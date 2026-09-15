@@ -49,7 +49,11 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({
               className="bg-neutral-900 border border-neutral-800 rounded-md overflow-hidden group hover:border-[#F05A28]/50 transition-all duration-300 flex flex-col justify-between"
             >
               {/* Image & Badges */}
-              <div className="relative aspect-[16/10] overflow-hidden bg-black">
+              <div 
+                onClick={() => onSelectVenue(venue)}
+                className="relative aspect-[16/10] overflow-hidden bg-black cursor-pointer"
+                title="Click to view details"
+              >
                 <img
                   src={venue.image}
                   alt={venue.name}
@@ -79,10 +83,13 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({
               {/* Body */}
               <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
                 <div>
-                  <h3 className="text-xl font-serif font-bold text-white tracking-tight group-hover:text-[#F05A28] transition-colors">
+                  <h3 
+                    onClick={() => onSelectVenue(venue)}
+                    className="text-xl font-serif font-bold text-white tracking-tight group-hover:text-[#F05A28] transition-colors cursor-pointer"
+                  >
                     {venue.name}
                   </h3>
-                  <p className="text-xs text-neutral-400 font-sans leading-relaxed mt-2 line-clamp-3">
+                  <p className="text-xs text-neutral-400 font-sans leading-relaxed mt-2">
                     {venue.description}
                   </p>
                 </div>
@@ -91,18 +98,26 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({
                   <div className="text-[10px] font-bold uppercase tracking-wider text-[#F05A28]">
                     Ideal Experience
                   </div>
-                  <div className="text-xs text-neutral-300 font-medium line-clamp-1">
+                  <div className="text-xs text-neutral-300 font-medium leading-normal">
                     {venue.idealFor}
                   </div>
                 </div>
 
-                <button
-                  onClick={() => onInquireVenue(venue.name)}
-                  className="w-full py-2.5 px-3 bg-neutral-800 hover:bg-[#F05A28] text-white text-xs font-bold uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <span>Inquire for Small Groups</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                <div className="pt-2 flex items-center gap-2">
+                  <button
+                    onClick={() => onSelectVenue(venue)}
+                    className="flex-1 py-2.5 px-3 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold rounded border border-neutral-700/60 transition-colors text-center"
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => onInquireVenue(venue.name)}
+                    className="flex-1 py-2.5 px-3 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                  >
+                    <span>Inquire</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}

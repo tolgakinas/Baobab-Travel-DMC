@@ -13,7 +13,9 @@ import {
   ShieldCheck, 
   Globe2,
   CalendarDays,
-  Sparkles
+  Sparkles,
+  Building2,
+  Lock
 } from 'lucide-react';
 import { COMPANY_CONTACT } from '../data/dmcData';
 
@@ -21,9 +23,10 @@ interface NavbarProps {
   onNavigate: (sectionId: string) => void;
   onOpenInquiry: (initialData?: Record<string, any>) => void;
   onOpenCalendly?: (eventTypeId?: string) => void;
+  onOpenB2BPanel?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpenCalendly: _onOpenCalendly }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpenCalendly: _onOpenCalendly, onOpenB2BPanel }) => {
   const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpe
             </div>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4 lg:gap-6 text-neutral-300">
             {/* Social Icons */}
             <div className="hidden xl:flex items-center border-r border-neutral-700/80 pr-4">
               <SocialMediaLinks variant="dark" size="sm" />
@@ -75,10 +78,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpe
             <a 
               href={`tel:${COMPANY_CONTACT.phoneRaw}`} 
               className="flex items-center gap-1.5 hover:text-white transition-colors"
+              title="Turkiye Office (HQ) Phone"
             >
               <Phone className="w-3 h-3 text-[#F05A28]" />
-              <span>{COMPANY_CONTACT.phone}</span>
+              <span className="font-medium">TR: {COMPANY_CONTACT.phone}</span>
             </a>
+
+            <span className="hidden xl:inline text-neutral-600">•</span>
+
+            <a 
+              href={`tel:${COMPANY_CONTACT.phoneUsRaw}`} 
+              className="hidden lg:flex items-center gap-1.5 hover:text-white transition-colors text-neutral-300"
+              title="USA Office (Branch) Phone"
+            >
+              <Phone className="w-3 h-3 text-cyan-400" />
+              <span className="font-medium">US: {COMPANY_CONTACT.phoneUs}</span>
+            </a>
+
+            <span className="hidden sm:inline text-neutral-600">•</span>
+
             <a 
               href={`https://wa.me/${COMPANY_CONTACT.whatsappRaw}?text=Hello%20Baobab%20DMC%2C%20I%20would%20like%20to%20inquire%20about%20a%20small%20group%20tour%20or%20adventure%20in%20Turkey`} 
               target="_blank" 
@@ -88,11 +106,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpe
               <MessageSquare className="w-3 h-3 fill-current" />
               <span>WhatsApp: {COMPANY_CONTACT.whatsapp}</span>
             </a>
-
-            {/* Language Flag Selector */}
-            <div className="pl-2 border-l border-neutral-700">
-              <LanguageSelector variant="dark" />
-            </div>
           </div>
         </div>
 
@@ -372,6 +385,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpe
                   <span>Partner With Us (B2B Trade)</span>
                   <span className="text-xs text-[#F05A28]">→</span>
                 </button>
+                {onOpenB2BPanel && (
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenB2BPanel();
+                    }}
+                    className="flex items-center justify-between py-2.5 px-3 bg-neutral-900 text-white rounded text-left font-bold text-xs shadow-sm"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-[#F05A28]" />
+                      <span>B2B Partner Portal & Tariffs</span>
+                    </div>
+                    <span className="text-[10px] bg-[#F05A28] text-white px-2 py-0.5 rounded uppercase tracking-wider">Hub</span>
+                  </button>
+                )}
                 <button
                   onClick={() => handleNavClick('about')}
                   className="flex items-center justify-between py-2 text-left border-b border-neutral-100 hover:text-[#F05A28]"
@@ -427,11 +455,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpe
                 <MessageSquare className="w-4 h-4 fill-current" />
                 <span>Chat on WhatsApp: {COMPANY_CONTACT.whatsapp}</span>
               </a>
-              <div className="flex justify-between items-center text-neutral-500 pt-1">
-                <span>TURSAB #{COMPANY_CONTACT.tursabNumber}</span>
-                <a href={`tel:${COMPANY_CONTACT.phoneRaw}`} className="font-semibold text-neutral-800">
-                  {COMPANY_CONTACT.phone}
-                </a>
+              <div className="space-y-2 text-neutral-500 pt-1">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span>TURSAB #{COMPANY_CONTACT.tursabNumber}</span>
+                  <span className="text-neutral-600 font-medium">{COMPANY_CONTACT.businessHours}</span>
+                </div>
+                <div className="flex justify-between items-center text-neutral-800 font-semibold text-xs">
+                  <a href={`tel:${COMPANY_CONTACT.phoneRaw}`} className="hover:text-[#F05A28]">
+                    TR: {COMPANY_CONTACT.phone}
+                  </a>
+                  <a href={`tel:${COMPANY_CONTACT.phoneUsRaw}`} className="hover:text-[#F05A28]">
+                    US: {COMPANY_CONTACT.phoneUs}
+                  </a>
+                </div>
               </div>
             </div>
           </div>

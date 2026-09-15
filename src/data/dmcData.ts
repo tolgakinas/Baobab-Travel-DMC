@@ -705,6 +705,16 @@ export const EXCLUSIVE_VENUES: VenueShowcase[] = [
     image: 'https://www.cekiste.com/images/blogs/74335gulet1.jpg',
     description: 'Handcrafted Turkish wooden sailing gulets chartered exclusively for small groups. Anchor in quiet turquoise coves, swim at sunrise, and host candlelit deck dinners under Aegean stars.',
     idealFor: 'Blue Voyage Charters, Sunset Dinners & Intimate Private Gatherings'
+  },
+  {
+    id: 'sait-halim-pasha-yali',
+    name: 'Sait Halim Pasha Historic Bosphorus Yalı',
+    location: 'Yenikoy, Bosphorus, Istanbul',
+    type: 'Historic Palace',
+    capacity: 'Boutique Small Groups (12–70 Guests)',
+    image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85',
+    description: 'A 19th-century Ottoman grand waterfront mansion situated directly on the European shoreline of the Bosphorus. Featuring direct boat-pier arrival, gilded baroque salons, and secluded waterside dining terraces overlooking the strait.',
+    idealFor: 'Bosphorus Welcome Receptions, Sunset Dinners & Chamber Music Recitals'
   }
 ];
 
@@ -765,11 +775,29 @@ export const FAQ_ITEMS = [
 
 export const COMPANY_CONTACT = {
   tursabNumber: 'A-15764',
-  address: 'Merkez Neighborhood, Abide-i Hurriyet Avenue, Blackout 211/67, Sisli, Istanbul, Turkey',
+  address: 'Abide-i Hurriyet Cd. Blackout 211/67 Sisli Istanbul Turkiye',
   phone: '+90 850 309 31 63',
   phoneRaw: '+908503093163',
   whatsapp: '+90 544 836 28 45',
   whatsappRaw: '905448362845',
+  phoneUs: '+1 (505) 581 67 07',
+  phoneUsRaw: '+15055816707',
+  usaAddress: '30 N Gould St STE 7000 Sheridan Wyoming 82801 USA',
+  businessHours: 'Mon- Sat: 09:00 AM - 7:00 PM',
+  turkiyeOffice: {
+    title: 'Turkiye Office (HQ)',
+    address: 'Abide-i Hurriyet Cd. Blackout 211/67 Sisli Istanbul Turkiye',
+    phone: '+90 850 309 31 63',
+    phoneRaw: '+908503093163',
+    whatsapp: '+90 544 836 28 45',
+    whatsappRaw: '905448362845',
+  },
+  usaOffice: {
+    title: 'USA Office (Branch)',
+    address: '30 N Gould St STE 7000 Sheridan Wyoming 82801 USA',
+    phone: '+1 (505) 581 67 07',
+    phoneRaw: '+15055816707',
+  },
   email: 'ops@baobabdmc.com',
   calendlyUrl: 'https://calendly.com/baobabdmc-info/30min',
   calendlyUsername: 'baobabdmc-info',

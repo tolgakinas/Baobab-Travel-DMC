@@ -21,6 +21,11 @@ import { AtlasTripsSection } from './components/AtlasTripsSection';
 import { TripDetailModal } from './components/TripDetailModal';
 import { BlogSection } from './components/BlogSection';
 import { BlogDetailModal } from './components/BlogDetailModal';
+import { SitemapModal } from './components/SitemapModal';
+import { ModernSlaveryModal } from './components/ModernSlaveryModal';
+import { SustainableTourismModal } from './components/SustainableTourismModal';
+import { ResponsibleTravelModal } from './components/ResponsibleTravelModal';
+import { B2BPartnerPanel } from './components/B2BPartnerPanel';
 import { Destination, SampleItinerary, VenueShowcase, InquiryFormData, AtlasTrip } from './types';
 import { DESTINATIONS, EXCLUSIVE_VENUES, COMPANY_CONTACT } from './data/dmcData';
 import { BlogPost } from './data/blogData';
@@ -37,6 +42,11 @@ export default function App() {
   const [inquiryInitialData, setInquiryInitialData] = useState<Partial<InquiryFormData>>({});
   const [calendlyModalOpen, setCalendlyModalOpen] = useState<boolean>(false);
   const [calendlyInitialEventType, setCalendlyInitialEventType] = useState<string>('b2b-discovery');
+  const [sitemapModalOpen, setSitemapModalOpen] = useState<boolean>(false);
+  const [modernSlaveryModalOpen, setModernSlaveryModalOpen] = useState<boolean>(false);
+  const [sustainableTourismModalOpen, setSustainableTourismModalOpen] = useState<boolean>(false);
+  const [responsibleTravelModalOpen, setResponsibleTravelModalOpen] = useState<boolean>(false);
+  const [b2bPanelOpen, setB2bPanelOpen] = useState<boolean>(false);
 
   // Smooth scroll helper
   const scrollToSection = (sectionId: string) => {
@@ -126,6 +136,7 @@ export default function App() {
           onNavigate={scrollToSection}
           onOpenInquiry={handleOpenInquiry}
           onOpenCalendly={handleOpenCalendly}
+          onOpenB2BPanel={() => setB2bPanelOpen(true)}
         />
 
       {/* Hero Section */}
@@ -177,6 +188,7 @@ export default function App() {
       <PartnerWithUsSection
         onOpenInquiry={handleOpenInquiry}
         onOpenCalendly={handleOpenCalendly}
+        onOpenB2BPanel={() => setB2bPanelOpen(true)}
       />
 
       {/* Why Baobab, TURSAB License, Testimonials & FAQ */}
@@ -205,6 +217,11 @@ export default function App() {
         onSelectDestination={handleSelectDestinationById}
         onOpenInquiry={handleOpenInquiry}
         onOpenCalendly={handleOpenCalendly}
+        onOpenB2BPanel={() => setB2bPanelOpen(true)}
+        onOpenSitemap={() => setSitemapModalOpen(true)}
+        onOpenModernSlavery={() => setModernSlaveryModalOpen(true)}
+        onOpenSustainableTourism={() => setSustainableTourismModalOpen(true)}
+        onOpenResponsibleTravel={() => setResponsibleTravelModalOpen(true)}
       />
 
       {/* Mobile Quick Action Sticky Bar */}
@@ -287,6 +304,54 @@ export default function App() {
         isOpen={calendlyModalOpen}
         onClose={() => setCalendlyModalOpen(false)}
         initialEventTypeId={calendlyInitialEventType}
+      />
+
+      <SitemapModal
+        isOpen={sitemapModalOpen}
+        onClose={() => setSitemapModalOpen(false)}
+        onNavigate={scrollToSection}
+        onSelectDestination={handleSelectDestinationById}
+        onSelectTrip={(trip) => setSelectedAtlasTrip(trip)}
+        onSelectBlogPost={(post) => setSelectedBlogPost(post)}
+        onOpenInquiry={handleOpenInquiry}
+        onOpenCalendly={handleOpenCalendly}
+        onOpenB2BPanel={() => setB2bPanelOpen(true)}
+        onOpenModernSlavery={() => setModernSlaveryModalOpen(true)}
+        onOpenSustainableTourism={() => setSustainableTourismModalOpen(true)}
+        onOpenResponsibleTravel={() => setResponsibleTravelModalOpen(true)}
+      />
+
+      <ModernSlaveryModal
+        isOpen={modernSlaveryModalOpen}
+        onClose={() => setModernSlaveryModalOpen(false)}
+        onOpenInquiry={handleOpenInquiry}
+      />
+
+      <SustainableTourismModal
+        isOpen={sustainableTourismModalOpen}
+        onClose={() => setSustainableTourismModalOpen(false)}
+        onSwitchToResponsibleTravel={() => {
+          setSustainableTourismModalOpen(false);
+          setResponsibleTravelModalOpen(true);
+        }}
+        onOpenInquiry={handleOpenInquiry}
+      />
+
+      <ResponsibleTravelModal
+        isOpen={responsibleTravelModalOpen}
+        onClose={() => setResponsibleTravelModalOpen(false)}
+        onSwitchToSustainableTourism={() => {
+          setResponsibleTravelModalOpen(false);
+          setSustainableTourismModalOpen(true);
+        }}
+        onOpenInquiry={handleOpenInquiry}
+      />
+
+      <B2BPartnerPanel
+        isOpen={b2bPanelOpen}
+        onClose={() => setB2bPanelOpen(false)}
+        onOpenInquiry={handleOpenInquiry}
+        onOpenCalendly={handleOpenCalendly}
       />
       </div>
     </LanguageProvider>

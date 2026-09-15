@@ -191,7 +191,7 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
               className="inline-flex items-center gap-1 text-emerald-700 font-semibold hover:underline text-[11px]"
             >
               <MessageSquare className="w-3 h-3 fill-current" />
-              <span>WhatsApp Chat</span>
+              <span>WhatsApp: {COMPANY_CONTACT.whatsapp}</span>
             </a>
             <span className="text-neutral-300">|</span>
             <a
@@ -199,7 +199,15 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
               className="inline-flex items-center gap-1 text-neutral-700 font-semibold hover:underline text-[11px]"
             >
               <Phone className="w-3 h-3 text-[#F05A28]" />
-              <span>{COMPANY_CONTACT.phone}</span>
+              <span>TR: {COMPANY_CONTACT.phone}</span>
+            </a>
+            <span className="text-neutral-300 hidden sm:inline">|</span>
+            <a
+              href={`tel:${COMPANY_CONTACT.phoneUsRaw}`}
+              className="hidden sm:inline-flex items-center gap-1 text-neutral-700 font-semibold hover:underline text-[11px]"
+            >
+              <Phone className="w-3 h-3 text-cyan-600" />
+              <span>US: {COMPANY_CONTACT.phoneUs}</span>
             </a>
           </div>
         </div>

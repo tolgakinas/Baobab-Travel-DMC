@@ -287,9 +287,9 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                           Signature Highlights:
                         </div>
                         {trip.highlights.slice(0, 2).map((hl, i) => (
-                          <div key={i} className="text-xs text-neutral-300 flex items-start gap-1.5 line-clamp-1">
-                            <span className="text-[#F05A28] font-bold text-xs shrink-0">•</span>
-                            <span className="truncate">{hl}</span>
+                          <div key={i} className="text-xs text-neutral-300 flex items-start gap-1.5">
+                            <span className="text-[#F05A28] font-bold text-xs shrink-0 leading-tight mt-0.5">•</span>
+                            <span className="leading-relaxed">{hl}</span>
                           </div>
                         ))}
                       </div>

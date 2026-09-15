@@ -21,9 +21,10 @@ import {
 interface PartnerWithUsSectionProps {
   onOpenInquiry: (initialData?: Record<string, any>) => void;
   onOpenCalendly?: (eventTypeId?: string) => void;
+  onOpenB2BPanel?: () => void;
 }
 
-export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOpenInquiry, onOpenCalendly }) => {
+export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOpenInquiry, onOpenCalendly, onOpenB2BPanel }) => {
   const partnerBenefits = [
     {
       icon: <Percent className="w-6 h-6 text-[#F05A28]" />,
@@ -119,6 +120,16 @@ export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOp
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {onOpenB2BPanel && (
+              <button
+                onClick={onOpenB2BPanel}
+                className="px-5 py-3 bg-white hover:bg-neutral-100 text-neutral-900 text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-md flex items-center justify-center gap-2 active:scale-95"
+              >
+                <Building2 className="w-4 h-4 text-[#F05A28]" />
+                <span>Access B2B Partner Hub</span>
+              </button>
+            )}
+
             <button
               onClick={() => onOpenInquiry({ 
                 formMode: 'b2b-partner',
@@ -254,6 +265,16 @@ export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOp
               <span>Open Trade Partnership Dialog</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+
+            {onOpenB2BPanel && (
+              <button
+                onClick={onOpenB2BPanel}
+                className="w-full py-2.5 bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold uppercase tracking-wider rounded transition-colors border border-neutral-600 flex items-center justify-center gap-2"
+              >
+                <Building2 className="w-3.5 h-3.5 text-[#F05A28]" />
+                <span>Existing Partners: Login to B2B Hub</span>
+              </button>
+            )}
 
             {onOpenCalendly && (
               <button

@@ -1,0 +1,7 @@
+{
+  "name": "Baobab DMC Turkey",
+  "description": "B2B Incoming Destination Management Company in Turkey for tour operators, travel agencies, and travel consultants worldwide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

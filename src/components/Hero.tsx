@@ -120,10 +120,10 @@ export const Hero: React.FC<HeroProps> = ({
           </p>
 
           {/* Action CTAs */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+          <div className="flex flex-wrap items-center gap-3 pt-2">
             <button
               onClick={() => onOpenInquiry()}
-              className="inline-flex items-center gap-2.5 px-6 sm:px-7 py-3.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-lg shadow-[#F05A28]/25 active:scale-95 group"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-lg shadow-[#F05A28]/25 active:scale-95 group whitespace-nowrap"
             >
               <span>{t('hero.ctaRequest')}</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -132,16 +132,16 @@ export const Hero: React.FC<HeroProps> = ({
             {onOpenCalendly && (
               <button
                 onClick={() => onOpenCalendly('b2b-discovery')}
-                className="inline-flex items-center gap-2 px-5 sm:px-6 py-3.5 bg-[#111111]/85 hover:bg-[#111111] text-white text-xs font-semibold uppercase tracking-wider rounded-sm backdrop-blur-md border border-white/20 hover:border-[#F05A28] transition-all duration-200 shadow-md active:scale-95 group"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-black/40 hover:bg-black/60 text-white text-xs font-bold uppercase tracking-wider rounded-sm backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-200 shadow-md active:scale-95 group whitespace-nowrap"
               >
-                <Video className="w-4 h-4 text-[#F05A28] group-hover:scale-110 transition-transform" />
+                <Video className="w-4 h-4 text-[#F05A28]" />
                 <span>{t('hero.ctaConsultation')}</span>
               </button>
             )}
 
             <button
               onClick={onExploreDestinations}
-              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold uppercase tracking-wider rounded-sm backdrop-blur-md border border-white/20 transition-all duration-200"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-white/10 hover:bg-white/20 text-white text-xs font-bold uppercase tracking-wider rounded-sm backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-200 shadow-sm active:scale-95 group whitespace-nowrap"
             >
               <Compass className="w-4 h-4 text-[#F05A28]" />
               <span>{t('hero.ctaExplore')}</span>

@@ -85,17 +85,17 @@ export const DestinationsSection: React.FC<DestinationsSectionProps> = ({
             >
               {/* Top Clean Text Header: crystal clear readability, no text over image */}
               <div className="p-5 pb-3 border-b border-neutral-100 bg-white">
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#F05A28]">
+                <div className="flex items-center justify-between gap-2 mb-1.5 min-w-0">
+                  <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#F05A28] truncate min-w-0">
                     {dest.region}
                   </span>
-                  <div className="flex items-center gap-1 px-2 py-0.5 bg-neutral-100 text-neutral-700 text-[10px] font-bold rounded">
-                    <Plane className="w-3 h-3 text-[#F05A28]" />
+                  <div className="flex items-center gap-1 px-2 py-0.5 bg-neutral-100 text-neutral-700 text-[10px] font-bold rounded shrink-0 whitespace-nowrap">
+                    <Plane className="w-3 h-3 text-[#F05A28] shrink-0" />
                     <span>{dest.airportCode}</span>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-serif font-bold text-neutral-900 tracking-tight leading-snug group-hover:text-[#F05A28] transition-colors">
+                <h3 className="text-lg sm:text-xl font-serif font-bold text-neutral-900 tracking-tight leading-snug group-hover:text-[#F05A28] transition-colors line-clamp-2 min-h-[3.25rem] flex items-center">
                   {dest.name}
                 </h3>
                 <div className="text-[11px] text-neutral-500 font-sans mt-0.5 truncate">

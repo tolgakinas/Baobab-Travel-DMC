@@ -88,7 +88,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: 'Full Day (7–8 Hours)',
     daysCount: 1,
     groupSize: 'Private Group (VIP Mercedes Vehicle)',
-    image: 'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/21/d9/c1/66/13/v1_E10/E10DWLS.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=84b5295c7b5dac4ed7615f024286d82da476ef6c9f0c367d0cbca14c2af81461',
     destinations: ['Istanbul'],
     description: 'The definitive private introduction to Istanbul’s historic highlights. Enjoy private door-to-door Mercedes transportation, skip-the-line coordination, and a dedicated licensed expert guide throughout. Visit Hagia Sophia, the Blue Mosque, the historic Hippodrome, Topkapi Palace, and the lively labyrinth of the Grand Bazaar with personalized pacing.',
     itinerary: [
@@ -167,7 +167,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '4 Hours',
     daysCount: 1,
     groupSize: 'Small Group (Max 10) or Private',
-    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/62/a5/dc/ed/e4/v1_E10/E106L9GC.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=2a20d5f6293c4a84d9be7170ff6864b238f3296b14e9886a8f796431db3ca405',
     destinations: ['Istanbul'],
     description: 'Capture the magic of Istanbul’s legendary Old Town in a focused half-day walking tour. Descend beneath the city streets into the eerie Basilica Cistern, admire the towering domes and turquoise Iznik tiles of the Blue Mosque, stroll the Roman Hippodrome, and conclude amidst the vibrant stalls and ancient hans of the Grand Bazaar.',
     itinerary: [
@@ -206,7 +206,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '4 Hours',
     daysCount: 1,
     groupSize: 'Small Group (Max 10) or Private',
-    image: 'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/5f/0d/2f/5e/da/v1_E10/E104S9SD.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=05c2e229f4f4b7ae3b6d323bb6627379a270ff10b2dddf7098ecb08ce59a04df',
     destinations: ['Istanbul'],
     description: 'Immerse yourself in Ottoman imperial grandeur by pairing two adjacent architectural marvels. Begin inside the Blue Mosque with its cascading domes and intricate stained glass, then enter the expansive grounds of Topkapi Palace and its secluded Imperial Harem for an evocative look at royal dynasties, politics, and opulence.',
     itinerary: [
@@ -284,7 +284,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '3.5 – 4 Hours',
     daysCount: 1,
     groupSize: 'Small Group (Max 10) or Private',
-    image: 'https://images.unsplash.com/photo-1567527259232-3a7fcd490c53?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/29/b3/ee/3a/ce/v1_E10/E1071L2V.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=daf8abf86b02ffad8d0cf867b69f75dbbcdda350d887039c80d171932df22f66',
     destinations: ['Istanbul'],
     description: 'Venture beyond Sultanahmet into Istanbul’s 19th-century cosmopolitan heart: Beyoğlu (ancient Pera). Walk Istiklal Avenue to discover hidden neoclassical passages (pasajlar), historic embassies, neo-Gothic churches, bohemian art studios, antique arcades, and secret rooftop terraces leading down to the medieval Galata Tower.',
     itinerary: [
@@ -323,7 +323,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '6 Hours',
     daysCount: 1,
     groupSize: 'Small Group (Max 10) or Private',
-    image: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/d2/79/1b/11/56/v1_E10/E101BWEU.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=1ff7ebb43cdbc5acfe108935ca776f8f80c2ca1c06080011342c55b31c6ce6c3',
     destinations: ['Istanbul'],
     description: 'An off-the-beaten-path heritage walk revealing the multi-cultural soul of Istanbul. Begin at the 14th-century Galata Tower, hop aboard a traditional public ferry across the Golden Horn, and explore the bohemian, rainbow-colored Ottoman streets of Fener, Balat, and Ayvansaray where Greek Orthodox, Jewish, and Armenian communities flourished for centuries.',
     itinerary: [
@@ -401,7 +401,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '4 Hours',
     daysCount: 1,
     groupSize: 'Small Group (Max 8) or Private',
-    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/d3/fb/d7/0b/b0/v1_E10/E1026EZ.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=137069b10fe1cccd4181cfbe785994b92731704661f2c44a875c1646c84ba56d',
     destinations: ['Istanbul'],
     description: 'Taste your way through the authentic food culture of Istanbul with a passionate foodie host. Experience 10 hand-picked tastings covering sweet, savory, street food, and historic tavern dishes across historic market districts. Discover how Turkish, Ottoman, and regional Anatolian traditions blend together in every bite.',
     itinerary: [
@@ -440,7 +440,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '5.5 Hours',
     daysCount: 1,
     groupSize: 'Small Group (Max 8) or Private',
-    image: 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/39/af/47/1b/82/v1_E10/E1055SXW.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=2887bfee10456104752106405b3918123ad7cfab3051ee544d3c8eb54a255874',
     destinations: ['Istanbul'],
     description: 'The ultimate culinary adventure spanning two continents in a single day. Begin in European Eminönü sampling breakfast specialties, then board a scenic public ferry across the Bosphorus to the lively Asian neighborhood of Kadıköy. Explore its renowned pedestrian food market, meze bistros, regional kebab houses, and seaside tea gardens in Moda.',
     itinerary: [
@@ -480,7 +480,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '4 Hours',
     daysCount: 1,
     groupSize: 'Small Group (Max 8) or Private',
-    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/23/47/8a/28/2c/v1_E11/E118E2YE.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=db9a6b45f2d849b5a02a98e297beab5cd5af8f5f745456c026784e1c478dd924',
     destinations: ['Istanbul'],
     description: 'Dive straight into Istanbul’s bustling street food hotspots and historical tavern culture across Karaköy and Beyoğlu. From crispy su böreği and charred kokoreç to savory meze plates in a century-old meyhane, this tour delivers an authentic taste of where Istanbulites really eat and socialize after hours.',
     itinerary: [
@@ -518,7 +518,7 @@ export const ISTANBUL_DAY_TOURS: AtlasTrip[] = [
     duration: '3.5 Hours (Evening)',
     daysCount: 1,
     groupSize: 'Small Group (Max 6) or Private',
-    image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/ae/26/be/99/ea/v1_E10/E10SPXI.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=709654f44c194759779adbdf124893b8f31accb595b48f2317857a4c3b080c51',
     destinations: ['Istanbul'],
     description: 'Experience genuine Turkish hospitality that cannot be found in restaurants. Join a welcoming Turkish family in their home for an intimate evening of shared food, culinary demonstrations, and authentic conversation. Enjoy a lavish multi-course home-cooked meal featuring heritage recipes passed down through generations.',
     itinerary: [

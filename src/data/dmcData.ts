@@ -53,7 +53,7 @@ export const DESTINATIONS: Destination[] = [
     region: 'Central Anatolia',
     tagline: 'Surreal Lunar Valleys, Valley Hikes & Sunrise Hot Air Balloons',
     description: 'A wonderland sculpted by volcanic eruptions, erosion, and early Christian cave dwellers. Hike hidden fairy chimney valleys, float above lunar formations at sunrise, stay in authentic boutique cave suites, and explore multi-level underground cities.',
-    heroImage: 'https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/6e/8b/0e/6d/4b/v1_E10/E108WXLE.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=4b9d533d63cb4bb08c118d5b610bf41abe7ad0ee2807d8fa5e0ee0c12cd27d14',
     galleryImages: [
       'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80'
@@ -89,7 +89,7 @@ export const DESTINATIONS: Destination[] = [
     region: 'Mediterranean',
     tagline: 'Lycian Trail Hikes, Sunken Ruins, Gulet Cruising & Mountain Canyons',
     description: 'Where the pine-clad Taurus Mountains drop into turquoise Mediterranean waters. Antalya, Kas, Fethiye, and Kalkan form the Turkish Riviera—offering coastal hiking along the Lycian Way, sea kayaking over sunken ruins, and secluded bay yachting.',
-    heroImage: 'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/58/47/14/1d/06/v1_E10/E10H1JC9.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=cd2e0bef67cfb525b0f922a9b36164f463e8d3df5980166e85db28c459919ee0',
     galleryImages: [
       'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80'
@@ -125,10 +125,10 @@ export const DESTINATIONS: Destination[] = [
     region: 'Aegean',
     tagline: 'Classical Antiquity, Vineyards, Whitewashed Villages & Blue Cruises',
     description: 'The storied Aegean coast blends world-wonder classical antiquity with olive groves, artisanal vineyards, and whitewashed seaside villages. Spanning Ephesus, Izmir, Bodrum, Urla, Sirince, and Pamukkale terraces.',
-    heroImage: 'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Ephesus_-_Celsus_Library.jpg/1280px-Ephesus_-_Celsus_Library.jpg',
     galleryImages: [
-      'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80'
+      'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Ephesus_Celsus_Library_Fa%C3%A7ade.jpg/1280px-Ephesus_Celsus_Library_Fa%C3%A7ade.jpg',
+      'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Library_of_Celsus_6242.jpg/1280px-Library_of_Celsus_6242.jpg'
     ],
     highlights: [
       'Scholar-guided walkthrough of Ephesus marble avenues and Roman Terrace Houses',
@@ -161,7 +161,7 @@ export const DESTINATIONS: Destination[] = [
     region: 'Black Sea',
     tagline: 'Lush Alpine Plateaus, Cloud Forests, Sumela Monastery & Tea Hills',
     description: 'A misty realm of emerald-green valleys, rushing glacial rivers, and dramatic Pontic mountain peaks. Discover cliff-hanging Byzantine monasteries, centuries-old Ottoman stone bridges, tea plantations, and timber alpine lodges.',
-    heroImage: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/a4/18/80/17/a7/v1_E10/E10FHDQY.JPG?w=1600&cf_fit=scale-down&q=85&format=auto&s=c50e41554c4cf5175999e6602992efb4837a026f84409cf85a382b2883e9b6d7',
     galleryImages: [
       'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80'
     ],
@@ -196,7 +196,7 @@ export const DESTINATIONS: Destination[] = [
     region: 'North Aegean & Marmara',
     tagline: 'Homeric Legends, Dardanelles Straits, Gallipoli & Ancient Assos',
     description: 'Where myth, classical philosophy, and modern history converge. Explore the legendary archaeological layers of Troy and its award-winning museum, Aristotle’s academy at hilltop Assos overlooking Lesbos island, and the historic Gallipoli battlefields.',
-    heroImage: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/7d/b4/c0/89/51/v1_E10/E1077UM2.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=78f0a75c3f548500c4176077c966cb0087d849950fdd003f5e0707e53193c048',
     galleryImages: [
       'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=800&q=80'
     ],
@@ -231,7 +231,7 @@ export const DESTINATIONS: Destination[] = [
     region: 'Eastern & Southeastern',
     tagline: '12,000-Year-Old Gobeklitepe, Mount Nemrut Colossi & Silk Road Citadels',
     description: 'An awe-inspiring journey through the earliest chapters of human civilization. Spanning the monumental 12,000-year-old megaliths of Gobeklitepe and Karahantepe, the giant stone heads of Mount Nemrut, honey-colored limestone mansions of Mardin, and the legendary Silk Road outpost of Kars and Ani.',
-    heroImage: 'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/aa/52/d4/7f/9f/v1_E10/E104D6EW.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=899e5586be4dcd13d370b1c9c56a8e773ab854815324c7c39a64db4bbe4eeb6b',
     galleryImages: [
       'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80'
@@ -250,7 +250,7 @@ export const DESTINATIONS: Destination[] = [
       'Traditional Anatolian Sira Night Musical Feast in a Restored Stone Caravanserai'
     ],
     exclusiveVenues: ['Historic Mardin Stone Mansions', 'Sanliurfa Caravanserai Courtyards', 'Zeugma Roman Mosaic Museum'],
-    airportCode: 'GNY / GZT / MQM / KSY / DIY',
+    airportCode: 'GZT / GNY / MQM',
     quickFacts: {
       idealDuration: '5 – 8 Days',
       bestFor: 'Prehistoric Archaeology, Biblical Heritage, Silk Road Citadels & World Gastronomy',
@@ -267,7 +267,7 @@ export const DESTINATIONS: Destination[] = [
     region: 'Aegean',
     tagline: 'Snow-White Mineral Cascades, Sacred Thermal Pools & Marble Masterpieces',
     description: 'A dazzling natural spectacle and classical sanctuary. Walk the glowing snow-white calcite travertines of Pamukkale, swim among fallen Roman columns in Cleopatra’s thermal pool, and wander through Aphrodisias—the ancient world’s legendary school of marble sculpture.',
-    heroImage: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/37/09/9a/fb/53/v1_E10/E10880A9.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=2b84144fa737f73ebb8b9b1de8bb4c62921d0ab157f902b56161800e075dcbe2',
     galleryImages: [
       'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?auto=format&fit=crop&w=800&q=80'
@@ -298,12 +298,12 @@ export const DESTINATIONS: Destination[] = [
   },
   {
     id: 'lake-van-ararat',
-    name: 'Lake Van, Mount Ararat & Dogubayazit',
-    regionTag: 'High Armenian Highlands & Biblical Peaks',
+    name: 'Lake Van & Mount Ararat',
+    regionTag: 'Dogubayazit Citadel, Biblical Peaks & Lake Van',
     region: 'Eastern & Southeastern',
     tagline: 'Turquoise Soda Lake, Akdamar Church, Ishak Pasha Palace & Biblical Ararat',
     description: 'A dramatic wilderness frontier where snow-draped Mount Ararat towers over vast volcanic plateaus and saline Lake Van. Explore the 10th-century stone carvings of Akdamar Holy Cross Church, Urartian citadels, and the fairytale clifftop Ishak Pasha Palace.',
-    heroImage: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1600&q=85',
+    heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/62/c6/9c/a0/87/v1_E10/E10AQQ1B.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=db397501b14c75ff5cecdb5677a2b5a4403b6e304e6928dc64ea04b50df018e9',
     galleryImages: [
       'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80'
@@ -357,7 +357,7 @@ export const DMC_SERVICES: DmcService[] = [
     shortDesc: 'Guided hiking along the Lycian Way, Cappadocia valley trekking, hot air ballooning, and sea kayaking.',
     fullDesc: 'For travelers who want to experience Turkey on foot and outdoors. From traversing the ancient coastal paths of the Lycian Way to canyoning in the Taurus Mountains, sunrise ballooning over volcanic gorges, and sea kayaking across submerged ruins.',
     icon: 'Compass',
-    image: 'https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=1200&q=85',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/a4/94/f8/63/2a/v1_E10/E102FGD9.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=617860541f26f75c5f19847ad9ddb4783c5a7c153a4c6aacbfde8d6d0e3dc91c',
     features: [
       'Certified outdoor & trekking guides with wilderness first-aid certifications',
       'Carefully paced daily hikes with luggage transfers and support vehicles',
@@ -373,7 +373,7 @@ export const DMC_SERVICES: DmcService[] = [
     shortDesc: 'Small-group food tours from Istanbul spice alleys to Gaziantep UNESCO kitchens and Aegean olive groves.',
     fullDesc: 'Immerse your guests in one of the world’s great culinary traditions. Cook with village grandmothers, taste regional cheeses in hidden Grand Bazaar courtyards, visit olive oil pressers in Urla, and sample street food with local food journalists.',
     icon: 'Utensils',
-    image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/ca/d0/c6/ce/eb/v1_E10/E108QNNK.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=cf588ca1c2aa13601e3dbf75c7c6629a84bba2df5b15e9c46a183eb1146d3897',
     features: [
       'Led by passionate food guides, cookbook authors, and certified sommelier partners',
       'Behind-the-scenes visits to historic bakeries, wood-fired ovens, and spice masters',
@@ -389,7 +389,7 @@ export const DMC_SERVICES: DmcService[] = [
     shortDesc: 'Handcrafted Turkish wooden gulets for small groups sailing the crystal Turquoise Coast.',
     fullDesc: 'Experience the legendary Turkish Blue Voyage on an intimate wooden sailing vessel. Ideal for small friend circles, family adventures, or hiking-and-sailing combinations. Anchor in quiet pine-fringed bays, swim at sunrise, and dine on fresh fish caught daily.',
     icon: 'Anchor',
-    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=85',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/71/a2/62/b4/24/v1_E10/E10QYY0.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=45bf8f07da2658a5531ee455b9d3006ed97d6e77be71ad4ed1555951d01cb259',
     features: [
       'Traditional wooden gulets selected specifically for small groups (4–8 cabins)',
       'Dedicated onboard crew: experienced captain, deckhand, and private chef',
@@ -405,7 +405,7 @@ export const DMC_SERVICES: DmcService[] = [
     shortDesc: 'Custom small group journeys designed from scratch for families, clubs, and international tour operators.',
     fullDesc: 'Whether you are a specialized tour operator looking for an agile ground DMC partner in Turkey or a private group organizer planning an anniversary journey, our team designs custom itineraries with transparent wholesale net pricing and full B2B support.',
     icon: 'ShieldCheck',
-    image: 'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1200&q=85',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/69/1f/d7/0c/fd/v1_E10/E10VKB6.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=5bd033aded3038171be1d291b60a464e3df64b4d945fda140340f980dfef8ad9',
     features: [
       'White-label B2B documentation customized with your agency branding',
       'Rapid proposal turnaround within 24 business hours with detailed day-by-day notes',
@@ -425,7 +425,7 @@ export const SAMPLE_ITINERARIES: SampleItinerary[] = [
     duration: '10 Days / 9 Nights',
     category: 'Small Group Tour',
     destinations: ['Istanbul', 'Cappadocia', 'Ephesus', 'Bodrum'],
-    coverImage: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=85',
+    coverImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/7a/ca/55/7f/11/v1_E10/E107CZJK.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=dca2269226b8dba04a9af5d5e48ea6b60b00ad05aa20a7c9869d8d3459f26a52',
     overview: 'Our quintessential small group cultural journey connecting the imperial sights of Istanbul, the fairy chimney trails of Cappadocia, the classical monuments of Ephesus, and the Aegean coast of Bodrum.',
     idealGroupSize: 'Intimate Groups & Private Circles (4–14 Travelers)',
     includedHighlights: [
@@ -515,7 +515,7 @@ export const SAMPLE_ITINERARIES: SampleItinerary[] = [
     duration: '8 Days / 7 Nights',
     category: 'Active Adventure',
     destinations: ['Cappadocia', 'Antalya', 'Lycian Coast'],
-    coverImage: 'https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=1200&q=85',
+    coverImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/74/3f/58/9b/8f/v1_E10/E10HJZF.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=47ccd6131ee20c81e34e9df499a6801354bfd86622ff7746ce9ff2f8bbbb90d9',
     overview: 'Designed for active small groups who want to combine Turkey’s two most dramatic landscapes: hiking through Cappadocia’s volcanic canyons and trekking cliffside trails along the turquoise Mediterranean on the Lycian Way.',
     idealGroupSize: 'Small Adventure Groups (6–12 Hikers)',
     includedHighlights: [
@@ -662,7 +662,7 @@ export const EXCLUSIVE_VENUES: VenueShowcase[] = [
     location: 'Beyoglu, Istanbul',
     type: 'Historic Palace',
     capacity: 'Boutique Small Groups (10–60 Guests)',
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
+    image: 'https://xx.bstatic.com/xdata/images/hotel/max1024/270287497.jpg?k=1473605be17f24f891c760294c921306e0bd35716e92c80108b205a29e31b6ce&o=',
     description: 'The legendary hotel built in 1892 to host Orient Express travelers. Agatha Christie and Ernest Hemingway stayed here. Perfect base for small group cultural travelers in Istanbul.',
     idealFor: 'Literary Salons, Afternoon Tea & Intimate Private Gatherings'
   },
@@ -672,7 +672,7 @@ export const EXCLUSIVE_VENUES: VenueShowcase[] = [
     location: 'Sultanahmet, Istanbul',
     type: 'Historic Palace',
     capacity: 'Private Group Access (10–150 Guests)',
-    image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80',
+    image: 'https://theothertour.com/wp-content/uploads/2024/12/binbirdirek-cistern.jpg',
     description: 'A subterranean marvel supported by 224 marble columns built by the Roman Emperor Justinian. We arrange private acoustic walk-throughs and small-group classical music recitals.',
     idealFor: 'Acoustic Recitals, Private Cultural Soirees & Historical Lectures'
   },
@@ -682,7 +682,7 @@ export const EXCLUSIVE_VENUES: VenueShowcase[] = [
     location: 'Goreme, Cappadocia',
     type: 'Cave & Canyon',
     capacity: 'Small Groups (10–50 Guests)',
-    image: 'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=800&q=80',
+    image: 'https://cdn.getyourguide.com/image/format=auto%2Cfit=contain%2Cgravity=auto%2Cquality=60%2Cwidth=1440%2Cheight=650%2Cdpr=1/tour_img/762a342ada515476cb73d10c28aecb252829213c30c4db5ad89eff1f2b2d2055.jpg',
     description: 'A private natural amphitheater and hollowed volcanic rock monastery illuminated by candle lanterns, torchlit pathways, and local Anatolian musicians.',
     idealFor: 'Sunset Wine Tastings, Intimate Group Dinners & Whirling Dervish Performances'
   },
@@ -692,19 +692,19 @@ export const EXCLUSIVE_VENUES: VenueShowcase[] = [
     location: 'Ephesus, Selcuk',
     type: 'Ancient Ruin',
     capacity: 'Curated Heritage Groups',
-    image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=800&q=80',
+    image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Ephesus_Celsus_Library_Fa%C3%A7ade.jpg/1280px-Ephesus_Celsus_Library_Fa%C3%A7ade.jpg',
     description: 'One of the most breathtaking monuments of the classical Greco-Roman world. We coordinate special permissions for quiet, scholar-guided visits beneath its towering Corinthian colonnade.',
     idealFor: 'Scholar Lectures, Sunset Archaeological Walks & Chamber Music'
   },
   {
     id: 'karakaya-village',
-    name: 'Historic Karakaya Stone Village Retreat',
-    location: 'Gumusluk, Bodrum Peninsula',
+    name: 'Private Handcrafted Wooden Gulet Charter',
+    location: 'Bodrum & Gocek, Aegean Coast',
     type: 'Coastal & Yacht',
-    capacity: 'Small Groups (10–40 Guests)',
-    image: 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=800&q=80',
-    description: 'A 300-year-old stone village perched high above the Aegean Sea overlooking the Greek islands. An inspiring mountain sanctuary for small retreat groups, sunset meals, and hiking halts.',
-    idealFor: 'Sunset Dinners, Meditation & Yoga Retreats, Walking Group Halts'
+    capacity: 'Small Groups (8–18 Guests)',
+    image: 'https://www.cekiste.com/images/blogs/74335gulet1.jpg',
+    description: 'Handcrafted Turkish wooden sailing gulets chartered exclusively for small groups. Anchor in quiet turquoise coves, swim at sunrise, and host candlelit deck dinners under Aegean stars.',
+    idealFor: 'Blue Voyage Charters, Sunset Dinners & Intimate Private Gatherings'
   }
 ];
 

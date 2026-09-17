@@ -150,17 +150,15 @@ export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({
 
           {/* Content Body */}
           <div className="p-6 sm:p-10 space-y-8 max-w-3xl mx-auto">
-            {/* Author & Geo Tag Row */}
+            {/* Intelligence & Geo Tag Row */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-neutral-200">
               <div className="flex items-center gap-3">
-                <img
-                  src={post.author.avatar}
-                  alt={post.author.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-[#F05A28]/30"
-                />
+                <div className="w-11 h-11 rounded-full bg-[#F05A28]/10 border border-[#F05A28]/20 flex items-center justify-center text-[#F05A28] shrink-0">
+                  <Compass className="w-5 h-5" />
+                </div>
                 <div>
-                  <p className="text-sm font-bold text-neutral-900">{post.author.name}</p>
-                  <p className="text-xs text-neutral-500">{post.author.role}</p>
+                  <p className="text-sm font-bold text-neutral-900">Baobab DMC Turkey Ground Intelligence</p>
+                  <p className="text-xs text-neutral-500">Official Destination & Logistics Briefing</p>
                 </div>
               </div>
 

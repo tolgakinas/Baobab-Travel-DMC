@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { InquiryFormData } from '../types';
 import { COMPANY_CONTACT } from '../data/dmcData';
 import { useLanguage } from '../context/LanguageContext';
+import { saveInquiryToFirestore } from '../services/inquiryService';
 import { 
   Send, 
   CheckCircle2, 
@@ -136,6 +137,28 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({
     const generatedRef = 'TR-BAOBAB-' + Math.floor(1000 + Math.random() * 9000);
 
     try {
+      // 1. Save directly to Firebase Firestore
+      await saveInquiryToFirestore({
+        referenceNumber: generatedRef,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        companyOrAgency: formData.companyOrAgency,
+        country: formData.country,
+        role: formData.role,
+        tripType: formData.tripType,
+        selectedTripTitle: formData.selectedTripTitle,
+        guestCount: formData.guestCount,
+        budgetTier: formData.budgetTier,
+        estimatedDate: formData.estimatedDate,
+        destinations: formData.destinations,
+        preferredExperiences: formData.preferredExperiences,
+        specialRequests: formData.specialRequests,
+        formMode: formData.formMode,
+        createdAt: new Date().toISOString(),
+      });
+
+      // 2. Dispatch via email backend
       const response = await fetch('/api/inquiry', {
         method: 'POST',
         headers: {

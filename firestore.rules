@@ -1,0 +1,115 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == 'tolgakinas@gmail.com'
+      );
+    }
+
+    // Validation for Inquiries
+    function isValidInquiry(data) {
+      return data.keys().hasAll(['fullName', 'email', 'referenceNumber', 'createdAt']) &&
+        data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 120 &&
+        data.email is string && data.email.size() > 0 && data.email.size() <= 150 &&
+        data.referenceNumber is string && data.referenceNumber.size() > 0 && data.referenceNumber.size() <= 64 &&
+        data.createdAt is string && data.createdAt.size() <= 60 &&
+        (!('phone' in data) || (data.phone is string && data.phone.size() <= 60)) &&
+        (!('companyOrAgency' in data) || (data.companyOrAgency is string && data.companyOrAgency.size() <= 150)) &&
+        (!('country' in data) || (data.country is string && data.country.size() <= 80)) &&
+        (!('tripType' in data) || (data.tripType is string && data.tripType.size() <= 100)) &&
+        (!('selectedTripTitle' in data) || (data.selectedTripTitle is string && data.selectedTripTitle.size() <= 150)) &&
+        (!('guestCount' in data) || (data.guestCount is string && data.guestCount.size() <= 40)) &&
+        (!('budgetTier' in data) || (data.budgetTier is string && data.budgetTier.size() <= 80)) &&
+        (!('estimatedDate' in data) || (data.estimatedDate is string && data.estimatedDate.size() <= 80)) &&
+        (!('destinations' in data) || (data.destinations is list && data.destinations.size() <= 20)) &&
+        (!('preferredExperiences' in data) || (data.preferredExperiences is list && data.preferredExperiences.size() <= 20)) &&
+        (!('specialRequests' in data) || (data.specialRequests is string && data.specialRequests.size() <= 2000)) &&
+        (!('formMode' in data) || (data.formMode is string && data.formMode.size() <= 50)) &&
+        (!('status' in data) || (data.status in ['new', 'in_review', 'proposal_sent', 'confirmed', 'archived']));
+    }
+
+    // Validation for User Profiles
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['email', 'createdAt']) &&
+        data.email is string && data.email.size() > 0 && data.email.size() <= 150 &&
+        data.createdAt is string && data.createdAt.size() <= 60 &&
+        (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 120)) &&
+        (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 500)) &&
+        (!('role' in data) || (data.role in ['partner', 'client', 'admin']));
+    }
+
+    // Validation for B2B Partner Profiles
+    function isValidB2BPartner(data) {
+      return data.keys().hasAll(['agencyName', 'contactPerson', 'email', 'createdAt']) &&
+        data.agencyName is string && data.agencyName.size() > 0 && data.agencyName.size() <= 150 &&
+        data.contactPerson is string && data.contactPerson.size() > 0 && data.contactPerson.size() <= 120 &&
+        data.email is string && data.email.size() > 0 && data.email.size() <= 150 &&
+        data.createdAt is string && data.createdAt.size() <= 60 &&
+        (!('phone' in data) || (data.phone is string && data.phone.size() <= 60)) &&
+        (!('country' in data) || (data.country is string && data.country.size() <= 80)) &&
+        (!('iataOrLicense' in data) || (data.iataOrLicense is string && data.iataOrLicense.size() <= 80)) &&
+        (!('annualPax' in data) || (data.annualPax is string && data.annualPax.size() <= 50)) &&
+        (!('status' in data) || (data.status in ['pending', 'verified', 'rejected']));
+    }
+
+    // Inquiries Collection
+    match /inquiries/{inquiryId} {
+      allow get: if isValidId(inquiryId) && (isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid));
+      allow list: if isAdmin();
+      allow create: if isValidId(inquiryId) && isValidInquiry(incoming());
+      allow update: if isValidId(inquiryId) && isAdmin() && isValidInquiry(incoming());
+      allow delete: if isValidId(inquiryId) && isAdmin();
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin();
+      allow create, update: if isValidId(userId) && (isOwner(userId) || isAdmin()) && isValidUserProfile(incoming());
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // B2B Partners Collection
+    match /b2b_partners/{partnerId} {
+      allow get: if isValidId(partnerId) && (isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid));
+      allow list: if isAdmin();
+      allow create: if isValidId(partnerId) && isSignedIn() && isValidB2BPartner(incoming()) && incoming().userId == request.auth.uid;
+      allow update: if isValidId(partnerId) && (isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid)) && isValidB2BPartner(incoming());
+      allow delete: if isValidId(partnerId) && isAdmin();
+    }
+
+    // Connection Test Document
+    match /test/connection {
+      allow get: if true;
+    }
+  }
+}

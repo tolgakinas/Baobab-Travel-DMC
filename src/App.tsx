@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { StatsBar } from './components/StatsBar';
@@ -129,8 +130,9 @@ export default function App() {
   };
 
   return (
-    <LanguageProvider>
-      <div className="min-h-screen flex flex-col bg-[#FAF9F6] text-[#1A1A1A] font-sans antialiased">
+    <AuthProvider>
+      <LanguageProvider>
+        <div className="min-h-screen flex flex-col bg-[#FAF9F6] text-[#1A1A1A] font-sans antialiased">
         {/* Fixed Navigation */}
         <Navbar
           onNavigate={scrollToSection}
@@ -355,5 +357,6 @@ export default function App() {
       />
       </div>
     </LanguageProvider>
+  </AuthProvider>
   );
 }

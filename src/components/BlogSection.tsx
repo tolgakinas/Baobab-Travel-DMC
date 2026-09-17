@@ -161,15 +161,11 @@ export const BlogSection: React.FC<BlogSectionProps> = ({
                   </p>
                 </div>
 
-                {/* Author footer and CTA */}
+                {/* Article footer and CTA */}
                 <div className="pt-4 border-t border-neutral-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <img
-                      src={post.author.avatar}
-                      alt={post.author.name}
-                      className="w-8 h-8 rounded-full object-cover border border-neutral-200"
-                    />
-                    <span className="text-xs font-semibold text-neutral-800">{post.author.name}</span>
+                  <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-[#F05A28]" />
+                    <span>Turkiye Field Intel</span>
                   </div>
 
                   <span className="inline-flex items-center gap-1 text-xs font-bold text-[#F05A28] group-hover:translate-x-1 transition-transform">

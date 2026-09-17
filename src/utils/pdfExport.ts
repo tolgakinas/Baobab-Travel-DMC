@@ -1,5 +1,6 @@
 import { AtlasTrip, SampleItinerary } from '../types';
 import { parseItineraryDayDetails } from './itineraryHelper';
+import { COMPANY_CONTACT } from '../data/dmcData';
 
 /**
  * Generates an executive, print-ready HTML document and opens a clean print window
@@ -323,7 +324,7 @@ export function exportItineraryToPdf(trip: AtlasTrip): void {
         </div>
         <div class="doc-tag">
           <strong>CONFIDENTIAL PROPOSAL</strong>
-          TURSAB Licensed #10848
+          TÜRSAB Licensed #${COMPANY_CONTACT.tursabNumber}
           <br />Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
         </div>
       </div>
@@ -369,11 +370,13 @@ export function exportItineraryToPdf(trip: AtlasTrip): void {
 
       <div class="footer">
         <div>
-          <strong>Baobab DMC Turkey Ground Operations</strong> | Istanbul • Cappadocia • Antalya • Bodrum
-          <br />B2B Wholesale Inquiries: operations@baobabdmc.com | +90 212 555 0199
+          <strong>Baobab DMC Turkey Ground Operations</strong> | TÜRSAB #${COMPANY_CONTACT.tursabNumber}
+          <br />Turkiye HQ: ${COMPANY_CONTACT.turkiyeOffice.address}
+          <br />Inquiries: ${COMPANY_CONTACT.email} | TR Phone: ${COMPANY_CONTACT.phone} | US Phone: ${COMPANY_CONTACT.phoneUs} | WhatsApp: ${COMPANY_CONTACT.whatsapp}
         </div>
-        <div>
-          Page 1 • White-Label Ready
+        <div style="text-align: right;">
+          <strong>White-Label Ready</strong>
+          <br />Hours: ${COMPANY_CONTACT.businessHours}
         </div>
       </div>
 

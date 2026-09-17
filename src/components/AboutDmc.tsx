@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TESTIMONIALS, FAQ_ITEMS, PARTNERS_ACCREDITATIONS, COMPANY_CONTACT } from '../data/dmcData';
+import React, { useState, useMemo } from 'react';
+import { TESTIMONIALS, FAQ_ITEMS, FAQ_CATEGORIES, PARTNERS_ACCREDITATIONS, COMPANY_CONTACT } from '../data/dmcData';
 import { 
   ShieldCheck, 
   Award, 
@@ -11,7 +11,11 @@ import {
   ChevronUp, 
   Building2,
   Lock,
-  Headphones
+  Headphones,
+  Search,
+  HelpCircle,
+  Sparkles,
+  ArrowRight
 } from 'lucide-react';
 
 interface AboutDmcProps {
@@ -19,7 +23,26 @@ interface AboutDmcProps {
 }
 
 export const AboutDmc: React.FC<AboutDmcProps> = ({ onOpenInquiry }) => {
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [openFaqId, setOpenFaqId] = useState<string | null>('visa-exemptions-us-uk-eu');
+
+  // Filtered FAQ items based on category and search query
+  const filteredFaqs = useMemo(() => {
+    return FAQ_ITEMS.filter((item) => {
+      const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+      const query = searchQuery.trim().toLowerCase();
+      if (!query) return matchesCategory;
+
+      const matchesQuery = 
+        item.q.toLowerCase().includes(query) ||
+        item.a.toLowerCase().includes(query) ||
+        item.category.toLowerCase().includes(query) ||
+        item.keywords.some((k) => k.toLowerCase().includes(query));
+
+      return matchesCategory && matchesQuery;
+    });
+  }, [selectedCategory, searchQuery]);
 
   return (
     <section id="about" className="py-20 sm:py-28 bg-white text-[#1A1A1A]">
@@ -174,62 +197,168 @@ export const AboutDmc: React.FC<AboutDmcProps> = ({ onOpenInquiry }) => {
           </div>
         </div>
 
-        {/* Section 3: B2B FAQ Accordion */}
-        <div id="faq" className="max-w-4xl mx-auto pt-12 border-t border-neutral-200">
-          <div className="text-center space-y-2 mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#F05A28]">
-              Frequently Asked Questions
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900">
-              Partnership & Small Group Insights
+        {/* Section 3: B2B & Ground Intelligence FAQ Section */}
+        <div id="faq" className="max-w-4xl mx-auto pt-14 border-t border-neutral-200">
+          <div className="text-center space-y-3 mb-8">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#F05A28]/10 rounded-full text-xs font-bold uppercase tracking-widest text-[#F05A28]">
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>Turkiye Travel & Ground Operations FAQ</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-neutral-900">
+              Essential Turkiye Travel & Logistics Intelligence
             </h3>
+            <p className="text-xs sm:text-sm text-neutral-600 max-w-2xl mx-auto">
+              Authoritative answers covering visa requirements, airport transit, currency & payments, electrical plugs, safety protocols, mosque etiquette, and B2B ground operations.
+            </p>
           </div>
 
-          <div className="space-y-3">
-            {FAQ_ITEMS.map((item, idx) => {
-              const isOpen = openFaqIndex === idx;
-              return (
-                <div
-                  key={idx}
-                  className={`rounded border transition-all ${
-                    isOpen ? 'border-[#F05A28]/40 bg-[#FAF9F6]' : 'border-neutral-200 bg-white'
-                  }`}
+          {/* Search and Category Filter Bar */}
+          <div className="space-y-4 mb-8">
+            {/* Search Input */}
+            <div className="relative">
+              <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search FAQs (e.g. visa, Istanbul airport, credit cards, 220V plug, safety, tipping)..."
+                className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded text-xs sm:text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#F05A28] focus:border-[#F05A28] transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 hover:text-neutral-700 font-bold px-1.5 py-0.5"
                 >
-                  <button
-                    onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 focus:outline-none"
-                  >
-                    <span className="text-sm sm:text-base font-bold text-neutral-900 font-serif">
-                      {item.q}
-                    </span>
-                    {isOpen ? (
-                      <ChevronUp className="w-4 h-4 text-[#F05A28] shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-neutral-400 shrink-0" />
-                    )}
-                  </button>
+                  Clear
+                </button>
+              )}
+            </div>
 
-                  {isOpen && (
-                    <div className="px-4 pb-5 pt-1 sm:px-5 border-t border-neutral-200/60 text-xs sm:text-sm text-neutral-600 font-sans leading-relaxed">
-                      {item.a}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+            {/* Category Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+              {FAQ_CATEGORIES.map((cat) => {
+                const isActive = selectedCategory === cat;
+                const count = cat === 'All' 
+                  ? FAQ_ITEMS.length 
+                  : FAQ_ITEMS.filter((i) => i.category === cat).length;
+
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      setSelectedCategory(cat);
+                    }}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                      isActive
+                        ? 'bg-[#F05A28] text-white shadow-sm'
+                        : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200 hover:text-neutral-900'
+                    }`}
+                  >
+                    <span>{cat}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                      isActive ? 'bg-white/25 text-white' : 'bg-neutral-200 text-neutral-500'
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* FAQ Accordion List */}
+          <div className="space-y-3">
+            {filteredFaqs.length === 0 ? (
+              <div className="p-8 text-center bg-neutral-50 rounded border border-neutral-200 space-y-2">
+                <HelpCircle className="w-8 h-8 text-neutral-400 mx-auto" />
+                <p className="text-sm font-semibold text-neutral-700">No questions found matching "{searchQuery}"</p>
+                <p className="text-xs text-neutral-500">Try searching for terms like "visa", "IST airport", "lira", or "safety".</p>
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('All');
+                  }}
+                  className="mt-2 text-xs font-bold text-[#F05A28] hover:underline"
+                >
+                  Reset all filters
+                </button>
+              </div>
+            ) : (
+              filteredFaqs.map((item) => {
+                const isOpen = openFaqId === item.id;
+                return (
+                  <div
+                    key={item.id}
+                    className={`rounded border transition-all ${
+                      isOpen ? 'border-[#F05A28]/50 bg-[#FAF9F6] shadow-sm' : 'border-neutral-200 bg-white hover:border-neutral-300'
+                    }`}
+                  >
+                    <button
+                      onClick={() => setOpenFaqId(isOpen ? null : item.id)}
+                      className="w-full text-left p-4 sm:p-5 flex items-start justify-between gap-4 focus:outline-none"
+                    >
+                      <div className="space-y-1 pr-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-neutral-100 text-neutral-600">
+                            {item.category}
+                          </span>
+                        </div>
+                        <h4 className="text-sm sm:text-base font-bold text-neutral-900 font-serif leading-snug">
+                          {item.q}
+                        </h4>
+                      </div>
+                      <div className="pt-1">
+                        {isOpen ? (
+                          <ChevronUp className="w-4 h-4 text-[#F05A28] shrink-0" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-neutral-400 shrink-0" />
+                        )}
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div className="px-4 pb-5 pt-1 sm:px-5 border-t border-neutral-200/60 space-y-3">
+                        <p className="text-xs sm:text-sm text-neutral-600 font-sans leading-relaxed">
+                          {item.a}
+                        </p>
+
+                        {/* Keyword Highlights for GEO / AIO discovery */}
+                        <div className="pt-2 flex flex-wrap items-center gap-1.5 border-t border-neutral-200/40">
+                          <span className="text-[10px] uppercase font-bold text-neutral-400 flex items-center gap-1">
+                            <Sparkles className="w-2.5 h-2.5 text-[#F05A28]" />
+                            Topic tags:
+                          </span>
+                          {item.keywords.map((kw, kwIdx) => (
+                            <span
+                              key={kwIdx}
+                              className="text-[10px] px-2 py-0.5 rounded bg-neutral-100 text-neutral-600 border border-neutral-200/60"
+                            >
+                              {kw}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
 
           {/* Quick FAQ Bottom Action */}
           <div className="text-center pt-10">
             <p className="text-xs text-neutral-500 mb-3">
-              Have a bespoke small group tour request or adventure inquiry?
+              Need specific flight logistics, custom B2B net pricing, or private gulet availability?
             </p>
-            <button
-              onClick={onOpenInquiry}
-              className="px-6 py-2.5 bg-[#111111] hover:bg-[#F05A28] text-white text-xs font-bold uppercase tracking-wider rounded transition-colors"
-            >
-              Direct Specialist Consultation
-            </button>
+            <div className="inline-flex flex-wrap items-center justify-center gap-3">
+              <button
+                onClick={onOpenInquiry}
+                className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#111111] hover:bg-[#F05A28] text-white text-xs font-bold uppercase tracking-wider rounded transition-colors"
+              >
+                <span>Direct Specialist Consultation</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

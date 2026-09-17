@@ -750,28 +750,188 @@ export const PARTNERS_ACCREDITATIONS = [
   { name: 'IATA', desc: 'International Air Transport Association Certified', badge: 'Flight Ticketing Desk' }
 ];
 
-export const FAQ_ITEMS = [
+export interface FaqItem {
+  id: string;
+  category: 'Visa & Entry' | 'Airports & Transfers' | 'Currency & Payments' | 'Electricity & Tech' | 'Health & Safety' | 'Culture & Etiquette' | 'B2B & Operations';
+  q: string;
+  a: string;
+  keywords: string[];
+}
+
+export const FAQ_CATEGORIES = [
+  'All',
+  'Visa & Entry',
+  'Airports & Transfers',
+  'Currency & Payments',
+  'Electricity & Tech',
+  'Health & Safety',
+  'Culture & Etiquette',
+  'B2B & Operations'
+] as const;
+
+export const FAQ_ITEMS: FaqItem[] = [
+  // --- VISA & ENTRY REQUIREMENTS ---
   {
-    q: 'What makes Baobab DMC specialized in small group tours & adventures?',
-    a: 'Unlike mass-market tour operators with 50-passenger coaches or commercial commission stops, Baobab DMC specializes strictly in intimate small groups (typically 6–14 guests). We use luxury Mercedes VIP Sprinters, stay in authentic boutique cave hotels and restored Ottoman stone mansions, work with university-degreed archaeologist guides, and construct active hiking and cultural itineraries off the beaten path.'
+    id: 'visa-exemptions-us-uk-eu',
+    category: 'Visa & Entry',
+    q: 'Do US, UK, EU, and Canadian citizens need a visa to travel to Turkiye?',
+    a: 'Citizens of the United States, United Kingdom, Canada, European Union member states, Australia, and New Zealand do not require a tourist visa for visits up to 90 days within any 180-day period. For other nationalities, official electronic visas (e-Visa) can be secured rapidly online prior to departure through the official Republic of Türkiye portal (evisa.gov.tr).',
+    keywords: ['Turkey visa requirements 2026', 'US citizen visa Turkey', 'UK tourist visa Turkiye', 'e-Visa official Turkey', '90 day tourist rule']
   },
   {
-    q: 'Do you collaborate with international travel agencies and group leaders?',
-    a: 'Yes, the majority of our work is partnering with boutique travel advisors, group tour operators, walking and hiking clubs, and private group organizers worldwide. We provide full white-label itineraries, net B2B wholesale pricing, flexible payment terms, and 24/7 on-ground dispatch.'
+    id: 'passport-validity-turkiye',
+    category: 'Visa & Entry',
+    q: 'What are the passport validity requirements for entering Turkiye?',
+    a: 'Your passport must be valid for at least 60 days beyond the "duration of stay" of your visa, e-Visa, or visa exemption period. As a golden rule for international travelers, we recommend having at least 6 months (180 days) of remaining validity from your scheduled arrival date, along with at least one blank page for entry and exit stamps.',
+    keywords: ['passport validity Turkey', '6 months passport rule Turkiye', 'entry requirements Istanbul airport', 'customs entry rules Turkey']
   },
   {
-    q: 'Can itineraries be customized for specific hiking abilities or cultural interests?',
-    a: 'Every single program can be customized. We can adjust daily trail distances on the Lycian Way or in Cappadocia valleys, integrate private cooking workshops, arrange private hot air balloon baskets, or coordinate private wooden gulet charters to suit your travelers’ exact pace and interests.'
+    id: 'official-evisa-application',
+    category: 'Visa & Entry',
+    q: 'How and where should eligible travelers apply for an official Turkish e-Visa?',
+    a: 'Eligible nationalities should apply strictly through the official Ministry of Foreign Affairs portal at evisa.gov.tr. The digital application takes under 5 minutes to complete, requires passport details and an email address, and is issued almost instantly upon fee payment. Avoid unauthorized third-party broker websites that charge inflated processing fees.',
+    keywords: ['official e-visa Turkey website', 'evisa.gov.tr', 'apply online visa Turkey', 'Turkish visa fees']
+  },
+
+  // --- AIRPORTS & TRANSFERS ---
+  {
+    id: 'istanbul-airports-difference',
+    category: 'Airports & Transfers',
+    q: 'Which airport in Istanbul should travelers fly into: Istanbul Airport (IST) or Sabiha Gökçen (SAW)?',
+    a: 'Istanbul Airport (IST) is the primary mega-hub on the European side, hosting Turkish Airlines, United/Lufthansa alliances, British Airways, Delta partners, and major long-haul carriers. Sabiha Gökçen Airport (SAW) is located on the Asian side, primarily serving Pegasus Airlines, AJet, and regional European/Middle Eastern carriers. Both airports feature modern highway connections, private VIP chauffeur transfers, and metro lines.',
+    keywords: ['Istanbul airport IST vs SAW', 'which airport in Istanbul', 'Istanbul airport transfer', 'Sabiha Gokcen distance to Sultanahmet']
   },
   {
-    q: 'How quickly do you prepare custom tour proposals and quotes?',
-    a: 'For small group tours and bespoke adventure inquiries, our operations team delivers a detailed day-by-day itinerary proposal with transparent net pricing within 24 business hours.'
+    id: 'domestic-flights-transit',
+    category: 'Airports & Transfers',
+    q: 'How do domestic flight connections work between Istanbul, Cappadocia, and coastal regions?',
+    a: 'Turkiye has an exceptionally dense domestic aviation network operated by Turkish Airlines and AJet. Flight durations between Istanbul (IST/SAW) and Cappadocia (Nevşehir NAV or Kayseri ASR), Izmir (ADB for Ephesus), Antalya (AYT), Bodrum (BJV), and Dalaman (DLM for Lycian Coast) are all between 60 and 80 minutes with multiple daily departures. As an inbound DMC, we arrange seamless VIP airport meet-and-greets and synchronized chauffeured ground transfers.',
+    keywords: ['domestic flights in Turkey', 'Istanbul to Cappadocia flight', 'Turkish Airlines domestic hubs', 'Nevsehir vs Kayseri airport']
   },
   {
-    q: 'What are your safety standards for adventure activities and transportation?',
-    a: 'All our Mercedes Sprinter vehicles are fully insured under comprehensive passenger liability policies with professional, background-checked chauffeurs. Our adventure and trekking guides are certified in wilderness first aid, and we maintain a 24/7 dedicated dispatch team with real-time support.'
+    id: 'airport-arrival-departure-timing',
+    category: 'Airports & Transfers',
+    q: 'How early should passengers arrive at Istanbul Airport (IST) for international departures?',
+    a: 'We strongly advise arriving at Istanbul Airport (IST) at least 3 hours prior to scheduled international departures (and 2 hours for domestic flights). IST is one of the largest passenger terminals in the world with dual security screening (at building entrance and airside passport control), extensive duty-free concourses, and walking distances to departure gates.',
+    keywords: ['Istanbul airport arrival time', 'how early to arrive at IST', 'Istanbul airport security checks', 'VIP meet and greet Istanbul']
+  },
+
+  // --- CURRENCY, CARDS & MONEY ---
+  {
+    id: 'currency-payments-cards',
+    category: 'Currency & Payments',
+    q: 'What is the local currency in Turkiye, and are US Dollars, Euros, and credit cards accepted?',
+    a: 'The official currency is the Turkish Lira (TRY / ₺). Contactless credit and debit cards (Visa and Mastercard) are universally accepted across hotels, restaurants, supermarkets, and boutique shops. US Dollars and Euros are widely accepted in major tourist hubs (such as the Grand Bazaar, Cappadocia balloon operators, and luxury coastal marinas). For small purchases, street food, and tipping, having a modest amount of Turkish Lira cash is recommended.',
+    keywords: ['Turkish Lira currency', 'using credit cards in Turkey', 'are US dollars accepted in Istanbul', 'Apple Pay in Turkey', 'currency exchange Istanbul']
+  },
+  {
+    id: 'atms-and-currency-exchange',
+    category: 'Currency & Payments',
+    q: 'Where is the best place to exchange currency or withdraw cash in Turkiye?',
+    a: 'Official exchange offices ("Döviz Bürosu") located in city centers (such as Sultanahmet, Sirkeci, Grand Bazaar, and Taksim) offer transparent rates with minimal or zero commission compared to airport kiosks. Bank-operated ATMs (such as Garanti BBVA, İş Bankası, Yapı Kredi, and Akbank) are ubiquitous and support international debit cards with multi-language prompts.',
+    keywords: ['best currency exchange Istanbul', 'ATM withdrawal fees Turkey', 'Doviz Burosu rates', 'cash vs card in Turkey']
+  },
+  {
+    id: 'vat-tax-free-refunds',
+    category: 'Currency & Payments',
+    q: 'Can international tourists claim Tax-Free / VAT refunds on shopping in Turkiye?',
+    a: 'Yes. Non-resident visitors can claim a Value Added Tax (KDV) refund on eligible purchases (carpets, leather, ceramics, jewelry, clothing) made at registered "Tax Free" stores. Request a Tax Free form and invoice at the time of purchase, and present unused items along with receipts at the Tax Refund Customs Office at Istanbul Airport (IST), Sabiha Gökçen (SAW), or Izmir/Antalya airports prior to checking baggage.',
+    keywords: ['Tax Free shopping Turkey', 'VAT refund Istanbul airport', 'Global Blue Turkey', 'KDV refund rules tourists']
+  },
+
+  // --- ELECTRICITY, PLUGS & CONNECTIVITY ---
+  {
+    id: 'electricity-plug-voltage',
+    category: 'Electricity & Tech',
+    q: 'What electrical plug types and voltage are used in Turkiye?',
+    a: 'Turkiye operates on a 220–240V supply voltage and 50Hz frequency, utilizing standard European Type C (two round pins) and Type F (Schuko with side grounding clips) electrical sockets. Travelers from the US/Canada will need a standard European plug adapter. Most modern smartphones, laptops, and camera chargers are dual-voltage (100–240V auto-switching) and only require a plug adapter; 110V-only appliances (like standard US hair dryers) require a voltage converter.',
+    keywords: ['plug type Turkey', 'electricity voltage Turkey 220V', 'European adapter Istanbul', 'Type C Type F socket Turkiye']
+  },
+  {
+    id: 'esim-mobile-internet',
+    category: 'Electricity & Tech',
+    q: 'How can international travelers get high-speed mobile internet, 5G data, and eSIMs in Turkiye?',
+    a: 'Travelers can easily activate digital travel eSIMs (such as Airalo, Holafly, or Maya Mobile) prior to arrival for immediate 4G/5G data upon landing. Alternatively, physical prepaid tourist SIM cards can be purchased upon arrival at airport arrival halls from national telecom providers: Turkcell, Vodafone Turkey, and Türk Telekom. All Baobab DMC private Mercedes touring vehicles and partner boutique hotels provide complimentary high-speed Wi-Fi.',
+    keywords: ['eSIM Turkey', 'best SIM card for tourists Turkey', 'Turkcell tourist SIM', 'mobile data Istanbul Cappadocia', '5G internet Turkey']
+  },
+
+  // --- HEALTH & SAFETY ---
+  {
+    id: 'turkiye-travel-safety-overview',
+    category: 'Health & Safety',
+    q: 'Is Turkiye safe for international tourists, solo female travelers, and families?',
+    a: 'Turkiye is one of the world’s top 5 most-visited countries, welcoming over 55 million visitors annually. Tourist corridors (Istanbul, Cappadocia, Antalya, Bodrum, Izmir, Ephesus) experience safety levels on par with or safer than major Western European capitals. Violent crime against tourists is extremely rare. Dedicated Tourism Police ("Turizm Polisi") patrol historic districts, and the local hospitality culture ("Misafirperverlik") places tremendous value on protecting and welcoming guests.',
+    keywords: ['is Turkey safe to visit 2026', 'solo female travel Turkey', 'Istanbul safety for tourists', 'travel advisory Turkey safety']
+  },
+  {
+    id: 'tap-water-safety',
+    category: 'Health & Safety',
+    q: 'Is tap water safe to drink in Turkiye?',
+    a: 'Tap water in Turkish cities is chlorinated and treated to municipal health standards, making it safe for brushing teeth, showering, and cooking. However, due to mineral hardness and taste preferences, bottled spring water and filtered mineral water are universally preferred and consumed by locals and visitors alike. Bottled water is readily available and provided complimentary on all our private transfers and tours.',
+    keywords: ['can you drink tap water in Turkey', 'is tap water safe in Istanbul', 'drinking water Cappadocia', 'bottled water Turkey']
+  },
+  {
+    id: 'emergency-hotline-medical',
+    category: 'Health & Safety',
+    q: 'What is the national emergency number and what healthcare infrastructure exists in Turkiye?',
+    a: 'The unified nationwide emergency hotline in Turkiye is 112 (covering Police, Gendarmerie, Ambulance, and Fire departments with multi-lingual dispatchers). Turkiye has world-class JCI-accredited (Joint Commission International) private hospitals staffed with English-speaking specialists (such as Acıbadem, Memorial, American Hospital, and Florence Nightingale). We recommend international travel medical insurance for all overseas journeys.',
+    keywords: ['emergency number Turkey 112', 'hospitals in Istanbul for tourists', 'medical care Turkey travel', 'pharmacies in Turkey Eczane']
+  },
+
+  // --- CULTURE, DRESS CODE & ETIQUETTE ---
+  {
+    id: 'mosque-dress-code-etiquette',
+    category: 'Culture & Etiquette',
+    q: 'What is the dress code and proper etiquette for visiting mosques in Turkiye?',
+    a: 'When visiting active imperial mosques (such as Hagia Sophia, Blue Mosque, or Süleymaniye): both men and women should wear modest clothing covering shoulders and knees (no tank tops or short shorts). Women are required to cover their hair with a scarf (lightweight scarves are often available at entrances). Shoes must be removed before stepping onto prayer carpets and placed in provided shoe bags. Photography is allowed without flash; maintain quiet respect during prayer times.',
+    keywords: ['mosque dress code Turkey', 'what to wear in Blue Mosque', 'Hagia Sophia etiquette', 'headscarf rules Turkey mosques']
+  },
+  {
+    id: 'tipping-gratuity-standards',
+    category: 'Culture & Etiquette',
+    q: 'What are the tipping and gratuity customs in Turkiye?',
+    a: 'Tipping is customary and appreciated in the Turkish hospitality industry. In sit-down restaurants, 10% to 15% is standard for good service. For private licensed tour guides, €25–€50 / $30–$55 per day for a group is standard; for private professional chauffeurs, €15–€30 / $20–$35 per day. Hotel bellhops typically receive 50–100 TRY per bag, and traditional Turkish hammam attendants receive a 15–20% gratuity.',
+    keywords: ['tipping in Turkey guide', 'how much to tip tour guide Turkey', 'gratuity customs Istanbul', 'restaurant tipping Turkey']
+  },
+  {
+    id: 'traveling-during-ramadan',
+    category: 'Culture & Etiquette',
+    q: 'Can non-Muslim travelers visit Turkiye during Ramadan (Ramazan)?',
+    a: 'Yes, absolutely. Turkiye is a secular republic, and all historic sites, museums, restaurants, cafes, bars, and public transit operate entirely as normal during Ramadan. In tourist corridors and cosmopolitan areas, eating and drinking are common throughout the day. Visiting during Ramadan provides a magical cultural experience with illuminated minarets ("Mahya"), festive communal sunset fast-breaking banquets ("Iftar"), and vibrant evening street fairs.',
+    keywords: ['traveling to Turkey during Ramadan', 'is Istanbul open during Ramazan', 'visiting Turkey holiday seasons']
+  },
+
+  // --- B2B & PARTNER GROUND OPERATIONS ---
+  {
+    id: 'tursab-licensing-importance',
+    category: 'B2B & Operations',
+    q: 'What is TÜRSAB and why must tour operators use a licensed Turkish DMC?',
+    a: 'TÜRSAB (Association of Turkish Travel Agencies) is the legal governing body established under Turkish Law No. 1618. Baobab DMC operates under official Ministry of Culture and Tourism A-Grade License A-15764. Booking through a fully licensed A-Grade DMC ensures full legal compliance, commercial passenger liability insurance, verified Ministry-licensed historian guides, and protection against unauthorized fly-by-night operators.',
+    keywords: ['TURSAB license Turkey DMC', 'TURSAB A-15764', 'licensed inbound ground operator Turkey', 'legal requirements travel agency Turkey']
+  },
+  {
+    id: 'small-group-bespoke-dmc-specialty',
+    category: 'B2B & Operations',
+    q: 'What makes Baobab DMC specialized in small group tours & bespoke adventures?',
+    a: 'Unlike mass-market tour operators with 50-passenger coaches or commercial commission stops, Baobab DMC specializes strictly in intimate small groups (typically 6–14 guests) and private FIT travelers. We deploy custom VIP Mercedes Sprinters, handpick authentic boutique cave hotels and restored Ottoman stone mansions, partner with university-degreed archaeologist guides, and curate active hiking and culinary trails away from congested tourist traps.',
+    keywords: ['small group tours Turkey DMC', 'best boutique DMC Istanbul', 'private Turkey tour operator', 'Lycian Way hiking DMC']
+  },
+  {
+    id: 'b2b-white-label-collaboration',
+    category: 'B2B & Operations',
+    q: 'Do you collaborate with international travel agencies, clubs, and group leaders on a white-label basis?',
+    a: 'Yes. Over 80% of our operations involve serving international travel advisors, boutique tour brands, private walking clubs, and luxury travel networks. We provide 100% white-label documentation with your agency branding, net B2B wholesale pricing, guaranteed 24-hour turnaround on custom quotes, and 24/7 on-ground concierge dispatch throughout your guests’ journeys.',
+    keywords: ['white label DMC Turkey', 'B2B travel partner Turkey', 'net rates Turkey tour operator', 'inbound ground handler Istanbul']
+  },
+  {
+    id: 'custom-adventure-pacing',
+    category: 'B2B & Operations',
+    q: 'Can itineraries be customized for specific trekking abilities, private gulets, or culinary themes?',
+    a: 'Every single program is fully customizable. We tailor daily hiking mileage on the Lycian Way or Cappadocia trails to your group’s fitness level, secure exclusive private hot air balloon baskets, arrange private handcrafted wooden gulet charters along the Turquoise Coast, and coordinate private masterclasses with master chefs and archaeologists.',
+    keywords: ['custom Turkey itinerary builder', 'private gulet charter Gocek', 'hiking Lycian Way small group', 'exclusive Cappadocia balloon basket']
   }
 ];
+
 
 export const COMPANY_CONTACT = {
   tursabNumber: 'A-15764',

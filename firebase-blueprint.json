@@ -1,0 +1,78 @@
+{
+  "entities": {
+    "Inquiry": {
+      "title": "Tour & Proposal Inquiry",
+      "description": "Client and travel partner requests for tour proposals and B2B partnerships",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "referenceNumber": { "type": "string", "maxLength": 64 },
+        "fullName": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 60 },
+        "companyOrAgency": { "type": "string", "maxLength": 150 },
+        "country": { "type": "string", "maxLength": 80 },
+        "role": { "type": "string", "maxLength": 80 },
+        "tripType": { "type": "string", "maxLength": 100 },
+        "selectedTripTitle": { "type": "string", "maxLength": 150 },
+        "guestCount": { "type": "string", "maxLength": 40 },
+        "budgetTier": { "type": "string", "maxLength": 80 },
+        "estimatedDate": { "type": "string", "maxLength": 80 },
+        "destinations": { "type": "array", "description": "Selected destination regions in Turkey" },
+        "preferredExperiences": { "type": "array", "description": "Preferred experiences and tour activities" },
+        "specialRequests": { "type": "string", "maxLength": 2000 },
+        "formMode": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["new", "in_review", "proposal_sent", "confirmed", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["fullName", "email", "referenceNumber", "createdAt"]
+    },
+    "B2BPartner": {
+      "title": "B2B Travel Partner",
+      "description": "Registered trade travel agency or tour operator profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "agencyName": { "type": "string", "maxLength": 150 },
+        "contactPerson": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 60 },
+        "country": { "type": "string", "maxLength": 80 },
+        "iataOrLicense": { "type": "string", "maxLength": 80 },
+        "annualPax": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["pending", "verified", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["agencyName", "contactPerson", "email", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Authenticated user profile for agency members and admins",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 150 },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "role": { "type": "string", "enum": ["partner", "client", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/inquiries/{inquiryId}": {
+      "schema": "Inquiry",
+      "description": "Collection of all submitted client and B2B tour inquiries"
+    },
+    "/b2b_partners/{partnerId}": {
+      "schema": "B2BPartner",
+      "description": "Collection of B2B travel partner profiles and tariff access"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User accounts and authentication profiles"
+    }
+  }
+}

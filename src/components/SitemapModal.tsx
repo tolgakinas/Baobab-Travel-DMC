@@ -25,6 +25,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { ATLAS_TURKEY_TRIPS } from '../data/tripsData';
+import { ISTANBUL_DAY_TOURS } from '../data/dayToursData';
 import { DESTINATIONS, EXCLUSIVE_VENUES, SAMPLE_ITINERARIES, COMPANY_CONTACT } from '../data/dmcData';
 import { BLOG_POSTS, BlogPost } from '../data/blogData';
 import { AtlasTrip } from '../types';
@@ -86,6 +87,13 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
     !q || trip.title.toLowerCase().includes(q) || 
     trip.category.toLowerCase().includes(q) ||
     trip.destinations.some(d => d.toLowerCase().includes(q))
+  );
+
+  // Filtered day tours
+  const filteredDayTours = ISTANBUL_DAY_TOURS.filter(tour =>
+    !q || tour.title.toLowerCase().includes(q) ||
+    tour.category.toLowerCase().includes(q) ||
+    tour.destinations.some(d => d.toLowerCase().includes(q))
   );
 
   // Filtered destinations
@@ -166,16 +174,6 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Floating Viewport Close Button */}
-      <button
-        onClick={onClose}
-        className="fixed top-3 right-3 sm:top-5 sm:right-5 z-60 w-10 h-10 rounded-full bg-neutral-900/90 hover:bg-[#F05A28] text-white flex items-center justify-center shadow-xl border border-white/20 transition-all duration-200 hover:scale-105"
-        aria-label="Close site map (Esc)"
-        title="Close site map (Esc)"
-      >
-        <X className="w-5 h-5" />
-      </button>
-
       {/* Modal Dialog Container */}
       <div className="relative bg-[#FAF9F6] text-neutral-900 rounded-xl max-w-5xl w-full my-auto overflow-hidden shadow-2xl border border-neutral-200 z-10 flex flex-col max-h-[92vh]">
         {/* Pinned Header Bar */}
@@ -193,7 +191,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
               </span>
             </div>
             <p className="text-xs text-neutral-500">
-              Complete index of destinations, 15 curated Turkey trips, day tours, sample blueprints, venues, and B2B portals.
+              Complete index of destinations, 15 multi-day Turkey expeditions, 14 Istanbul day tours, sample blueprints, venues, and B2B portals.
             </p>
           </div>
 
@@ -243,7 +241,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
             )}
           </div>
           <span className="text-[11px] text-neutral-500 whitespace-nowrap hidden sm:inline-block">
-            {filteredTrips.length + filteredDestinations.length + filteredFrameworks.length + filteredVenues.length + filteredBlogs.length} items mapped
+            {filteredTrips.length + filteredDayTours.length + filteredDestinations.length + filteredFrameworks.length + filteredVenues.length + filteredBlogs.length} items mapped
           </span>
         </div>
 
@@ -295,7 +293,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
                 <div className="flex items-center gap-2">
                   <Route className="w-4 h-4 text-[#F05A28]" />
                   <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-900">
-                    Turkey Trips & Tours Portfolio ({filteredTrips.length})
+                    Multi-Day Turkey Trips & Expeditions ({filteredTrips.length})
                   </h3>
                 </div>
                 <span className="text-xs text-neutral-500">Click any trip to inspect full day-by-day itinerary</span>
@@ -328,7 +326,47 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
             </div>
           )}
 
-          {/* Section 3: Geographic Destinations & Operational Hubs */}
+          {/* Section 3: Istanbul Day Tours & Private Excursions */}
+          {filteredDayTours.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between pb-2 mb-4 border-b border-neutral-300">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#F05A28]" />
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-900">
+                    Istanbul Day Tours & Private Scholar Excursions ({filteredDayTours.length})
+                  </h3>
+                </div>
+                <span className="text-xs text-neutral-500">Click any day tour to inspect schedule & photo slides</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {filteredDayTours.map(tour => (
+                  <button
+                    key={tour.id}
+                    onClick={() => handleTripClick(tour)}
+                    className="p-3.5 bg-white hover:bg-orange-50/60 border border-neutral-200 hover:border-[#F05A28]/50 rounded-lg text-left transition-all group flex flex-col justify-between space-y-2 shadow-2xs hover:shadow-sm"
+                  >
+                    <div className="flex items-start justify-between gap-2 w-full">
+                      <h4 className="font-semibold text-xs text-neutral-900 group-hover:text-[#F05A28] transition-colors line-clamp-2 leading-snug">
+                        {tour.title}
+                      </h4>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 whitespace-nowrap shrink-0 border border-neutral-200">
+                        {tour.duration}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-neutral-500 pt-1 border-t border-neutral-100">
+                      <span className="truncate max-w-[170px]">{tour.groupSize || 'Private / Small Group'}</span>
+                      <span className="text-[#F05A28] font-semibold text-[10px] uppercase group-hover:underline">
+                        View Tour ›
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Section 4: Geographic Destinations & Operational Hubs */}
           {filteredDestinations.length > 0 && (
             <div>
               <div className="flex items-center justify-between pb-2 mb-4 border-b border-neutral-300">

@@ -21,6 +21,8 @@ import { AtlasTrip } from '../types';
 import { COMPANY_CONTACT } from '../data/dmcData';
 import { parseItineraryDayDetails, ItinerarySymbolsBar } from '../utils/itineraryHelper';
 import { exportItineraryToPdf } from '../utils/pdfExport';
+import { TripPhotoSlider } from './TripPhotoSlider';
+import { getTripGallery } from '../data/tripPhotosMap';
 
 interface TripDetailModalProps {
   trip: AtlasTrip | null;
@@ -84,82 +86,110 @@ export const TripDetailModal: React.FC<TripDetailModalProps> = ({
     `Hello Baobab DMC, I am an international tour operator/travel advisor inquiring about B2B wholesale partner pricing for: "${trip.title}" (${trip.duration}).`
   );
 
+  const tripGallery = getTripGallery(trip.id, trip.image);
+  const sliderImages = (trip.images && trip.images.length > 0) ? trip.images : tripGallery.images;
+  const sliderCaptions = (trip.imageCaptions && trip.imageCaptions.length > 0) ? trip.imageCaptions : tripGallery.imageCaptions;
+
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-2 sm:p-4 md:p-6 flex justify-center items-start animate-in fade-in duration-200"
       onClick={onClose}
     >
+      {/* Modal Dialog Card */}
       <div 
-        className="relative w-full max-w-4xl max-h-[92vh] bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col border border-neutral-200"
+        className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl border border-neutral-200 my-2 sm:my-6 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header Hero Image */}
-        <div className="relative h-64 sm:h-80 w-full shrink-0 overflow-hidden bg-neutral-900">
-          <img
-            src={trip.image}
-            alt={trip.title}
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20" />
-          
-          {/* Action buttons on hero: Print / PDF & Close */}
-          <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-            <button
-              onClick={handleExportPdf}
-              className="px-3 py-2 rounded-full bg-black/70 hover:bg-[#F05A28] text-white flex items-center gap-1.5 transition-colors shadow-lg text-xs font-semibold backdrop-blur-xs"
-              title="Export Itinerary as PDF / Printable Version"
-              aria-label="Export Itinerary PDF"
-            >
-              <Printer className="w-4 h-4" />
-              <span className="hidden sm:inline">Export PDF</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="w-10 h-10 rounded-full bg-black/70 hover:bg-[#F05A28] text-white flex items-center justify-center transition-colors shadow-lg backdrop-blur-xs"
-              aria-label="Close modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+        {/* Header 5-Photo Slider with Real Photos & Lightbox */}
+        <TripPhotoSlider
+          images={sliderImages}
+          captions={sliderCaptions}
+          title={trip.title}
+          aspectRatioClassName="h-64 sm:h-80 md:h-[360px]"
+          badges={
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 bg-[#F05A28] text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm">
+                {trip.category}
+              </span>
+              <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-semibold rounded-sm flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#F05A28]" />
+                {trip.duration}
+              </span>
+              <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-semibold rounded-sm flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-neutral-300" />
+                {trip.groupSize}
+              </span>
+            </div>
+          }
+          topActions={
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleExportPdf}
+                className="px-3 py-2 rounded-full bg-black/75 hover:bg-[#F05A28] text-white flex items-center gap-1.5 transition-colors shadow-lg text-xs font-semibold backdrop-blur-xs cursor-pointer"
+                title="Export Itinerary as PDF / Printable Version"
+                aria-label="Export Itinerary PDF"
+              >
+                <Printer className="w-4 h-4" />
+                <span className="hidden sm:inline">Export PDF</span>
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-10 h-10 rounded-full bg-black/75 hover:bg-[#F05A28] text-white flex items-center justify-center transition-colors shadow-lg backdrop-blur-xs cursor-pointer"
+                aria-label="Close modal"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          }
+        />
 
-          {/* Badges on hero */}
-          <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-[#F05A28] text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm">
-              {trip.category}
-            </span>
-            <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-semibold rounded-sm flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-[#F05A28]" />
-              {trip.duration}
-            </span>
-            <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-semibold rounded-sm flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-neutral-300" />
-              {trip.groupSize}
-            </span>
-          </div>
-
-          {/* Title & Destinations */}
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <h2 className="font-serif text-2xl sm:text-3xl font-semibold leading-tight mb-2 drop-shadow-md">
-              {trip.title}
-            </h2>
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-neutral-200">
-              <MapPin className="w-3.5 h-3.5 text-[#F05A28] shrink-0" />
-              <span className="font-medium">Destinations Visited:</span>
-              {trip.destinations.map((dest, i) => (
-                <span key={i} className="inline-flex items-center">
-                  <span className="bg-white/20 px-2 py-0.5 rounded text-[11px] backdrop-blur-xs font-medium">
-                    {dest}
+        {/* Sticky Title & Quick Actions Bar */}
+        <div className="sticky top-0 z-30 px-4 py-3 sm:px-6 sm:py-3.5 bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <h2 className="font-serif text-lg sm:text-2xl font-bold text-neutral-900 leading-tight">
+                {trip.title}
+              </h2>
+              <div className="flex flex-wrap items-center gap-1.5 mt-1 text-xs text-neutral-600">
+                <MapPin className="w-3.5 h-3.5 text-[#F05A28] shrink-0" />
+                <span className="font-semibold text-neutral-800">Destinations:</span>
+                {trip.destinations.map((dest, i) => (
+                  <span key={i} className="inline-flex items-center">
+                    <span className="bg-neutral-100 border border-neutral-200 text-neutral-800 px-2 py-0.5 rounded text-[11px] font-medium">
+                      {dest}
+                    </span>
+                    {i < trip.destinations.length - 1 && <span className="mx-1 text-neutral-300">•</span>}
                   </span>
-                  {i < trip.destinations.length - 1 && <span className="mx-1 opacity-60">•</span>}
-                </span>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => onRequestProposal(trip)}
+                className="px-3.5 py-2 bg-[#F05A28] hover:bg-[#D94818] text-white text-xs font-semibold rounded shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Request B2B Quote</span>
+              </button>
+              <a
+                href={`https://wa.me/${COMPANY_CONTACT.whatsappRaw}?text=${whatsappMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 border border-emerald-600/30 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded transition-colors"
+                title="Direct WhatsApp Inquiry"
+              >
+                <MessageCircle className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 text-neutral-700">
+        {/* Scrollable Content Body */}
+        <div className="p-4 sm:p-8 space-y-8 text-neutral-700">
           {/* Rate Notice Banner (Prices Removed) */}
           <div className="p-4 bg-[#FAF9F6] border border-neutral-200 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
             <div className="flex items-start gap-3">

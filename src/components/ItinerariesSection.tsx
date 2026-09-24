@@ -102,16 +102,29 @@ export const ItinerariesSection: React.FC<ItinerariesSectionProps> = ({
                 {currentItinerary.overview}
               </p>
 
-              {/* Photo Preview */}
-              <div className="relative aspect-[16/9] rounded overflow-hidden shadow-inner bg-neutral-900">
+              {/* Photo Preview - Clickable to open itinerary details */}
+              <div 
+                onClick={() => onSelectItinerary(currentItinerary)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectItinerary(currentItinerary);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open ${currentItinerary.title} details`}
+                title={`Click to view ${currentItinerary.title} details`}
+                className="relative aspect-[16/9] rounded overflow-hidden shadow-inner bg-neutral-900 cursor-pointer group/photo focus:outline-hidden focus:ring-2 focus:ring-[#F05A28]"
+              >
                 <img
                   src={currentItinerary.coverImage}
                   alt={currentItinerary.title}
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-center group-hover/photo:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-3 text-white text-xs font-semibold flex items-center gap-1.5">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-3 text-white text-xs font-semibold flex items-center gap-1.5 pointer-events-none">
                   <MapPin className="w-3.5 h-3.5 text-[#F05A28]" />
                   <span>{currentItinerary.destinations.join(' • ')}</span>
                 </div>

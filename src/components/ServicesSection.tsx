@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DMC_SERVICES } from '../data/dmcData';
 import { InteractiveTurkiyeMap } from './InteractiveTurkiyeMap';
+import { useSiteContent } from '../context/SiteContentContext';
 import { 
   Users, 
   Compass, 
@@ -172,10 +173,12 @@ const SERVICE_SPECS: Record<string, ServiceSpecs> = {
 };
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenInquiry }) => {
-  const [activeServiceId, setActiveServiceId] = useState<string>(DMC_SERVICES[0].id);
+  const { content } = useSiteContent();
+  const servicesList = content?.services && content.services.length > 0 ? content.services : DMC_SERVICES;
+  const [activeServiceId, setActiveServiceId] = useState<string>(servicesList[0]?.id || DMC_SERVICES[0].id);
   const [viewMode, setViewMode] = useState<'map' | 'blueprint'>('map');
 
-  const activeService = DMC_SERVICES.find(s => s.id === activeServiceId) || DMC_SERVICES[0];
+  const activeService = servicesList.find(s => s.id === activeServiceId) || servicesList[0] || DMC_SERVICES[0];
   const activeSpecs = SERVICE_SPECS[activeService.id] || SERVICE_SPECS['small-group-tours'];
 
   const getIcon = (iconName: string) => {
@@ -227,7 +230,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenInquiry 
           <div className="lg:col-span-5 space-y-4">
             {/* Service selector list */}
             <div className="space-y-2.5">
-              {DMC_SERVICES.map((service) => {
+              {servicesList.map((service) => {
                 const isActive = service.id === activeServiceId;
                 return (
                   <button

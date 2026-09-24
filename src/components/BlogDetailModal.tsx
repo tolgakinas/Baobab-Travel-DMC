@@ -63,16 +63,6 @@ export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Floating Viewport Close Button (always visible on top-right of screen) */}
-      <button
-        onClick={onClose}
-        className="fixed top-3 right-3 sm:top-5 sm:right-5 z-60 w-10 h-10 rounded-full bg-neutral-900/90 hover:bg-[#F05A28] text-white flex items-center justify-center shadow-xl border border-white/20 transition-all duration-200 hover:scale-105"
-        aria-label="Close article (Esc)"
-        title="Close article (Esc)"
-      >
-        <X className="w-5 h-5" />
-      </button>
-
       {/* Modal Dialog Container */}
       <div 
         className="relative bg-white text-neutral-900 rounded-xl max-w-4xl w-full my-auto overflow-hidden shadow-2xl border border-neutral-200 z-10 flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200"
@@ -115,16 +105,6 @@ export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({
               referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-            {/* Close Button on Hero */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/60 hover:bg-[#F05A28] text-white backdrop-blur-md transition-all shadow-lg border border-white/20"
-              aria-label="Close article"
-              title="Close article (Esc)"
-            >
-              <X className="w-5 h-5" />
-            </button>
 
             {/* Hero text overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white space-y-3">

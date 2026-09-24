@@ -44,6 +44,8 @@ interface FooterProps {
   onOpenSustainableTourism?: () => void;
   onOpenResponsibleTravel?: () => void;
   onOpenB2BPanel?: () => void;
+  onOpenConsultantPortal?: () => void;
+  onOpenSuperAdmin?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -56,6 +58,8 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenSustainableTourism,
   onOpenResponsibleTravel,
   onOpenB2BPanel,
+  onOpenConsultantPortal,
+  onOpenSuperAdmin,
 }) => {
   const { t } = useLanguage();
   const scrollToTop = () => {
@@ -319,6 +323,18 @@ export const Footer: React.FC<FooterProps> = ({
                   </button>
                 </li>
               )}
+              {onOpenConsultantPortal && (
+                <li>
+                  <button 
+                    onClick={onOpenConsultantPortal} 
+                    className="group hover:text-white text-emerald-400 font-semibold transition-colors flex items-center gap-2"
+                    title="Travel Advisors & Consultants Portal"
+                  >
+                    <Briefcase className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span>Travel Advisor Portal</span>
+                  </button>
+                </li>
+              )}
               {onOpenSitemap && (
                 <li className="pt-1">
                   <button 
@@ -550,6 +566,30 @@ export const Footer: React.FC<FooterProps> = ({
               <FileCode className="w-3.5 h-3.5 text-neutral-500" />
               <span>XML Sitemap</span>
             </a>
+
+            {onOpenConsultantPortal && (
+              <button
+                id="travel-consultant-footer-link"
+                onClick={onOpenConsultantPortal}
+                className="hover:text-emerald-300 text-emerald-400 hover:bg-emerald-950/50 px-2.5 py-1 rounded flex items-center gap-1.5 transition-colors text-xs font-bold border border-emerald-500/30"
+                title="Travel Advisors & Consultants Desk"
+              >
+                <Briefcase className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Advisor Login</span>
+              </button>
+            )}
+
+            {onOpenSuperAdmin && (
+              <button
+                id="super-admin-footer-link"
+                onClick={onOpenSuperAdmin}
+                className="hover:text-[#F05A28] text-neutral-400 hover:bg-neutral-800/80 px-2 py-1 rounded flex items-center gap-1.5 transition-colors text-xs font-semibold"
+                title="Super Admin Backend Control Panel"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-[#F05A28]" />
+                <span>Admin Login</span>
+              </button>
+            )}
 
             <button 
               onClick={() => onOpenInquiry()} 

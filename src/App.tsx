@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
+import { SiteContentProvider } from './context/SiteContentContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { StatsBar } from './components/StatsBar';
@@ -27,10 +28,13 @@ import { ModernSlaveryModal } from './components/ModernSlaveryModal';
 import { SustainableTourismModal } from './components/SustainableTourismModal';
 import { ResponsibleTravelModal } from './components/ResponsibleTravelModal';
 import { B2BPartnerPanel } from './components/B2BPartnerPanel';
+import { TravelConsultantPortal } from './components/TravelConsultantPortal';
+import { SuperAdminModal } from './components/admin/SuperAdminModal';
+import { QuickScrollButtons } from './components/QuickScrollButtons';
 import { Destination, SampleItinerary, VenueShowcase, InquiryFormData, AtlasTrip } from './types';
 import { DESTINATIONS, EXCLUSIVE_VENUES, COMPANY_CONTACT } from './data/dmcData';
 import { BlogPost } from './data/blogData';
-import { MessageSquare, Phone, CalendarDays, Video } from 'lucide-react';
+import { MessageSquare, Phone, CalendarDays, Video, ShieldCheck } from 'lucide-react';
 
 export default function App() {
   // Modal states
@@ -48,6 +52,20 @@ export default function App() {
   const [sustainableTourismModalOpen, setSustainableTourismModalOpen] = useState<boolean>(false);
   const [responsibleTravelModalOpen, setResponsibleTravelModalOpen] = useState<boolean>(false);
   const [b2bPanelOpen, setB2bPanelOpen] = useState<boolean>(false);
+  const [consultantPortalOpen, setConsultantPortalOpen] = useState<boolean>(false);
+  const [superAdminModalOpen, setSuperAdminModalOpen] = useState<boolean>(false);
+
+  // Global keyboard shortcut to open Super Admin panel (Ctrl+Shift+A or Cmd+Shift+A)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        setSuperAdminModalOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Smooth scroll helper
   const scrollToSection = (sectionId: string) => {
@@ -131,15 +149,16 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <LanguageProvider>
-        <div className="min-h-screen flex flex-col bg-[#FAF9F6] text-[#1A1A1A] font-sans antialiased">
-        {/* Fixed Navigation */}
-        <Navbar
-          onNavigate={scrollToSection}
-          onOpenInquiry={handleOpenInquiry}
-          onOpenCalendly={handleOpenCalendly}
-          onOpenB2BPanel={() => setB2bPanelOpen(true)}
-        />
+      <SiteContentProvider>
+        <LanguageProvider>
+          <div className="min-h-screen flex flex-col bg-[#FAF9F6] text-[#1A1A1A] font-sans antialiased">
+          {/* Fixed Navigation */}
+          <Navbar
+            onNavigate={scrollToSection}
+            onOpenInquiry={handleOpenInquiry}
+            onOpenCalendly={handleOpenCalendly}
+            onOpenB2BPanel={() => setB2bPanelOpen(true)}
+          />
 
       {/* Hero Section */}
       <Hero
@@ -163,7 +182,7 @@ export default function App() {
         onOpenInquiry={handleOpenInquiry}
       />
 
-      {/* All Turkey Guided Trips Portfolio (from Atlas Global Tours) */}
+      {/* All Turkey Guided Trips Portfolio */}
       <AtlasTripsSection
         onSelectTrip={setSelectedAtlasTrip}
         onRequestProposal={handleRequestProposalForAtlasTrip}
@@ -224,6 +243,8 @@ export default function App() {
         onOpenModernSlavery={() => setModernSlaveryModalOpen(true)}
         onOpenSustainableTourism={() => setSustainableTourismModalOpen(true)}
         onOpenResponsibleTravel={() => setResponsibleTravelModalOpen(true)}
+        onOpenConsultantPortal={() => setConsultantPortalOpen(true)}
+        onOpenSuperAdmin={() => setSuperAdminModalOpen(true)}
       />
 
       {/* Mobile Quick Action Sticky Bar */}
@@ -263,6 +284,9 @@ export default function App() {
           <span>Inquire</span>
         </button>
       </div>
+
+      {/* Quick Scroll Down & Up Navigation (Transparent) */}
+      <QuickScrollButtons />
 
       {/* Modals */}
       <TripDetailModal
@@ -355,8 +379,22 @@ export default function App() {
         onOpenInquiry={handleOpenInquiry}
         onOpenCalendly={handleOpenCalendly}
       />
+
+      {/* Travel Consultants & Luxury Advisors Portal (-25% Net Tariff) */}
+      <TravelConsultantPortal
+        isOpen={consultantPortalOpen}
+        onClose={() => setConsultantPortalOpen(false)}
+        onOpenCalendly={handleOpenCalendly}
+      />
+
+      {/* Super Admin Control Panel Modal */}
+      <SuperAdminModal
+        isOpen={superAdminModalOpen}
+        onClose={() => setSuperAdminModalOpen(false)}
+      />
       </div>
     </LanguageProvider>
-  </AuthProvider>
+  </SiteContentProvider>
+</AuthProvider>
   );
 }

@@ -12,6 +12,7 @@ import {
   Printer
 } from 'lucide-react';
 import { exportSampleItineraryToPdf } from '../utils/pdfExport';
+import { TripPhotoSlider } from './TripPhotoSlider';
 
 interface ItineraryModalProps {
   itinerary: SampleItinerary | null;
@@ -26,66 +27,104 @@ export const ItineraryModal: React.FC<ItineraryModalProps> = ({
 }) => {
   if (!itinerary) return null;
 
+  const sliderImages = itinerary.images && itinerary.images.length > 0
+    ? itinerary.images
+    : [
+        itinerary.coverImage,
+        'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80'
+      ];
+
+  const sliderCaptions = itinerary.imageCaptions && itinerary.imageCaptions.length > 0
+    ? itinerary.imageCaptions
+    : [
+        `${itinerary.title} - Main overview`,
+        'Imperial architecture & historic heritage',
+        'Spectacular panoramic landscapes of Turkey',
+        'Ancient Mediterranean and Classical archaeological monuments',
+        'Scenic coastal waters and picturesque harbors'
+      ];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
-
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-2 sm:p-4 md:p-6 flex justify-center items-start animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       {/* Modal Card */}
-      <div className="relative bg-white w-full max-w-4xl rounded-md shadow-2xl overflow-hidden z-10 my-8 animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
-        {/* Top Banner with Image */}
-        <div className="relative aspect-[21/9] sm:aspect-[24/8] w-full bg-neutral-900 shrink-0">
-          <img
-            src={itinerary.coverImage}
-            alt={itinerary.title}
-            className="w-full h-full object-cover object-center"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-          {/* Top Actions: Print / PDF & Close */}
-          <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-            <button
-              onClick={() => exportSampleItineraryToPdf(itinerary)}
-              className="px-3 py-1.5 rounded-full bg-black/60 hover:bg-[#F05A28] text-white flex items-center gap-1.5 transition-colors text-xs font-semibold backdrop-blur-xs"
-              title="Export itinerary as printable PDF"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">PDF Out</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-full bg-black/60 hover:bg-black text-white transition-colors"
-              aria-label="Close modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="absolute bottom-4 left-6 right-6">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 bg-[#F05A28] text-white text-[11px] font-bold uppercase tracking-wider rounded-sm">
+      <div 
+        className="relative bg-white w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden z-10 my-2 sm:my-6 border border-neutral-200 animate-in fade-in zoom-in-95 duration-200 flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Top 5-Photo Slider */}
+        <TripPhotoSlider
+          images={sliderImages}
+          captions={sliderCaptions}
+          title={itinerary.title}
+          aspectRatioClassName="h-64 sm:h-80 md:h-[340px]"
+          badges={
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-1 bg-[#F05A28] text-white text-[11px] font-bold uppercase tracking-wider rounded-sm shadow-sm">
                 {itinerary.category}
               </span>
-              <span className="text-xs text-neutral-300 font-mono">
+              <span className="px-2.5 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-mono rounded-sm">
                 {itinerary.duration}
               </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+          }
+          topActions={
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => exportSampleItineraryToPdf(itinerary)}
+                className="px-3 py-1.5 rounded-full bg-black/75 hover:bg-[#F05A28] text-white flex items-center gap-1.5 transition-colors text-xs font-semibold backdrop-blur-xs cursor-pointer shadow-md"
+                title="Export itinerary as printable PDF"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">PDF Out</span>
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-2 rounded-full bg-black/75 hover:bg-[#F05A28] text-white transition-colors cursor-pointer shadow-md"
+                aria-label="Close modal"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          }
+        />
+
+        {/* Sticky Title Bar */}
+        <div className="sticky top-0 z-30 px-6 py-3.5 bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-xs flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 tracking-tight truncate">
               {itinerary.title}
             </h2>
-            <div className="text-xs sm:text-sm text-neutral-200 mt-0.5 flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5 text-[#F05A28]" />
-              <span>{itinerary.destinations.join(' • ')}</span>
+            <div className="text-xs sm:text-sm text-neutral-600 mt-0.5 flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 text-[#F05A28] shrink-0" />
+              <span className="font-medium truncate">{itinerary.destinations.join(' • ')}</span>
             </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onCustomize(itinerary);
+              }}
+              className="px-3.5 py-1.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold rounded transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <span>Customize</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-neutral-800">
+        {/* Scrollable Content Body */}
+        <div className="p-6 sm:p-8 space-y-6 text-neutral-800">
           <div className="space-y-2">
             <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-400">
               Program Executive Summary

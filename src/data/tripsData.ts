@@ -1,5 +1,6 @@
 import { AtlasTrip } from "../types";
 import { ISTANBUL_DAY_TOURS } from "./dayToursData";
+import { TRIP_PHOTOS_REGISTRY, getTripGallery } from "./tripPhotosMap";
 
 export { ISTANBUL_DAY_TOURS };
 
@@ -107,7 +108,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Kars & Ani | The Lost City of Ani",
       "Kars to Erzurum by Train"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/turkiye-by-rail/"
+    "originalUrl": ""
   },
   {
     "id": "trip-9467",
@@ -116,7 +117,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
     "slug": "sunrise-walking-tour-of-istanbul-with-traditional-breakfast",
     "category": "City Break & Walking Tour",
     "duration": "6 Hours",
-    "daysCount": 6,
+    "daysCount": 1,
     "groupSize": "2–10 Guests (Small Group)",
     "image": "https://atlasglobaltours.com/wp-content/uploads/2026/08/sultan-ahmet-camii-the-blue-mosque-at-sunset-is-2026-03-13-01-58-11-utc-scaled.jpg",
     "destinations": [
@@ -155,7 +156,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Historic Hippodrome and Blue Mosque views",
       "Artisan alleys and historic courtyard exploration"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/sunrise-walking-tour-of-istanbul-with-traditional-breakfast/"
+    "originalUrl": ""
   },
   {
     "id": "trip-9160",
@@ -225,7 +226,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Love Valley Hike ( 8 - 10 km )",
       "Ihlara Valley Nature & River Hike ( 12 - 14 km )"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/cappadocia-hiking-adventure/"
+    "originalUrl": ""
   },
   {
     "id": "trip-9137",
@@ -365,7 +366,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Legendary Troy & Famous Turkish Cheese Taste",
       "Ancient Ephesus & Cooking Class"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/immersive-all-turkiye-culinary-cultural-tour/"
+    "originalUrl": ""
   },
   {
     "id": "trip-9134",
@@ -386,7 +387,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Gallipoli",
       "Troy"
     ],
-    "description": "Trace the legendary stories of Western Turkey as ancient history , natural wonders, and delicious cuisine of course ... We don’t just show you destinations – we let you taste them. At Atlas Global Tours, history and food come together to create memories that last a lifetime. Welcome to More than 1000 years capital Constantinople today's Istanbul , visit Topkapi palace and Blue mosque. Begin on the windswept cliffs of  Gallipoli , where the Aegean Sea meets a powerful legacy. Walk through memorials and quiet cemeteries, reflecting on the courage and sacrifice of the ANZAC soldiers. Journey to the myth-laden ruins of  Troy , where archaeologists unearthed layers of civilizations and where the legendary Trojan War is said to have taken place. Stand where myths met reality and imagine the echo of ancient footsteps. Visit Ephesus Capital of Roman Asia Minor. Next, soak in the surreal beauty of  Pamukkale . Walk barefoot along warm, white travertine terraces filled with mineral-rich pools, and explore  Hierapolis , an ancient city built above a thermal spring.",
+    "description": "Trace the legendary stories of Western Turkey as ancient history , natural wonders, and delicious cuisine of course ... We don’t just show you destinations – we let you taste them. On our signature tours, history and food come together to create memories that last a lifetime. Welcome to More than 1000 years capital Constantinople today's Istanbul , visit Topkapi palace and Blue mosque. Begin on the windswept cliffs of  Gallipoli , where the Aegean Sea meets a powerful legacy. Walk through memorials and quiet cemeteries, reflecting on the courage and sacrifice of the ANZAC soldiers. Journey to the myth-laden ruins of  Troy , where archaeologists unearthed layers of civilizations and where the legendary Trojan War is said to have taken place. Stand where myths met reality and imagine the echo of ancient footsteps. Visit Ephesus Capital of Roman Asia Minor. Next, soak in the surreal beauty of  Pamukkale . Walk barefoot along warm, white travertine terraces filled with mineral-rich pools, and explore  Hierapolis , an ancient city built above a thermal spring.",
     "itinerary": [
       {
         "dayNumber": 1,
@@ -421,7 +422,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       {
         "dayNumber": 7,
         "title": "Flight Back to Istanbul & Tour ends",
-        "description": "Today we fly back to Istanbul in the morning and tour ends at the airport As you embark on your journey home, may the memories you're gathered during our trip stay with you like treasures in your heart. Our team will ensure you have all the details for your onward journey, whether you're heading to the airport or continuing your travels.  Safe travels and thank you for joining us on this incredible adventure ! Farewell and Best wishes for your future adventures! We wish to see you again in another great Atlas Global Tours."
+        "description": "Today we fly back to Istanbul in the morning and tour ends at the airport As you embark on your journey home, may the memories you're gathered during our trip stay with you like treasures in your heart. Our team will ensure you have all the details for your onward journey, whether you're heading to the airport or continuing your travels.  Safe travels and thank you for joining us on this incredible adventure ! Farewell and Best wishes for your future adventures! We look forward to welcoming you again on your next journey with us."
       }
     ],
     "includes": [
@@ -444,7 +445,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Legendary Troy & Famous Turkish Cheese Taste",
       "Ancient Ephesus & Cooking Class"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/immersive-aegean-turkiye-culinary-cultural-tour/"
+    "originalUrl": ""
   },
   {
     "id": "trip-9078",
@@ -490,7 +491,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       {
         "dayNumber": 6,
         "title": "Departure",
-        "description": "As you embark on your journey home, may the memories you're gathered during our trip stay with you like treasures in your heart. Our team will ensure you have all the details for your onward journey, whether you're heading to the airport or continuing your travels.  Safe travels and thank you for joining us on this incredible adventure ! Farewell and Best wishes for your future adventures! We wish to see you again in another great Atlas Global Tours."
+        "description": "As you embark on your journey home, may the memories you're gathered during our trip stay with you like treasures in your heart. Our team will ensure you have all the details for your onward journey, whether you're heading to the airport or continuing your travels.  Safe travels and thank you for joining us on this incredible adventure ! Farewell and Best wishes for your future adventures! We look forward to welcoming you again on your next journey with us."
       }
     ],
     "includes": [
@@ -516,7 +517,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Princes’ Islands Escape & Biking Adventure",
       "Bosphorus Sea Kayaking: Between Two Continents"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/6-day-istanbul-adventure-culture-nature-sea/"
+    "originalUrl": ""
   },
   {
     "id": "trip-7717",
@@ -539,7 +540,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Troy",
       "Konya"
     ],
-    "description": "Trace the legendary stories of Western and Central Turkey as ancient history , natural wonders, and delicious cuisine of course ... We don’t just show you destinations – we let you taste them. At Atlas Global Tours, history and food come together to create memories that last a lifetime. Welcome to More than 1000 years capital Constantinople today's Istanbul , visit Topkapi palace and Blue mosque. Begin on the windswept cliffs of  Gallipoli , where the Aegean Sea meets a powerful legacy. Walk through memorials and quiet cemeteries, reflecting on the courage and sacrifice of the ANZAC soldiers. Journey to the myth-laden ruins of  Troy , where archaeologists unearthed layers of civilizations and where the legendary Trojan War is said to have taken place. Stand where myths met reality and imagine the echo of ancient footsteps. Visit Ephesus Capital of Roman Asia Minor. Next, soak in the surreal beauty of  Pamukkale . Walk barefoot along warm, white travertine terraces filled with mineral-rich pools, and explore  Hierapolis , an ancient city built above a thermal spring. Stay 2 nights in Antalya , often called the “Turkish Dubrovnik” thanks to its charming old town, dramatic coastline, and Mediterranean atmosphere. Cross into the heart of Anatolia and arrive in mystical  Konya , home of the Whirling Dervishes. Discover the teachings of Rumi as you explore this spiritual and soulful city. Your adventure reaches its grand finale in  Cappadocia , a fairytale landscape of volcanic valleys and cave-carved homes. At sunrise, take to the sky in a  hot-air balloon , drifting over chimneys of stone and endless horizons—a once-in-a-lifetime moment.",
+    "description": "Trace the legendary stories of Western and Central Turkey as ancient history , natural wonders, and delicious cuisine of course ... We don’t just show you destinations – we let you taste them. On our signature tours, history and food come together to create memories that last a lifetime. Welcome to More than 1000 years capital Constantinople today's Istanbul , visit Topkapi palace and Blue mosque. Begin on the windswept cliffs of  Gallipoli , where the Aegean Sea meets a powerful legacy. Walk through memorials and quiet cemeteries, reflecting on the courage and sacrifice of the ANZAC soldiers. Journey to the myth-laden ruins of  Troy , where archaeologists unearthed layers of civilizations and where the legendary Trojan War is said to have taken place. Stand where myths met reality and imagine the echo of ancient footsteps. Visit Ephesus Capital of Roman Asia Minor. Next, soak in the surreal beauty of  Pamukkale . Walk barefoot along warm, white travertine terraces filled with mineral-rich pools, and explore  Hierapolis , an ancient city built above a thermal spring. Stay 2 nights in Antalya , often called the “Turkish Dubrovnik” thanks to its charming old town, dramatic coastline, and Mediterranean atmosphere. Cross into the heart of Anatolia and arrive in mystical  Konya , home of the Whirling Dervishes. Discover the teachings of Rumi as you explore this spiritual and soulful city. Your adventure reaches its grand finale in  Cappadocia , a fairytale landscape of volcanic valleys and cave-carved homes. At sunrise, take to the sky in a  hot-air balloon , drifting over chimneys of stone and endless horizons—a once-in-a-lifetime moment.",
     "itinerary": [
       {
         "dayNumber": 1,
@@ -589,7 +590,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       {
         "dayNumber": 10,
         "title": "Flight Back to Istanbul & Tour ends",
-        "description": "Today we fly back to Istanbul in the morning and tour ends at the airport As you embark on your journey home, may the memories you're gathered during our trip stay with you like treasures in your heart. Farewell and Best wishes for your future adventures! We wish to see you again in another great Atlas Global Tours."
+        "description": "Today we fly back to Istanbul in the morning and tour ends at the airport As you embark on your journey home, may the memories you're gathered during our trip stay with you like treasures in your heart. Farewell and Best wishes for your future adventures! We look forward to welcoming you again on your next journey with us."
       }
     ],
     "includes": [
@@ -612,7 +613,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Legendary Troy & Famous Turkish Cheese Taste",
       "Ancient Ephesus & Cooking Class"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/immersive-western-turkiye-tour-gallipoli-dalyan-aphrodisias/"
+    "originalUrl": ""
   },
   {
     "id": "trip-7540",
@@ -697,7 +698,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Kas - Mountain Biking in Kas – Rugged, Real, and Wildly Beautiful",
       "Kas Famous Diving Experience – Discover the Underwater World"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/hike-bike-kayak-in-kas-turkey/"
+    "originalUrl": ""
   },
   {
     "id": "trip-7534",
@@ -727,7 +728,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       {
         "dayNumber": 3,
         "title": "ISTANBUL - Dolmabahce Palace & Modern Istanbul",
-        "description": "This Morning we will visit Dolmabahce Palace – A breathtaking 19th-century palace with stunning interiors. Arrive early to beat the crowds.  We head to Istiklal Street & Galata Tower – Walk down Istiklal Street, shop, and visit the historic Galata Tower for panoramic city views. Taksim Square is a lively area with modern shops and restaurants.   Today is the last day of our trip. We hope you enjoyed being with us.  hope to see you again in other destinations.  Atlas Global LLC."
+        "description": "This Morning we will visit Dolmabahce Palace – A breathtaking 19th-century palace with stunning interiors. Arrive early to beat the crowds.  We head to Istiklal Street & Galata Tower – Walk down Istiklal Street, shop, and visit the historic Galata Tower for panoramic city views. Taksim Square is a lively area with modern shops and restaurants.   Today is the last day of our trip. We hope you enjoyed being with us and we hope to see you again in other destinations. Safe travels and warm regards from our team."
       }
     ],
     "includes": [
@@ -745,7 +746,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "ISTANBUL - Bosphorus Boat Trip & Balat District",
       "ISTANBUL - Dolmabahce Palace & Modern Istanbul"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/istanbul-short-break-tour/"
+    "originalUrl": ""
   },
   {
     "id": "trip-7531",
@@ -771,7 +772,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Troy",
       "Konya"
     ],
-    "description": "Welcome to Turkey. We are very happy to see you here. This tour combines eastern and western Highlights. Ancient history, natural wonders, and delicious cuisines ... We don’t just show you destinations – we let you taste them. At Atlas Global Tours, history and food come together to create memories that last a lifetime. Begin in Istanbul, where iconic landmarks such as Topkapi Palace, Blue Mosque, and the vibrant Grand Bazaar showcase the city’s rich history and dynamic culture. Continue to the moving battlefields of Gallipoli and the legendary ancient city of Troy. Discover the remarkably preserved ruins of Ephesus, then marvel at the dazzling white terraces of Pamukkale. Relax along the Mediterranean coast in Antalya before heading inland to explore the unique landscapes of Cappadocia. Your journey continues in Gaziantep, a culinary capital rich in culture and history. Visit the extraordinary Gobeklitepe, the world’s oldest known temple, along with its sister site Karahantepe—both offering a fascinating glimpse into early human civilization and increasingly gaining global recognition. Step further back in time as you explore these ancient settlements, then journey to Mount Nemrut for an unforgettable experience. Enjoy a rewarding hike to witness the colossal statues of the Commagene Kingdom and take in one of the most breathtaking sunset views in the region. This carefully curated journey offers the perfect blend of history, nature, and culture—an experience you will cherish long after your travels end.",
+    "description": "Welcome to Turkey. We are very happy to see you here. This tour combines eastern and western Highlights. Ancient history, natural wonders, and delicious cuisines ... We don’t just show you destinations – we let you taste them. On our signature tours, history and food come together to create memories that last a lifetime. Begin in Istanbul, where iconic landmarks such as Topkapi Palace, Blue Mosque, and the vibrant Grand Bazaar showcase the city’s rich history and dynamic culture. Continue to the moving battlefields of Gallipoli and the legendary ancient city of Troy. Discover the remarkably preserved ruins of Ephesus, then marvel at the dazzling white terraces of Pamukkale. Relax along the Mediterranean coast in Antalya before heading inland to explore the unique landscapes of Cappadocia. Your journey continues in Gaziantep, a culinary capital rich in culture and history. Visit the extraordinary Gobeklitepe, the world’s oldest known temple, along with its sister site Karahantepe—both offering a fascinating glimpse into early human civilization and increasingly gaining global recognition. Step further back in time as you explore these ancient settlements, then journey to Mount Nemrut for an unforgettable experience. Enjoy a rewarding hike to witness the colossal statues of the Commagene Kingdom and take in one of the most breathtaking sunset views in the region. This carefully curated journey offers the perfect blend of history, nature, and culture—an experience you will cherish long after your travels end.",
     "itinerary": [
       {
         "dayNumber": 1,
@@ -841,7 +842,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       {
         "dayNumber": 14,
         "title": "Fly Back to Istanbul & Tour Ends",
-        "description": "This morning, bid farewell to the enchanting landscapes and timeless heritage of Eastern Turkey as you fly back to Istanbul , where your unforgettable journey began. Upon arrival in Istanbul , your tour comes to an end — but the memories of majestic palaces, mystical ruins, sacred sites, and the vibrant spirit of Anatolia will stay with you long after you return home. Safe travels and may your path ahead be as enriching and joyful as your time here. Until we meet again, cherish the moments and carry a piece of Turkey's spirit with you wherever you go. Farewell and best wishes for your future adventures! Atlas Global Tours LLC"
+        "description": "This morning, bid farewell to the enchanting landscapes and timeless heritage of Eastern Turkey as you fly back to Istanbul , where your unforgettable journey began. Upon arrival in Istanbul , your tour comes to an end — but the memories of majestic palaces, mystical ruins, sacred sites, and the vibrant spirit of Anatolia will stay with you long after you return home. Safe travels and may your path ahead be as enriching and joyful as your time here. Until we meet again, cherish the moments and carry a piece of Turkey's spirit with you wherever you go. Farewell and best wishes for your future adventures!"
       }
     ],
     "includes": [
@@ -869,7 +870,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Legendary Troy & Famous Turkish Cheese Taste",
       "Ancient Ephesus & Cooking Class"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/immersive-eastern-western-turkey/"
+    "originalUrl": ""
   },
   {
     "id": "trip-7530",
@@ -943,7 +944,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Thyatira & Sardis – Tracing Ancient Civilizations",
       "Philadelphia & Laodicea – Echoes of Early Christianity"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/seven-churches-turkey/"
+    "originalUrl": ""
   },
   {
     "id": "trip-7525",
@@ -1019,7 +1020,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Faralya to Kabak Hike ( 12 km)",
       "Kabak to Alinca ( Sarnic ) (12 km)"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/lycian-way-hike-in-turkey/"
+    "originalUrl": ""
   },
   {
     "id": "trip-2956",
@@ -1039,7 +1040,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Sanliurfa",
       "Mount Nemrut"
     ],
-    "description": "Eastern Turkey is a land where history whispers through ancient stones, and every horizon reveals a story etched by time. This captivating region blends delicious cuisine, cultures, empires, and breathtaking natural beauty — a place where every destination leaves a lasting impression. We don't just show you destinations. we let you taste them. At Atlas global Tours, History and food come together to create memories that last a lifetime. Your journey Starts in Istanbul with Topkapi palace , blue mosque and delicious ottoman cuisine. Continues in Gaziantep, a culinary capital rich in culture and history. Visit the extraordinary Gobeklitepe, the world’s oldest known temple, Continue to Capital of Mezopotamia. Visit Mardin, Van & Kars city. Step further back in time as you explore these ancient settlements, then journey to Mount Nemrut for an unforgettable experience. Enjoy a rewarding hike to witness the colossal statues of the Commagene Kingdom and take in one of the most breathtaking sunset views in the region. Mardin is the hidden gem of messopotamia. Amazing meals and great history blends here. Van Lake and Akdamar church , old Armenian Capital waits you... This carefully curated journey offers the perfect blend of history, nature, and culture—an experience you will cherish long after your travels end.",
+    "description": "Eastern Turkey is a land where history whispers through ancient stones, and every horizon reveals a story etched by time. This captivating region blends delicious cuisine, cultures, empires, and breathtaking natural beauty — a place where every destination leaves a lasting impression. We don't just show you destinations. we let you taste them. On our signature tours, history and food come together to create memories that last a lifetime. Your journey Starts in Istanbul with Topkapi palace , blue mosque and delicious ottoman cuisine. Continues in Gaziantep, a culinary capital rich in culture and history. Visit the extraordinary Gobeklitepe, the world’s oldest known temple, Continue to Capital of Mezopotamia. Visit Mardin, Van & Kars city. Step further back in time as you explore these ancient settlements, then journey to Mount Nemrut for an unforgettable experience. Enjoy a rewarding hike to witness the colossal statues of the Commagene Kingdom and take in one of the most breathtaking sunset views in the region. Mardin is the hidden gem of messopotamia. Amazing meals and great history blends here. Van Lake and Akdamar church , old Armenian Capital waits you... This carefully curated journey offers the perfect blend of history, nature, and culture—an experience you will cherish long after your travels end.",
     "itinerary": [
       {
         "dayNumber": 1,
@@ -1112,7 +1113,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Adiyaman & Local Family Lunch",
       "Gobeklitepe Temple & Traditional Sira Gecesi Activity"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/immersive-eastern-turkiye/"
+    "originalUrl": ""
   },
   {
     "id": "trip-2954",
@@ -1132,7 +1133,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Bodrum",
       "Ani"
     ],
-    "description": "Straddling two continents, with one foot in Europe and the other in Asia, Turkey has been the meeting point of civilizations for thousands of years. From mighty empires to remarkable archaeological treasures, its extraordinary heritage is unlike anywhere else in the world. With  Atlas Global Tours , this rich history comes alive. Accompanied by our knowledgeable local experts, journey from the imperial splendor of Istanbul to the timeless ruins of Ephesus, the surreal landscapes of Cappadocia, and beyond. Along the way, uncover fascinating stories, experience authentic traditions, and gain a deeper appreciation of Turkey's remarkable cultural legacy. Every aspect of your journey has been thoughtfully curated with your comfort in mind. We have carefully selected elegant hotels, exceptional restaurants, experienced professional guides, and first-class domestic flights to ensure a seamless and luxurious travel experience. From the moment you arrive until your departure, every detail is designed to provide effortless comfort, authentic experiences, and impeccable service. Because at Atlas Global Tours , you are more than our guest, you are at the heart of everything we do.",
+    "description": "Straddling two continents, with one foot in Europe and the other in Asia, Turkey has been the meeting point of civilizations for thousands of years. From mighty empires to remarkable archaeological treasures, its extraordinary heritage is unlike anywhere else in the world. With our expertly guided journeys, this rich history comes alive. Accompanied by our knowledgeable local experts, journey from the imperial splendor of Istanbul to the timeless ruins of Ephesus, the surreal landscapes of Cappadocia, and beyond. Along the way, uncover fascinating stories, experience authentic traditions, and gain a deeper appreciation of Turkey's remarkable cultural legacy. Every aspect of your journey has been thoughtfully curated with your comfort in mind. We have carefully selected elegant hotels, exceptional restaurants, experienced professional guides, and first-class domestic flights to ensure a seamless and luxurious travel experience. From the moment you arrive until your departure, every detail is designed to provide effortless comfort, authentic experiences, and impeccable service. Because on our journeys, you are more than a guest — you are at the heart of everything we do.",
     "itinerary": [
       {
         "dayNumber": 1,
@@ -1182,7 +1183,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       {
         "dayNumber": 10,
         "title": "Istanbul / Departure",
-        "description": "Enjoy a private VIP transfer to Istanbul Airport for your onward flight. As your unforgettable journey through Turkey comes to an end, we thank you for choosing Atlas Global Tours. We hope the memories of its rich history, spectacular landscapes, exceptional cuisine, and warm hospitality will stay with you for years to come. Meals: Breakfast"
+        "description": "Enjoy a private VIP transfer to Istanbul Airport for your onward flight. As your unforgettable journey through Turkey comes to an end, we thank you for choosing our signature journeys. We hope the memories of its rich history, spectacular landscapes, exceptional cuisine, and warm hospitality will stay with you for years to come. Meals: Breakfast"
       }
     ],
     "includes": [
@@ -1209,7 +1210,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Bodrum - From Imperial Splendor to Aegean Serenity",
       "Bodrum - Premier Ephesus / Vineyard & Wellness Experience"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/immersive-western-turkiye/"
+    "originalUrl": ""
   },
   {
     "id": "trip-2951",
@@ -1227,7 +1228,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Sanliurfa",
       "Mount Nemrut"
     ],
-    "description": "Experience the timeless beauty and cultural depth of Turkey on this unforgettable 5-day journey . Ancient history, natural wonders, and delicious cuisines ... We don’t just show you destinations – we let you taste them. At Atlas Global Tours, history and food come together to create memories that last a lifetime. Begin your adventure in Istanbul , where East meets West, and explore the city’s most iconic landmarks — the majestic Topkapi Palace , the awe-inspiring Blue Mosque and the vibrant Grand Bazaar . Continue to Gaziantep famous with Baklava and kebabs, Sanliurfa , the cradle of civilization, to uncover the mysteries of the ancient world at Gobeklitepe — the world’s oldest known temple. Immerse yourself in history at the Sanliurfa Archaeological Museum and the Haleplibahce Mosaic Museum , home to exquisite Roman-era artworks. Your journey concludes with an ascent to Mount Nemrut , a UNESCO World Heritage Site, where colossal stone statues stand guard over the tomb of King Antiochus I . Witness one of the most spectacular sunsets in Turkey , a perfect finale to a tour that blends history, adventure, and breathtaking landscapes .",
+    "description": "Experience the timeless beauty and cultural depth of Turkey on this unforgettable 5-day journey . Ancient history, natural wonders, and delicious cuisines ... We don’t just show you destinations – we let you taste them. On our signature tours, history and food come together to create memories that last a lifetime. Begin your adventure in Istanbul , where East meets West, and explore the city’s most iconic landmarks — the majestic Topkapi Palace , the awe-inspiring Blue Mosque and the vibrant Grand Bazaar . Continue to Gaziantep famous with Baklava and kebabs, Sanliurfa , the cradle of civilization, to uncover the mysteries of the ancient world at Gobeklitepe — the world’s oldest known temple. Immerse yourself in history at the Sanliurfa Archaeological Museum and the Haleplibahce Mosaic Museum , home to exquisite Roman-era artworks. Your journey concludes with an ascent to Mount Nemrut , a UNESCO World Heritage Site, where colossal stone statues stand guard over the tomb of King Antiochus I . Witness one of the most spectacular sunsets in Turkey , a perfect finale to a tour that blends history, adventure, and breathtaking landscapes .",
     "itinerary": [
       {
         "dayNumber": 1,
@@ -1257,7 +1258,7 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       {
         "dayNumber": 6,
         "title": "Return Flight & The Tour Ends",
-        "description": "Today marks the final day of your journey. After breakfast, we’ll transfer you to  sanliurfa Airport  for your  domestic flight back to Istanbul . We aim to secure the  earliest available flight , but if morning flights are fully booked, you will be scheduled on the  next available afternoon departure . Thank you for visiting  Turkey  and for choosing to travel with  Atlas Global Tours LLC . It has been our pleasure to host you, and we hope to welcome you again on another unforgettable adventure in the future. Tour ends in the airport"
+        "description": "Today marks the final day of your journey. After breakfast, we’ll transfer you to  sanliurfa Airport  for your  domestic flight back to Istanbul . We aim to secure the  earliest available flight , but if morning flights are fully booked, you will be scheduled on the  next available afternoon departure . Thank you for visiting  Turkey  and for choosing to travel with our team. It has been our pleasure to host you, and we hope to welcome you again on another unforgettable adventure in the future. Tour ends in the airport"
       }
     ],
     "includes": [
@@ -1280,11 +1281,21 @@ const BASE_ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
       "Adiyaman & Local Family Lunch",
       "Gobeklitepe Temple & Traditional Sira Gecesi Activity"
     ],
-    "originalUrl": "https://atlasglobaltours.com/trip/shortbreak-eastern-turkiye/"
+    "originalUrl": ""
   }
 ];
 
+function enrichTripWithPhotos(trip: AtlasTrip): AtlasTrip {
+  const photoData = TRIP_PHOTOS_REGISTRY[trip.id] || getTripGallery(trip.id, trip.image);
+  return {
+    ...trip,
+    image: photoData.image || trip.image,
+    images: [...photoData.images],
+    imageCaptions: [...(photoData.imageCaptions || (photoData as any).captions || [])]
+  };
+}
+
 export const ATLAS_TURKEY_TRIPS: AtlasTrip[] = [
-  ...BASE_ATLAS_TURKEY_TRIPS,
-  ...ISTANBUL_DAY_TOURS
+  ...BASE_ATLAS_TURKEY_TRIPS.map(enrichTripWithPhotos),
+  ...ISTANBUL_DAY_TOURS.map(enrichTripWithPhotos)
 ];

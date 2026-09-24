@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { DESTINATIONS, COMPANY_CONTACT } from '../data/dmcData';
 import { useLanguage } from '../context/LanguageContext';
+import { useSiteContent } from '../context/SiteContentContext';
 
 interface HeroProps {
   onOpenInquiry: (initialData?: Record<string, any>) => void;
@@ -21,37 +22,6 @@ interface HeroProps {
   onOpenCalendly?: (eventTypeId?: string) => void;
 }
 
-const HERO_SLIDES = [
-  {
-    image: 'https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=2400&q=90',
-    location: 'Cappadocia, Central Anatolia',
-    title: 'Surreal Lunar Valleys & Dawn Balloon Flights',
-    subtitle: 'Small group valley trail hikes, sunrise balloons, and authentic boutique cave hotels.',
-    destId: 'cappadocia'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=2000&q=90',
-    location: 'Bosphorus Strait, Istanbul',
-    title: 'Historic Quarters & Hidden Artisan Courtyards',
-    subtitle: 'Small group cultural walks, Bosphorus sunset boats, and local culinary trails.',
-    destId: 'istanbul'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=2000&q=90',
-    location: 'Bodrum, Aegean Coast',
-    title: 'Wooden Gulet Sailing & Secluded Coves',
-    subtitle: 'Intimate handcrafted wooden gulets, swimming in aquamarine bays, and coastal walks.',
-    destId: 'bodrum'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=2000&q=90',
-    location: 'Ancient Ephesus, Aegean',
-    title: 'Classical Antiquity & Coastal Vineyards',
-    subtitle: 'Scholar-guided Roman avenues, Urla artisan wineries, and charming stone villages.',
-    destId: 'ephesus'
-  }
-];
-
 export const Hero: React.FC<HeroProps> = ({
   onOpenInquiry,
   onExploreDestinations,
@@ -59,12 +29,25 @@ export const Hero: React.FC<HeroProps> = ({
   onOpenCalendly
 }) => {
   const { t } = useLanguage();
+  const { content } = useSiteContent();
+  const heroData = content.hero;
+  const brandData = content.branding;
+  const slides = heroData?.slides && heroData.slides.length > 0 ? heroData.slides : [
+    {
+      image: 'https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=2400&q=90',
+      location: 'Cappadocia, Central Anatolia',
+      title: 'Surreal Lunar Valleys & Dawn Balloon Flights',
+      subtitle: 'Small group valley trail hikes, sunrise balloons, and authentic boutique cave hotels.',
+      destId: 'cappadocia'
+    }
+  ];
+
   const [activeSlide, setActiveSlide] = useState(0);
   const [selectedDestination, setSelectedDestination] = useState('all');
   const [selectedType, setSelectedType] = useState<'Small Group Tour' | 'Active Adventure & Hiking' | 'Cultural & Historical Expedition' | 'Gulet & Coastal Adventure'>('Small Group Tour');
   const [guestCount, setGuestCount] = useState('6-10');
 
-  const current = HERO_SLIDES[activeSlide];
+  const current = slides[activeSlide] || slides[0];
 
   const handleQuickSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,9 +62,9 @@ export const Hero: React.FC<HeroProps> = ({
     <section id="hero" className="relative min-h-[92vh] flex flex-col justify-between pt-24 sm:pt-28 pb-12 overflow-hidden bg-[#121316] text-white">
       {/* Background Image Carousel with Overlay */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {HERO_SLIDES.map((slide, idx) => (
+        {slides.map((slide, idx) => (
           <div
-            key={slide.location}
+            key={slide.location + idx}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
               idx === activeSlide ? 'opacity-100 scale-105 transition-transform duration-[10000ms]' : 'opacity-0 scale-100 pointer-events-none'
             }`}
@@ -105,18 +88,20 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Eyebrow badge */}
           <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/15 text-xs font-semibold tracking-wider uppercase text-neutral-200">
             <span className="w-2 h-2 rounded-full bg-[#F05A28] animate-pulse" />
-            <span>{t('hero.badge')} • TURSAB #{COMPANY_CONTACT.tursabNumber}</span>
+            <span className="text-white">{heroData.eyebrowBadge || t('hero.badge')}</span>
           </div>
 
           {/* Majestic Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-white leading-[1.08]">
-            {t('hero.titleLine1')} <br />
-            <span className="italic font-light text-[#FAF9F6]">{t('hero.titleLine2')}</span>
+            {heroData.headlineLine1 || t('hero.titleLine1')} <br />
+            <span className="italic font-light text-[#FAF9F6]">
+              {heroData.headlineLine2 || t('hero.titleLine2')}
+            </span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-neutral-300 font-sans font-normal leading-relaxed max-w-2xl">
-            {t('hero.subtitle')}
+            {heroData.subheadline || t('hero.subtitle')}
           </p>
 
           {/* Action CTAs */}
@@ -125,7 +110,7 @@ export const Hero: React.FC<HeroProps> = ({
               onClick={() => onOpenInquiry()}
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-lg shadow-[#F05A28]/25 active:scale-95 group whitespace-nowrap"
             >
-              <span>{t('hero.ctaRequest')}</span>
+              <span>{heroData.primaryCtaText || t('hero.ctaRequest')}</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
 
@@ -244,7 +229,7 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5">
-            {HERO_SLIDES.map((slide, i) => (
+            {slides.map((slide, i) => (
               <button
                 key={slide.location}
                 onClick={() => setActiveSlide(i)}

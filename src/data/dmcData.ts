@@ -22,6 +22,20 @@ export const DESTINATIONS: Destination[] = [
       'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=800&q=80'
     ],
+    images: [
+      'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Sultanahmet Square and Blue Mosque in golden morning light',
+      'Sixth-century Hagia Sophia grand dome and historic courtyard',
+      'Galata Tower rising above the historic skyline and Golden Horn',
+      'Historic cobblestone alleys and Ottoman wooden architectural heritage',
+      'Bosphorus sunset cruise between European and Asian continents'
+    ],
     highlights: [
       'Private sunset cruise on the Bosphorus strait between Europe and Asia',
       'Curated after-hours visits to the Basilica Cistern & Hagia Sophia',
@@ -57,6 +71,20 @@ export const DESTINATIONS: Destination[] = [
     galleryImages: [
       'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80'
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Sunrise hot air balloons drifting over Cappadocia\'s volcanic canyons',
+      'Trekking scenic ridgelines through Pigeon and Rose Valleys',
+      'Ancient fairy chimneys and rock hermitage carvings in Pasabag',
+      'Panoramic vistas from Uchisar rock citadel overlooking Pigeon Valley',
+      'Historic cave suite terraces and atmospheric volcanic dwellings'
     ],
     highlights: [
       'Sunrise hot-air balloon flight gliding over fairy chimneys with champagne landing',
@@ -94,6 +122,20 @@ export const DESTINATIONS: Destination[] = [
       'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80'
     ],
+    images: [
+      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Picturesque harbor and turquoise Mediterranean waters of Kas',
+      'Sea kayaking directly over the submerged ancient ruins of Kekova',
+      'Trekking cliff-edge coastal footpaths along the scenic Lycian Way',
+      'Kaputas beach canyon and vibrant Mediterranean turquoise surf',
+      'Secluded pine-fringed bays and crystal-clear marine waters'
+    ],
     highlights: [
       'Guided trekking on scenic segments of the world-renowned Lycian Way',
       'Sea kayaking over the sunken Lycian ruins of Simena and Kekova island',
@@ -130,6 +172,20 @@ export const DESTINATIONS: Destination[] = [
       'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Ephesus_Celsus_Library_Fa%C3%A7ade.jpg/1280px-Ephesus_Celsus_Library_Fa%C3%A7ade.jpg',
       'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Library_of_Celsus_6242.jpg/1280px-Library_of_Celsus_6242.jpg'
     ],
+    images: [
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Magnificent Library of Celsus in ancient Roman Ephesus',
+      'Bodrum Castle and the sparkling turquoise marina',
+      'Urla wine trail estates and vineyard dining overlooking the Aegean',
+      'Centuries-old Aegean olive orchards and peaceful stone villages',
+      'Fresh wild Aegean herbs and Mediterranean cold-pressed olive oil mezze'
+    ],
     highlights: [
       'Scholar-guided walkthrough of Ephesus marble avenues and Roman Terrace Houses',
       'Boutique wine tastings and olive oil estates along the Urla Wine Route',
@@ -165,6 +221,20 @@ export const DESTINATIONS: Destination[] = [
     galleryImages: [
       'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80'
     ],
+    images: [
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Sumela Monastery clinging to sheer rock cliffs in Altindere Valley, Trabzon',
+      'Misty cloud-sea panorama above high alpine pasture plateaus in Rize',
+      'High alpine pine forests and trekking trails of the Kackar Mountains',
+      'Historic Ottoman timber architecture of traditional Black Sea mansions',
+      'Glacial rivers and stone arch bridges in the lush Firtina Valley'
+    ],
     highlights: [
       'Sumela Monastery clinging impossibly to a 300-meter sheer cliff in Altindere Valley',
       'Scenic hikes across high alpine pasture plateaus (Ayder, Pokut, and Sal Yaylasi)',
@@ -199,6 +269,20 @@ export const DESTINATIONS: Destination[] = [
     heroImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/7d/b4/c0/89/51/v1_E10/E1077UM2.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=78f0a75c3f548500c4176077c966cb0087d849950fdd003f5e0707e53193c048',
     galleryImages: [
       'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=800&q=80'
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1599818818580-0a2c2069279d?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Classical stone ruins and multi-layered archaeological excavations of Troy',
+      'Doric columns of Temple of Athena at hilltop Assos overlooking the Aegean',
+      'Dardanelles maritime shipping straits connecting the Aegean and Marmara',
+      'Gallipoli peninsula historical park, ANZAC Cove and commemorative headlands',
+      'Peaceful stone mountain hamlets and centuries-old olive orchards on Mount Ida'
     ],
     highlights: [
       'Scholar-guided walkthrough of the 9 archaeological strata of ancient Troy (Iliad epic)',
@@ -236,6 +320,20 @@ export const DESTINATIONS: Destination[] = [
       'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80'
     ],
+    images: [
+      'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1599818818580-0a2c2069279d?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Colossal 2,000-year-old stone heads atop Mount Nemrut sanctuary',
+      '11,500-year-old monumental T-shaped stone pillars of Gobeklitepe',
+      'Tiered honey-colored limestone architecture and minarets of ancient Mardin',
+      'World-famous culinary feasts of sizzling kebabs and pistachio baklava in Gaziantep',
+      'Medieval ruins and stone ramparts of Ani on the Silk Road frontier gorge'
+    ],
     highlights: [
       'Scholar-led discovery of 12,000-year-old T-shaped obelisks at Gobeklitepe and Karahantepe',
       'Sunrise or sunset over the colossal stone god statues atop Mount Nemrut sanctuary',
@@ -272,6 +370,20 @@ export const DESTINATIONS: Destination[] = [
       'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?auto=format&fit=crop&w=800&q=80'
     ],
+    images: [
+      'https://images.unsplash.com/photo-1596401057633-54a8fe8ef647?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Dazzling snow-white mineral travertine terraces and thermal pools of Pamukkale',
+      'Cleopatra\'s Antique Pool with submerged ancient Roman marble fluted columns',
+      'Steep Roman hillside theater of Hierapolis overlooking the Lycus Valley',
+      'Monumental Tetrapylon marble gateway and stadium of ancient Aphrodisias',
+      'Thermal mineral springs and historic healing waters of Denizli-Pamukkale'
+    ],
     highlights: [
       'Walking barefoot across the mineral-rich thermal white travertine terraces of Pamukkale',
       'Swimming over submerged 2nd-century Roman marble columns in Cleopatra’s Antique Pool',
@@ -307,6 +419,20 @@ export const DESTINATIONS: Destination[] = [
     galleryImages: [
       'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80'
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1599818818580-0a2c2069279d?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Turquoise waters of Lake Van with Akdamar Island and snow-capped peaks',
+      'Snow-draped Mount Ararat soaring 5,137m over high Eastern Anatolian plateau',
+      'Clifftop Silk Road palace fortress of Ishak Pasha in Dogubayazit',
+      'Urartian Iron Age fortress rock inscriptions and walls overlooking Lake Van',
+      'World-famous Van breakfast ritual with wild herbal cheeses and Anatolian honeys'
     ],
     highlights: [
       'Boat cruise to Akdamar Island to admire 10th-century biblical stone bas-reliefs',
@@ -425,7 +551,21 @@ export const SAMPLE_ITINERARIES: SampleItinerary[] = [
     duration: '10 Days / 9 Nights',
     category: 'Small Group Tour',
     destinations: ['Istanbul', 'Cappadocia', 'Ephesus', 'Bodrum'],
-    coverImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/7a/ca/55/7f/11/v1_E10/E107CZJK.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=dca2269226b8dba04a9af5d5e48ea6b60b00ad05aa20a7c9869d8d3459f26a52',
+    coverImage: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1600&q=85',
+    images: [
+      'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Imperial Hagia Sophia and Sultanahmet historical peninsula, Istanbul',
+      'Dawn hot air balloon ascension over Cappadocia\'s sculpted rock valleys',
+      'Classical marble architecture of the Library of Celsus in ancient Ephesus',
+      'Aegean vineyards, olive groves, and gastronomy trail in Urla',
+      'Historic Bodrum Castle overlooking the turquoise Mediterranean harbor'
+    ],
     overview: 'Our quintessential small group cultural journey connecting the imperial sights of Istanbul, the fairy chimney trails of Cappadocia, the classical monuments of Ephesus, and the Aegean coast of Bodrum.',
     idealGroupSize: 'Intimate Groups & Private Circles (4–14 Travelers)',
     includedHighlights: [
@@ -515,7 +655,21 @@ export const SAMPLE_ITINERARIES: SampleItinerary[] = [
     duration: '8 Days / 7 Nights',
     category: 'Active Adventure',
     destinations: ['Cappadocia', 'Antalya', 'Lycian Coast'],
-    coverImage: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/74/3f/58/9b/8f/v1_E10/E10HJZF.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=47ccd6131ee20c81e34e9df499a6801354bfd86622ff7746ce9ff2f8bbbb90d9',
+    coverImage: 'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1600&q=85',
+    images: [
+      'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Hot air balloons drifting across Cappadocia\'s volcanic canyons',
+      'Trekking panoramic ridgelines through Pigeon and Rose Valleys',
+      'Coastal footpath trekking on high cliff sections of the Lycian Way',
+      'Sea kayaking directly over the submerged ancient Lycian ruins of Kekova',
+      'Picturesque harbor and turquoise waters of the Mediterranean coast'
+    ],
     overview: 'Designed for active small groups who want to combine Turkey’s two most dramatic landscapes: hiking through Cappadocia’s volcanic canyons and trekking cliffside trails along the turquoise Mediterranean on the Lycian Way.',
     idealGroupSize: 'Small Adventure Groups (6–12 Hikers)',
     includedHighlights: [
@@ -591,7 +745,21 @@ export const SAMPLE_ITINERARIES: SampleItinerary[] = [
     duration: '7 Days / 6 Nights',
     category: 'Gulet & Coastal Trek',
     destinations: ['Bodrum', 'Turquoise Coast'],
-    coverImage: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=85',
+    coverImage: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1600&q=85',
+    images: [
+      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=80'
+    ],
+    imageCaptions: [
+      'Turquoise waters and pine-fringed secluded coves of the Turquoise Coast',
+      'Traditional handcrafted wooden Turkish gulet anchored in serene bays',
+      'Bodrum Castle and harbor departure gateway for blue cruises',
+      'Dramatic coastline with ancient ruins meeting crystal-clear waters',
+      'Swimming and snorkeling in pristine Mediterranean marine coves'
+    ],
     overview: 'A classic Turkish wooden gulet voyage tailored for small groups, pairing secluded bay sailing with optional daily shoreline hikes on the Carian and Lycian trails.',
     idealGroupSize: 'Small Groups & Friend Circles (6 to 14 Guests)',
     includedHighlights: [
@@ -792,6 +960,20 @@ export const FAQ_ITEMS: FaqItem[] = [
     a: 'Eligible nationalities should apply strictly through the official Ministry of Foreign Affairs portal at evisa.gov.tr. The digital application takes under 5 minutes to complete, requires passport details and an email address, and is issued almost instantly upon fee payment. Avoid unauthorized third-party broker websites that charge inflated processing fees.',
     keywords: ['official e-visa Turkey website', 'evisa.gov.tr', 'apply online visa Turkey', 'Turkish visa fees']
   },
+  {
+    id: 'transit-visa-istanbul-airport',
+    category: 'Visa & Entry',
+    q: 'Do I need a transit visa for connecting international flights at Istanbul Airport (IST)?',
+    a: 'No transit visa is required if you remain in the international transit area of Istanbul Airport (IST) and your baggage is checked through to your final destination. However, if you plan to exit the airport into Istanbul during a long layover, collect luggage, or transfer from Istanbul Airport (IST) to Sabiha Gökçen (SAW), standard entry and visa requirements apply according to your nationality.',
+    keywords: ['transit visa Turkey', 'Istanbul airport layover visa', 'do I need visa for layover Istanbul', 'IST international transit']
+  },
+  {
+    id: 'turkey-to-greek-islands-ferries',
+    category: 'Visa & Entry',
+    q: 'Can travelers combine Turkiye with the Greek Islands via ferry, and what are the visa rules?',
+    a: 'Yes, daily international passenger catamarans connect Turkish coastal ports with Greek Aegean islands (e.g., Bodrum to Kos, Marmaris to Rhodes, Fethiye to Rhodes, Kaş to Meis/Kastellorizo, and Çeşme to Chios). Non-EU/Schengen passport holders must have a valid multiple-entry Schengen visa to visit Greece, and a multiple-entry Turkish visa or exemption to re-enter Turkiye. A streamlined Greek "express island visa" is also available at designated island ports during summer seasons.',
+    keywords: ['ferry Turkey to Greece', 'Bodrum to Kos ferry visa', 'Marmaris to Rhodes ferry', 'Kas to Meis boat', 'Greek island day trip from Turkey']
+  },
 
   // --- AIRPORTS & TRANSFERS ---
   {
@@ -815,6 +997,27 @@ export const FAQ_ITEMS: FaqItem[] = [
     a: 'We strongly advise arriving at Istanbul Airport (IST) at least 3 hours prior to scheduled international departures (and 2 hours for domestic flights). IST is one of the largest passenger terminals in the world with dual security screening (at building entrance and airside passport control), extensive duty-free concourses, and walking distances to departure gates.',
     keywords: ['Istanbul airport arrival time', 'how early to arrive at IST', 'Istanbul airport security checks', 'VIP meet and greet Istanbul']
   },
+  {
+    id: 'istanbul-airport-layover-amenities',
+    category: 'Airports & Transfers',
+    q: 'What amenities and hotels exist for long layovers inside Istanbul Airport (IST)?',
+    a: 'Istanbul Airport features world-class layover infrastructure, including YOTEL Istanbul (offering both airside transit cabins and landside rooms bookable in 4-hour blocks), IGA Sleepods, private lounge suites, complimentary luggage storage, prayer rooms, children’s playzones, and luxury showers. For layovers over 8–10 hours, private chauffeured half-day city tours to Sultanahmet and the Bosphorus can be seamlessly coordinated.',
+    keywords: ['Istanbul airport hotel YOTEL', 'IGA Sleepod Istanbul airport', 'Istanbul airport luggage storage', 'Istanbul airport layover tour']
+  },
+  {
+    id: 'domestic-baggage-allowance',
+    category: 'Airports & Transfers',
+    q: 'What are domestic checked and cabin baggage allowances on Turkish Airlines and AJet?',
+    a: 'For domestic flights within Turkiye, Turkish Airlines standard Economy tickets typically include 15kg to 20kg (33–44 lbs) of checked baggage plus an 8kg (17.6 lbs) carry-on bag and one personal item. Business Class includes 30kg. For low-cost carriers like AJet or Pegasus, standard allowances range from 15kg to 20kg. As an inbound DMC, Baobab DMC pre-books appropriate checked baggage allowances for all private and group domestic sectors.',
+    keywords: ['Turkish Airlines domestic baggage allowance', 'luggage limit flights Turkey', 'AJet baggage rules', 'domestic flights baggage weight']
+  },
+  {
+    id: 'vip-airport-meet-and-assist',
+    category: 'Airports & Transfers',
+    q: 'How does VIP Airport Meet & Assist work at Istanbul Airport (IST)?',
+    a: 'Our VIP Meet & Assist service provides a personal airport concierge who greets guests immediately as they step off the jetbridge. Concierges escort travelers via electric buggy through dedicated fast-track immigration and customs lanes, assist with luggage carousel retrieval, and escort guests directly to their awaiting Mercedes-Benz VIP private chauffeur outside the arrivals terminal.',
+    keywords: ['VIP airport meet and greet Istanbul', 'fast track Istanbul airport', 'Istanbul airport buggy transfer', 'private arrival transfer IST']
+  },
 
   // --- CURRENCY, CARDS & MONEY ---
   {
@@ -830,6 +1033,34 @@ export const FAQ_ITEMS: FaqItem[] = [
     q: 'Where is the best place to exchange currency or withdraw cash in Turkiye?',
     a: 'Official exchange offices ("Döviz Bürosu") located in city centers (such as Sultanahmet, Sirkeci, Grand Bazaar, and Taksim) offer transparent rates with minimal or zero commission compared to airport kiosks. Bank-operated ATMs (such as Garanti BBVA, İş Bankası, Yapı Kredi, and Akbank) are ubiquitous and support international debit cards with multi-language prompts.',
     keywords: ['best currency exchange Istanbul', 'ATM withdrawal fees Turkey', 'Doviz Burosu rates', 'cash vs card in Turkey']
+  },
+  {
+    id: 'avoid-dcc-atm-trap',
+    category: 'Currency & Payments',
+    q: 'What is Dynamic Currency Conversion (DCC) and why should travelers always choose "Charge in TRY"?',
+    a: 'When paying with a foreign card or withdrawing cash from an ATM in Turkiye, the terminal will often ask whether you wish to be billed in your home currency (USD, EUR, GBP) or local currency (Turkish Lira / TRY). ALWAYS choose "Continue in Turkish Lira (Without Conversion)". Choosing your home currency triggers Dynamic Currency Conversion (DCC), where the local terminal operator applies an inflated exchange markup of 5% to 10%. Letting your own home bank do the conversion saves substantial money on every transaction.',
+    keywords: ['Dynamic currency conversion Turkey', 'ATM exchange rate trick Istanbul', 'charge in TRY or USD', 'avoid ATM fees Turkey']
+  },
+  {
+    id: 'apple-pay-google-pay-turkey',
+    category: 'Currency & Payments',
+    q: 'Can international travelers use Apple Pay and Google Pay in Turkiye?',
+    a: 'Yes. While Apple Pay is not officially registered for Turkish bank-issued cards, international credit and debit cards loaded onto Apple Pay, Google Wallet, and smartwatches work seamlessly on almost all contactless ("Temassız") POS payment terminals across Turkiye. Nonetheless, we recommend always carrying at least one physical chip-and-PIN credit card as a reliable backup.',
+    keywords: ['Apple Pay in Turkey', 'Google Wallet Istanbul', 'contactless payment Turkey', 'contactless POS Istanbul shops']
+  },
+  {
+    id: 'daily-cash-budget-recommendation',
+    category: 'Currency & Payments',
+    q: 'How much cash does a traveler realistically need per day in Turkiye?',
+    a: 'Because credit cards are accepted virtually everywhere (even in small bakeries, taxis, and museums), travelers typically only need 500 to 1,000 TRY (approx. $15–$30 USD) in cash per person per day for street snacks, tipping, public restroom fees (5–10 TRY), and small souvenir stalls. Luxury purchases, dining, and hotel bills are almost universally settled by card.',
+    keywords: ['how much cash to take to Turkey', 'daily spending budget Turkey', 'cash vs card Istanbul', 'cost of food and transport Turkey']
+  },
+  {
+    id: 'amex-acceptance-turkey',
+    category: 'Currency & Payments',
+    q: 'Are American Express (Amex) and Discover cards widely accepted in Turkiye?',
+    a: 'American Express is accepted primarily in international 5-star hotel chains, upscale fine-dining restaurants, luxury boutiques in Nişantaşı and İstinye Park, and major airline booking portals. In ordinary cafes, traditional bazaars, and provincial towns, Amex acceptance is limited due to higher merchant processing fees. Visa and Mastercard are accepted universally. We advise carrying a Visa or Mastercard as your primary travel card.',
+    keywords: ['Amex in Turkey', 'American Express Istanbul acceptance', 'Discover card Turkey', 'best credit card for Turkey travel']
   },
   {
     id: 'vat-tax-free-refunds',
@@ -848,11 +1079,25 @@ export const FAQ_ITEMS: FaqItem[] = [
     keywords: ['plug type Turkey', 'electricity voltage Turkey 220V', 'European adapter Istanbul', 'Type C Type F socket Turkiye']
   },
   {
+    id: 'power-converter-vs-adapter',
+    category: 'Electricity & Tech',
+    q: 'Do I need a voltage converter or just a plug adapter for US appliances in Turkiye?',
+    a: 'Check the input label on your device: if it states "INPUT: 100-240V, 50/60Hz" (as 95% of smartphones, laptops, iPads, CPAP machines, and electric shavers do), you DO NOT need a voltage converter—only an inexpensive two-pin European plug adapter (Type C/F). However, high-wattage 110V-only heating appliances from North America (like standard hair curlers or clothing irons) WILL overheat or short-circuit unless connected to a heavy-duty step-down voltage converter. High-grade hotels and boutique lodges in Turkiye furnish quality 220V hair dryers in every room.',
+    keywords: ['voltage converter Turkey', 'do I need voltage converter for Istanbul', 'using American curling iron in Turkey', '220V adapter Turkey']
+  },
+  {
     id: 'esim-mobile-internet',
     category: 'Electricity & Tech',
     q: 'How can international travelers get high-speed mobile internet, 5G data, and eSIMs in Turkiye?',
     a: 'Travelers can easily activate digital travel eSIMs (such as Airalo, Holafly, or Maya Mobile) prior to arrival for immediate 4G/5G data upon landing. Alternatively, physical prepaid tourist SIM cards can be purchased upon arrival at airport arrival halls from national telecom providers: Turkcell, Vodafone Turkey, and Türk Telekom. All Baobab DMC private Mercedes touring vehicles and partner boutique hotels provide complimentary high-speed Wi-Fi.',
     keywords: ['eSIM Turkey', 'best SIM card for tourists Turkey', 'Turkcell tourist SIM', 'mobile data Istanbul Cappadocia', '5G internet Turkey']
+  },
+  {
+    id: 'drone-regulations-turkey',
+    category: 'Electricity & Tech',
+    q: 'Can tourists bring and fly recreational drones (DJI) in Turkiye?',
+    a: 'Turkiye enforces strict civil aviation laws regarding drones (UAV / İHA) under the Directorate General of Civil Aviation (SHGM). Drones weighing over 500 grams brought by foreigners are subject to customs impoundment unless granted formal pre-authorization permits. In addition, flying drones over archaeological sites, historical monuments (Hagia Sophia, Topkapi, Ephesus), military facilities, and hot air balloon airspace in Cappadocia is strictly prohibited by law without special ministerial permits.',
+    keywords: ['flying drone in Turkey', 'drone laws Turkey SHGM', 'can I bring DJI drone to Istanbul', 'Cappadocia drone rules']
   },
 
   // --- HEALTH & SAFETY ---
@@ -877,6 +1122,13 @@ export const FAQ_ITEMS: FaqItem[] = [
     a: 'The unified nationwide emergency hotline in Turkiye is 112 (covering Police, Gendarmerie, Ambulance, and Fire departments with multi-lingual dispatchers). Turkiye has world-class JCI-accredited (Joint Commission International) private hospitals staffed with English-speaking specialists (such as Acıbadem, Memorial, American Hospital, and Florence Nightingale). We recommend international travel medical insurance for all overseas journeys.',
     keywords: ['emergency number Turkey 112', 'hospitals in Istanbul for tourists', 'medical care Turkey travel', 'pharmacies in Turkey Eczane']
   },
+  {
+    id: 'prescription-medications-rules',
+    category: 'Health & Safety',
+    q: 'What are the rules for bringing personal prescription medication into Turkiye?',
+    a: 'Travelers may bring personal medications for personal use in quantities corresponding to the planned duration of stay. Keep all medications in their original pharmacy packaging with clearly labeled prescription stickers matching your passport name. For controlled substances, strong painkillers, stimulants (such as ADHD medications like Adderall/Ritalin), or psychotropic drugs, carry an official doctor’s letter in English detailing the diagnosis, required dosage, and generic active ingredients.',
+    keywords: ['bringing prescription drugs to Turkey', 'Adderall in Turkey customs', 'medication rules Istanbul airport', 'pharmacy Turkey Eczane']
+  },
 
   // --- CULTURE, DRESS CODE & ETIQUETTE ---
   {
@@ -899,6 +1151,27 @@ export const FAQ_ITEMS: FaqItem[] = [
     q: 'Can non-Muslim travelers visit Turkiye during Ramadan (Ramazan)?',
     a: 'Yes, absolutely. Turkiye is a secular republic, and all historic sites, museums, restaurants, cafes, bars, and public transit operate entirely as normal during Ramadan. In tourist corridors and cosmopolitan areas, eating and drinking are common throughout the day. Visiting during Ramadan provides a magical cultural experience with illuminated minarets ("Mahya"), festive communal sunset fast-breaking banquets ("Iftar"), and vibrant evening street fairs.',
     keywords: ['traveling to Turkey during Ramadan', 'is Istanbul open during Ramazan', 'visiting Turkey holiday seasons']
+  },
+  {
+    id: 'bargaining-grand-bazaar-etiquette',
+    category: 'Culture & Etiquette',
+    q: 'How does bargaining work in the Grand Bazaar and Turkish markets?',
+    a: 'Bargaining is an age-old cultural tradition in historical bazaars for carpets, handmade ceramics, leather, antique jewelry, and textiles. It is practiced with warm humor and hospitality, usually over a small tulip glass of apple or black tea. Start with a polite counteroffer roughly 20% to 30% below the asking price. In modern supermarkets, pharmacies, shopping malls, restaurants, and museum ticket booths, prices are strictly fixed.',
+    keywords: ['Grand Bazaar bargaining etiquette', 'how to negotiate prices Istanbul', 'shopping Grand Bazaar tips', 'is bargaining rude in Turkey']
+  },
+  {
+    id: 'street-cats-and-dogs-culture',
+    category: 'Culture & Etiquette',
+    q: 'Why are there so many cats and dogs on the streets of Istanbul, and are they safe?',
+    a: 'Istanbul is lovingly celebrated worldwide as the "City of Cats". Street animals in Turkiye are regarded not as strays, but as communal neighborhood companions. Under Turkish animal protection laws, municipal veterinarians vaccinate, sterilize, microchip, and tag street dogs (notice the plastic tags in their ears). Locals place communal food, clean water dishes, and cozy cat houses on every block. The animals are friendly, calm, and accustomed to humans.',
+    keywords: ['Istanbul street cats', 'stray dogs in Turkey', 'are Istanbul cats friendly', 'animal care in Istanbul']
+  },
+  {
+    id: 'alcohol-meyhane-dining-culture',
+    category: 'Culture & Etiquette',
+    q: 'Is alcohol available in Turkiye and what is the traditional Meyhane culture?',
+    a: 'Yes. Turkiye is a secular country with a thriving wine industry and ancient culinary traditions centered on dining and spirits. Beer, international spirits, and indigenous wines (from Thrace, Urla, and Cappadocia) are widely available in restaurants, bars, and bistros. A cherished Turkish tradition is the "Meyhane" (tavern)—a slow, convivial evening where friends gather over countless cold and warm mezze, grilled fresh fish, and glasses of aniseed-flavored Turkish rakı ("Lion’s Milk") mixed with chilled water.',
+    keywords: ['alcohol in Turkey', 'drinking raki in Istanbul', 'Meyhane dinner Istanbul', 'Turkish wine regions Urla']
   },
 
   // --- B2B & PARTNER GROUND OPERATIONS ---

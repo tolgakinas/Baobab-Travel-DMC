@@ -53,7 +53,7 @@ export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOp
     {
       icon: <ShieldCheck className="w-6 h-6 text-[#F05A28]" />,
       title: 'TURSAB A-Grade Licensed & Bonded',
-      description: 'Officially certified under TURSAB License #13127 with full financial bonding, comprehensive passenger liability insurance, and stringent safety standards.',
+      description: 'Officially certified under TURSAB License #15764 with full financial bonding, comprehensive passenger liability insurance, and stringent safety standards.',
       badge: 'Fully Insured'
     },
     {
@@ -123,7 +123,7 @@ export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOp
             {onOpenB2BPanel && (
               <button
                 onClick={onOpenB2BPanel}
-                className="px-5 py-3 bg-white hover:bg-neutral-100 text-neutral-900 text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-md flex items-center justify-center gap-2 active:scale-95"
+                className="px-5 py-3 bg-white hover:bg-neutral-100 text-neutral-900 text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-md flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap"
               >
                 <Building2 className="w-4 h-4 text-[#F05A28]" />
                 <span>Access B2B Partner Hub</span>
@@ -136,7 +136,7 @@ export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOp
                 partnerType: 'Tour Operator', 
                 specialRequests: 'Registering as a new B2B trade partner / requesting agency agreement and net wholesale tariff sheet.' 
               })}
-              className="px-6 py-3 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-lg flex items-center justify-center gap-2 active:scale-95"
+              className="px-5 py-3 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-md flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap"
             >
               <span>Register as Partner</span>
               <ArrowRight className="w-4 h-4" />
@@ -145,7 +145,7 @@ export const PartnerWithUsSection: React.FC<PartnerWithUsSectionProps> = ({ onOp
             {onOpenCalendly && (
               <button
                 onClick={() => onOpenCalendly('b2b-discovery')}
-                className="px-5 py-3 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 border border-neutral-700 flex items-center justify-center gap-2 active:scale-95"
+                className="px-5 py-3 bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 border border-neutral-600 hover:border-neutral-400 shadow-md flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap"
               >
                 <Video className="w-4 h-4 text-[#F05A28]" />
                 <span>Schedule Discovery Call</span>

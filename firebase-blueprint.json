@@ -55,10 +55,44 @@
         "email": { "type": "string", "maxLength": 150 },
         "displayName": { "type": "string", "maxLength": 120 },
         "photoURL": { "type": "string", "maxLength": 500 },
-        "role": { "type": "string", "enum": ["partner", "client", "admin"] },
+        "role": { "type": "string", "enum": ["partner", "client", "admin", "consultant"] },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["email", "createdAt"]
+    },
+    "ConsultantBooking": {
+      "title": "Travel Consultant Customer Booking",
+      "description": "Direct bookings created by accredited travel consultants and advisors with 25% net wholesale rates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "bookingReference": { "type": "string", "maxLength": 64 },
+        "consultantName": { "type": "string", "maxLength": 120 },
+        "agencyName": { "type": "string", "maxLength": 150 },
+        "consultantEmail": { "type": "string", "maxLength": 150 },
+        "consultantPhone": { "type": "string", "maxLength": 60 },
+        "iataOrClia": { "type": "string", "maxLength": 80 },
+        "leadCustomerName": { "type": "string", "maxLength": 120 },
+        "customerEmail": { "type": "string", "maxLength": 150 },
+        "customerPhone": { "type": "string", "maxLength": 60 },
+        "guestCount": { "type": "number", "minimum": 1, "maximum": 50 },
+        "tripId": { "type": "string", "maxLength": 100 },
+        "tripTitle": { "type": "string", "maxLength": 180 },
+        "category": { "type": "string", "maxLength": 80 },
+        "travelDate": { "type": "string", "maxLength": 80 },
+        "duration": { "type": "string", "maxLength": 80 },
+        "roomType": { "type": "string", "maxLength": 80 },
+        "retailPricePerPax": { "type": "number" },
+        "discountPercentage": { "type": "number" },
+        "netPricePerPax": { "type": "number" },
+        "totalGrossRetail": { "type": "number" },
+        "totalNetPayable": { "type": "number" },
+        "advisorCommission": { "type": "number" },
+        "specialRequests": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["confirmed", "deposit_pending", "operating", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["bookingReference", "consultantName", "consultantEmail", "leadCustomerName", "tripTitle", "totalNetPayable", "createdAt"]
     }
   },
   "firestore": {
@@ -69,6 +103,10 @@
     "/b2b_partners/{partnerId}": {
       "schema": "B2BPartner",
       "description": "Collection of B2B travel partner profiles and tariff access"
+    },
+    "/consultant_bookings/{bookingId}": {
+      "schema": "ConsultantBooking",
+      "description": "Collection of trade customer bookings created by travel consultants"
     },
     "/users/{userId}": {
       "schema": "UserProfile",

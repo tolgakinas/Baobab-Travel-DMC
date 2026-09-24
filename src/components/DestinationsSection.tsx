@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DESTINATIONS } from '../data/dmcData';
 import { Destination } from '../types';
+import { useSiteContent } from '../context/SiteContentContext';
 import { 
   MapPin, 
   Sparkles, 
@@ -22,6 +23,8 @@ export const DestinationsSection: React.FC<DestinationsSectionProps> = ({
   onSelectDestination,
   onPlanTripToDestination,
 }) => {
+  const { content } = useSiteContent();
+  const destList = content?.destinations && content.destinations.length > 0 ? content.destinations : DESTINATIONS;
   const [selectedRegion, setSelectedRegion] = useState<string>('All');
 
   const regions = [
@@ -36,8 +39,8 @@ export const DestinationsSection: React.FC<DestinationsSectionProps> = ({
   ];
 
   const filteredDestinations = selectedRegion === 'All' 
-    ? DESTINATIONS 
-    : DESTINATIONS.filter(d => d.region === selectedRegion);
+    ? destList 
+    : destList.filter(d => d.region === selectedRegion);
 
   return (
     <section id="destinations" className="py-20 sm:py-28 bg-[#FAF9F6] text-[#1A1A1A]">
@@ -103,8 +106,21 @@ export const DestinationsSection: React.FC<DestinationsSectionProps> = ({
                 </div>
               </div>
 
-              {/* Narrower Photo Banner (Compact 16/7 aspect ratio instead of large 16/11) */}
-              <div className="relative aspect-[16/7] w-full overflow-hidden bg-neutral-100">
+              {/* Narrower Photo Banner - Clickable to open destination details */}
+              <div 
+                onClick={() => onSelectDestination(dest)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectDestination(dest);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open ${dest.name} details`}
+                title={`Click to view ${dest.name} details`}
+                className="relative aspect-[16/7] w-full overflow-hidden bg-neutral-100 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#F05A28]"
+              >
                 <img
                   src={dest.heroImage}
                   alt={dest.name}

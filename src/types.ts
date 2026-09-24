@@ -16,6 +16,8 @@ export interface Destination {
   description: string;
   heroImage: string;
   galleryImages: string[];
+  images?: string[];
+  imageCaptions?: string[];
   highlights: string[];
   bestSeason: string;
   signatureExperiences: string[];
@@ -40,6 +42,8 @@ export interface AtlasTrip {
   daysCount: number;
   groupSize: string;
   image: string;
+  images?: string[];
+  imageCaptions?: string[];
   destinations: string[];
   description: string;
   itinerary: TripItineraryDay[];
@@ -76,6 +80,8 @@ export interface SampleItinerary {
   category: 'Small Group Tour' | 'Active Adventure' | 'Cultural Expedition' | 'Gulet & Coastal Trek';
   destinations: string[];
   coverImage: string;
+  images?: string[];
+  imageCaptions?: string[];
   overview: string;
   idealGroupSize: string;
   includedHighlights: string[];

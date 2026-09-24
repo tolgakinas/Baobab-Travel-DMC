@@ -65,16 +65,6 @@ export const ModernSlaveryModal: React.FC<ModernSlaveryModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Floating Viewport Close Button */}
-      <button
-        onClick={onClose}
-        className="fixed top-3 right-3 sm:top-5 sm:right-5 z-60 w-10 h-10 rounded-full bg-neutral-900/90 hover:bg-[#F05A28] text-white flex items-center justify-center shadow-xl border border-white/20 transition-all duration-200 hover:scale-105 print:hidden"
-        aria-label="Close Modern Slavery Act Statement (Esc)"
-        title="Close (Esc)"
-      >
-        <X className="w-5 h-5" />
-      </button>
-
       {/* Modal Dialog Container */}
       <div className="relative bg-white text-neutral-900 rounded-xl max-w-4xl w-full my-auto overflow-hidden shadow-2xl border border-neutral-200 z-10 flex flex-col max-h-[92vh]">
         {/* Sticky Header Bar */}

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { TESTIMONIALS, FAQ_ITEMS, FAQ_CATEGORIES, PARTNERS_ACCREDITATIONS, COMPANY_CONTACT } from '../data/dmcData';
+import { useSiteContent } from '../context/SiteContentContext';
 import { 
   ShieldCheck, 
   Award, 
@@ -23,6 +24,11 @@ interface AboutDmcProps {
 }
 
 export const AboutDmc: React.FC<AboutDmcProps> = ({ onOpenInquiry }) => {
+  const { content } = useSiteContent();
+  const aboutData = content?.about;
+  const testimonialsList = aboutData?.testimonials && aboutData.testimonials.length > 0 ? aboutData.testimonials : TESTIMONIALS;
+  const pillarsList = aboutData?.pillars && aboutData.pillars.length > 0 ? aboutData.pillars : null;
+
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [openFaqId, setOpenFaqId] = useState<string | null>('visa-exemptions-us-uk-eu');
@@ -171,14 +177,14 @@ export const AboutDmc: React.FC<AboutDmcProps> = ({ onOpenInquiry }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((t, idx) => (
+            {testimonialsList.map((t, idx) => (
               <div
                 key={idx}
                 className="bg-[#FAF9F6] p-6 sm:p-7 rounded-md border border-neutral-200 flex flex-col justify-between space-y-4"
               >
                 <div className="space-y-3">
                   <div className="flex items-center gap-1 text-amber-500">
-                    {[...Array(t.rating)].map((_, i) => (
+                    {[...Array(t.rating || 5)].map((_, i) => (
                       <Star key={i} className="w-3.5 h-3.5 fill-current" />
                     ))}
                   </div>
@@ -190,7 +196,7 @@ export const AboutDmc: React.FC<AboutDmcProps> = ({ onOpenInquiry }) => {
                 <div className="pt-4 border-t border-neutral-200">
                   <div className="font-bold text-xs text-neutral-900">{t.author}</div>
                   <div className="text-[11px] text-[#F05A28] font-semibold">{t.role}</div>
-                  <div className="text-[11px] text-neutral-500">{t.company}</div>
+                  <div className="text-[11px] text-neutral-500">{t.agency || (t as any).company} • {t.country}</div>
                 </div>
               </div>
             ))}

@@ -73,7 +73,7 @@ export const translations: Record<SupportedLanguage, Record<string, string>> = {
     'dest.all': 'All Regions',
 
     // Trips Section
-    'trips.tag': 'Atlas Global Tours Portfolio • Turnkey Ground Operations',
+    'trips.tag': 'Curated Signature Journeys • Turnkey Ground Operations',
     'trips.title': 'Guided Tour Programs Across Turkiye',
     'trips.subtitle': 'B2B Small Group Journeys, Active Treks & Cultural Circuits',
     'trips.desc': 'Explore our complete operational portfolio of guided small-group and private tour programs across Turkey. All programs are fully customizable for your agency with white-label delivery, private executive transit, and licensed historian guides.',
@@ -193,7 +193,7 @@ export const translations: Record<SupportedLanguage, Record<string, string>> = {
     'dest.all': 'Alle Regionen',
 
     // Trips Section
-    'trips.tag': 'Atlas Global Tours Portfolio • Schlüsselfertige Durchführung',
+    'trips.tag': 'Ausgewählte Rundreisen • Schlüsselfertige Durchführung',
     'trips.title': 'Geführte Reiseprogramme in der Türkei',
     'trips.subtitle': 'B2B-Kleingruppen, Aktive Treks & Rundreisen',
     'trips.desc': 'Unser vollständiges Portfolio an geführten Kultur- und Wanderreisen durch die Türkei. Sämtliche Reisen sind für Ihre Agentur frei anpassbar – mit White-Label-Unterlagen, privatem Transport und zertifizierten Historikern.',
@@ -313,7 +313,7 @@ export const translations: Record<SupportedLanguage, Record<string, string>> = {
     'dest.all': 'Todas las Regiones',
 
     // Trips Section
-    'trips.tag': 'Portafolio Atlas Global Tours • Operaciones Receptivas Integrales',
+    'trips.tag': 'Portafolio de Viajes Exclusivos • Operaciones Receptivas Integrales',
     'trips.title': 'Programas de Viaje Guiados en Turquía',
     'trips.subtitle': 'Grupos Reducidos B2B, Senderismo Activo y Rutas Culturales',
     'trips.desc': 'Descubra nuestro portafolio de circuitos guiados en grupos reducidos y viajes privados por Turquía. Todos los programas son 100% personalizables con entrega en marca blanca, transporte ejecutivo privado y guías oficiales.',

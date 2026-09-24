@@ -1,10 +1,13 @@
 import React from 'react';
-import { DMC_STATS, PARTNERS_ACCREDITATIONS } from '../data/dmcData';
+import { PARTNERS_ACCREDITATIONS } from '../data/dmcData';
 import { ShieldCheck, Award, CheckCircle2, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSiteContent } from '../context/SiteContentContext';
 
 export const StatsBar: React.FC = () => {
   const { t } = useLanguage();
+  const { content } = useSiteContent();
+  const statsList = content?.stats || [];
 
   const getTranslatedStatLabel = (originalLabel: string) => {
     if (originalLabel.includes('Years')) return t('stat.years');
@@ -20,8 +23,8 @@ export const StatsBar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Core Operational Statistics */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 pb-10 border-b border-neutral-100">
-          {DMC_STATS.map((stat, i) => (
-            <div key={stat.label} className="text-left space-y-1">
+          {statsList.map((stat, i) => (
+            <div key={i} className="text-left space-y-1">
               <div className="text-3xl sm:text-4xl font-serif font-bold text-[#111111] tracking-tight flex items-baseline gap-1">
                 <span>{stat.value}</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F05A28]" />

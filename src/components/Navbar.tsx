@@ -14,8 +14,7 @@ import {
   Globe2,
   CalendarDays,
   Sparkles,
-  Building2,
-  Lock
+  Building2
 } from 'lucide-react';
 import { COMPANY_CONTACT } from '../data/dmcData';
 
@@ -26,7 +25,12 @@ interface NavbarProps {
   onOpenB2BPanel?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpenCalendly: _onOpenCalendly, onOpenB2BPanel }) => {
+export const Navbar: React.FC<NavbarProps> = ({ 
+  onNavigate, 
+  onOpenInquiry, 
+  onOpenCalendly: _onOpenCalendly, 
+  onOpenB2BPanel
+}) => {
   const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -287,7 +291,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, onOpenInquiry, onOpe
           </div>
 
           {/* Action CTA */}
-          <div className="hidden sm:flex items-center">
+          <div className="hidden sm:flex items-center gap-2.5">
             <button
               onClick={() => onOpenInquiry()}
               className="relative inline-flex items-center justify-center gap-2 px-4 xl:px-5 py-2.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-all duration-200 shadow-sm active:scale-95 group"

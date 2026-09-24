@@ -37,13 +37,12 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
     }
   }, [initialEventTypeId]);
 
-  // Lock background scroll when modal is open to prevent mobile scroll interference
+  // Lock background scroll when modal is open to prevent background scrolling,
+  // but DO NOT block touch-action so mobile gestures continue working cleanly
   useEffect(() => {
     if (isOpen) {
       const originalOverflow = document.body.style.overflow;
-      const originalTouchAction = document.body.style.touchAction;
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
 
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
@@ -54,7 +53,6 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
 
       return () => {
         document.body.style.overflow = originalOverflow;
-        document.body.style.touchAction = originalTouchAction;
         window.removeEventListener('keydown', handleKeyDown);
       };
     }
@@ -118,17 +116,20 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200 overflow-hidden"
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-black/85 backdrop-blur-sm animate-in fade-in duration-200 p-0 sm:p-4 md:p-6 flex flex-col items-center justify-start sm:justify-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="calendly-modal-title"
+      style={{ WebkitOverflowScrolling: 'touch' }}
+      onClick={onClose}
     >
       {/* Modal Dialog Card */}
       <div 
-        className="relative w-full h-full sm:h-auto sm:max-h-[94vh] max-w-4xl bg-white sm:rounded-2xl shadow-2xl border-0 sm:border sm:border-neutral-200/80 flex flex-col text-neutral-900 overflow-hidden my-0 sm:my-auto"
+        className="relative w-full min-h-full sm:min-h-0 sm:h-auto sm:max-h-[94vh] max-w-4xl bg-white sm:rounded-2xl shadow-2xl border-0 sm:border sm:border-neutral-200/80 flex flex-col text-neutral-900 my-0 sm:my-auto"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Sticky Top Header Bar */}
-        <div className="shrink-0 bg-[#111215] text-white px-4 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between border-b border-neutral-800 z-30">
+        <div className="sticky top-0 shrink-0 bg-[#111215] text-white px-4 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between border-b border-neutral-800 z-40 shadow-md">
           <div className="flex items-center gap-2.5 sm:gap-3">
             <Logo variant="dark" size="sm" />
             <div className="hidden xs:block h-4 w-[1px] bg-neutral-700" />
@@ -143,7 +144,7 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
               href={activeEvent.url || 'https://calendly.com/baobabdmc-info/30min'}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider rounded transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider rounded transition-colors shadow-xs"
               title="Open full page in new tab"
             >
               <span>Open in App</span>
@@ -152,7 +153,7 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-2 -mr-1 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors flex items-center justify-center min-w-[36px] min-h-[36px]"
+              className="p-2 -mr-1 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors flex items-center justify-center min-w-[36px] min-h-[36px] cursor-pointer"
               aria-label="Close scheduling modal"
             >
               <X className="w-5 h-5" />
@@ -188,7 +189,7 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
                 <CalendarIcon className="w-3.5 h-3.5 text-[#F05A28]" />
                 <span>Select Meeting Objective:</span>
               </div>
-              <div className="flex sm:grid sm:grid-cols-3 gap-2 overflow-x-auto pb-1 scrollbar-none">
+              <div className="flex sm:grid sm:grid-cols-3 gap-2 overflow-x-auto pb-2 scrollbar-thin">
                 {eventTypes.map((evt) => {
                   const isSelected = evt.id === selectedEventTypeId;
                   return (
@@ -199,7 +200,7 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
                         setIframeLoaded(false);
                         setLoadTimedOut(false);
                       }}
-                      className={`text-left p-2.5 sm:p-3 rounded-lg transition-all border shrink-0 sm:shrink min-w-[220px] sm:min-w-0 ${
+                      className={`text-left p-2.5 sm:p-3 rounded-lg transition-all border shrink-0 sm:shrink min-w-[220px] sm:min-w-0 cursor-pointer ${
                         isSelected
                           ? 'bg-[#111111] text-white border-[#111111] shadow-sm ring-1 ring-[#F05A28]'
                           : 'bg-white text-neutral-800 border-neutral-300 hover:border-neutral-400 hover:bg-neutral-50'
@@ -223,28 +224,35 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
               </div>
             </div>
 
-            {/* Mobile-Friendly Navigation Banner */}
-            <div className="mt-3 p-2.5 bg-amber-50/80 border border-amber-200/80 rounded-lg flex items-center justify-between gap-3 text-xs text-amber-900">
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4 text-[#F05A28] shrink-0" />
-                <span className="text-[11px] sm:text-xs">
-                  Scroll below to select your date and time slot.
-                </span>
+            {/* Mobile-Optimized Direct Action Banner */}
+            <div className="mt-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/90 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-900 shadow-xs">
+              <div className="flex items-start sm:items-center gap-2">
+                <CalendarIcon className="w-4 h-4 text-[#F05A28] shrink-0 mt-0.5 sm:mt-0" />
+                <div>
+                  <span className="font-bold block sm:inline text-neutral-900">
+                    Live Calendar & Slot Selector:
+                  </span>{' '}
+                  <span className="text-neutral-700 text-[11px] sm:text-xs">
+                    Select a date below or open in fullscreen on mobile.
+                  </span>
+                </div>
               </div>
-              <a
-                href={activeEvent.url || 'https://calendly.com/baobabdmc-info/30min'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 font-bold text-[#F05A28] hover:underline text-[11px] inline-flex items-center gap-1"
-              >
-                <span>Full screen</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
+              <div className="flex items-center gap-2 shrink-0">
+                <a
+                  href={activeEvent.url || 'https://calendly.com/baobabdmc-info/30min'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 bg-[#F05A28] hover:bg-[#D94526] text-white font-bold rounded text-[11px] inline-flex items-center gap-1.5 shadow-xs transition-colors"
+                >
+                  <span>Open Fullscreen</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Calendar Body / Iframe Area */}
-          <div className="w-full bg-white relative flex-1 min-h-[720px] sm:min-h-[660px]">
+          {/* Calendar Body / Iframe Area with Side Touch Margins for Mobile Scrolling */}
+          <div className="w-full bg-white relative flex-1 min-h-[750px] sm:min-h-[680px] p-1 sm:p-0">
             {/* Loading Indicator */}
             {!iframeLoaded && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/95 z-10 space-y-3 p-6 text-center">
@@ -275,19 +283,43 @@ export const CalendlyModal: React.FC<CalendlyModalProps> = ({
               </div>
             )}
 
-            {/* Embedded Calendly iframe */}
-            <iframe
-              src={embedUrl}
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              title="Calendly Scheduling Interface"
-              className="w-full h-full min-h-[720px] sm:min-h-[660px] border-none block"
-              style={{ minHeight: '720px' }}
-              scrolling="yes"
-              allow="camera; microphone; fullscreen; display-capture"
-              onLoad={() => setIframeLoaded(true)}
-            />
+            {/* Embedded Calendly iframe: Styled with 100% width and dynamic mobile viewport heights */}
+            <div className="w-full h-full min-h-[750px] sm:min-h-[680px] overflow-hidden">
+              <iframe
+                src={embedUrl}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                title="Calendly Scheduling Interface"
+                className="w-full h-full min-h-[750px] sm:min-h-[680px] border-none block"
+                style={{ minHeight: '750px', height: '100%', width: '100%' }}
+                scrolling="yes"
+                allow="camera; microphone; fullscreen; display-capture"
+                onLoad={() => setIframeLoaded(true)}
+              />
+            </div>
+          </div>
+
+          {/* Sticky Mobile Quick Action Bar at bottom */}
+          <div className="sm:hidden sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-2.5 flex items-center justify-between gap-2 shadow-lg">
+            <a
+              href={activeEvent.url || 'https://calendly.com/baobabdmc-info/30min'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-2 bg-[#F05A28] text-white text-xs font-bold rounded text-center flex items-center justify-center gap-1.5 shadow-xs"
+            >
+              <span>Instant Booking Tab</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href={`https://wa.me/${COMPANY_CONTACT.whatsappRaw}?text=Hello%20Baobab%20DMC%2C%20I%20would%20like%20to%20schedule%20a%20B2B%20consultation`}
+              target="_blank"
+              rel="noreferrer"
+              className="py-2 px-3 bg-emerald-600 text-white text-xs font-semibold rounded flex items-center justify-center gap-1 shadow-xs"
+            >
+              <MessageSquare className="w-3.5 h-3.5 fill-current" />
+              <span>WhatsApp</span>
+            </a>
           </div>
 
           {/* Footer Info & Quick Channels Bar */}

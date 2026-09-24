@@ -1,6 +1,7 @@
 import React from 'react';
 import { EXCLUSIVE_VENUES } from '../data/dmcData';
 import { VenueShowcase } from '../types';
+import { useSiteContent } from '../context/SiteContentContext';
 import { MapPin, Users, Sparkles, Building2, ArrowRight } from 'lucide-react';
 
 interface VenuesSectionProps {
@@ -12,6 +13,9 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({
   onSelectVenue,
   onInquireVenue,
 }) => {
+  const { content } = useSiteContent();
+  const venuesList = content?.venues && content.venues.length > 0 ? content.venues : EXCLUSIVE_VENUES;
+
   return (
     <section id="venues" className="py-20 sm:py-28 bg-[#181A1E] text-white relative">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
@@ -43,7 +47,7 @@ export const VenuesSection: React.FC<VenuesSectionProps> = ({
 
         {/* Venues Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {EXCLUSIVE_VENUES.map((venue) => (
+          {venuesList.map((venue) => (
             <div
               key={venue.id}
               className="bg-neutral-900 border border-neutral-800 rounded-md overflow-hidden group hover:border-[#F05A28]/50 transition-all duration-300 flex flex-col justify-between"

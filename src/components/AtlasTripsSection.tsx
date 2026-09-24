@@ -17,6 +17,7 @@ import {
 import { AtlasTrip } from '../types';
 import { ATLAS_TURKEY_TRIPS } from '../data/tripsData';
 import { exportItineraryToPdf } from '../utils/pdfExport';
+import { useSiteContent } from '../context/SiteContentContext';
 
 interface AtlasTripsSectionProps {
   onSelectTrip: (trip: AtlasTrip) => void;
@@ -27,6 +28,9 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
   onSelectTrip,
   onRequestProposal,
 }) => {
+  const { content } = useSiteContent();
+  const tripsSource = content?.trips && content.trips.length > 0 ? content.trips : ATLAS_TURKEY_TRIPS;
+
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedDuration, setSelectedDuration] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -50,7 +54,7 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
   ];
 
   const filteredTrips = useMemo(() => {
-    return ATLAS_TURKEY_TRIPS.filter((trip) => {
+    return tripsSource.filter((trip) => {
       // Category match
       if (selectedCategory !== 'all' && trip.category !== selectedCategory) {
         return false;
@@ -191,7 +195,7 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
             <Compass className="w-10 h-10 text-neutral-500 mx-auto mb-3" />
             <h3 className="text-lg font-semibold text-white mb-1">No matching Turkey trips found</h3>
             <p className="text-sm text-neutral-400 max-w-md mx-auto mb-4">
-              Try adjusting your search query or selecting &quot;All 15 Trips&quot; to see our full Turkey catalog.
+              Try adjusting your search query or clearing filters to see our full Turkey catalog.
             </p>
             <button
               onClick={() => {
@@ -211,25 +215,38 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                 key={trip.id}
                 className="group bg-neutral-800/70 rounded-lg border border-neutral-700/70 overflow-hidden flex flex-col hover:border-neutral-500 transition-all duration-300 shadow-md hover:shadow-2xl hover:-translate-y-1"
               >
-                {/* Card Image */}
-                <div className="relative h-56 w-full overflow-hidden bg-neutral-900 shrink-0">
+                {/* Card Image - Clickable to open trip details */}
+                <div 
+                  onClick={() => onSelectTrip(trip)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onSelectTrip(trip);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open ${trip.title} itinerary`}
+                  title={`Click to view ${trip.title} full itinerary`}
+                  className="relative h-56 w-full overflow-hidden bg-neutral-900 shrink-0 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#F05A28]"
+                >
                   <img
                     src={trip.image}
                     alt={trip.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
                     referrerPolicy="no-referrer"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/90 via-transparent to-black/30" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/90 via-transparent to-black/30 pointer-events-none" />
 
                   {/* Top Badges */}
-                  <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                  <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 pointer-events-none">
                     <span className="px-2.5 py-0.5 bg-[#F05A28] text-white text-[11px] font-bold uppercase tracking-wider rounded-sm shadow-xs">
                       {trip.category}
                     </span>
                   </div>
 
-                  <div className="absolute top-3 right-3">
+                  <div className="absolute top-3 right-3 pointer-events-none">
                     <span className="px-2.5 py-0.5 bg-black/70 backdrop-blur-xs text-white text-[11px] font-semibold rounded-sm flex items-center gap-1">
                       <Calendar className="w-3 h-3 text-[#F05A28]" />
                       {trip.duration}
@@ -237,7 +254,7 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                   </div>
 
                   {/* Pax on image bottom */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-neutral-300">
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-neutral-300 pointer-events-none">
                     <span className="flex items-center gap-1 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded text-[11px]">
                       <Users className="w-3 h-3 text-neutral-400" />
                       {trip.groupSize}
@@ -354,7 +371,7 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                 B2B Custom Itinerary Tailoring & White-Label Operating
               </div>
               <div className="text-xs text-neutral-400">
-                All 15 programs can be customized for your agency's brand, closed private departures, affinity groups, or fixed-date catalog series with bespoke pacing and lodge upgrades.
+                All programs can be customized for your company's brand, closed private departures, affinity groups, or fixed-date catalog series with bespoke pacing and lodge upgrades.
               </div>
             </div>
           </div>

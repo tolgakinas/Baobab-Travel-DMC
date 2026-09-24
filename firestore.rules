@@ -81,6 +81,23 @@ service cloud.firestore {
         (!('status' in data) || (data.status in ['pending', 'verified', 'rejected']));
     }
 
+    // Validation for Consultant Bookings
+    function isValidConsultantBooking(data) {
+      return data.keys().hasAll(['bookingReference', 'consultantName', 'consultantEmail', 'leadCustomerName', 'tripTitle', 'totalNetPayable', 'createdAt']) &&
+        data.bookingReference is string && data.bookingReference.size() > 0 && data.bookingReference.size() <= 64 &&
+        data.consultantName is string && data.consultantName.size() > 0 && data.consultantName.size() <= 120 &&
+        data.consultantEmail is string && data.consultantEmail.size() > 0 && data.consultantEmail.size() <= 150 &&
+        data.leadCustomerName is string && data.leadCustomerName.size() > 0 && data.leadCustomerName.size() <= 120 &&
+        data.tripTitle is string && data.tripTitle.size() > 0 && data.tripTitle.size() <= 180 &&
+        data.createdAt is string && data.createdAt.size() <= 60 &&
+        (!('agencyName' in data) || (data.agencyName is string && data.agencyName.size() <= 150)) &&
+        (!('consultantPhone' in data) || (data.consultantPhone is string && data.consultantPhone.size() <= 60)) &&
+        (!('customerEmail' in data) || (data.customerEmail is string && data.customerEmail.size() <= 150)) &&
+        (!('customerPhone' in data) || (data.customerPhone is string && data.customerPhone.size() <= 60)) &&
+        (!('specialRequests' in data) || (data.specialRequests is string && data.specialRequests.size() <= 2000)) &&
+        (!('status' in data) || (data.status in ['confirmed', 'deposit_pending', 'operating', 'cancelled']));
+    }
+
     // Inquiries Collection
     match /inquiries/{inquiryId} {
       allow get: if isValidId(inquiryId) && (isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid));
@@ -88,6 +105,15 @@ service cloud.firestore {
       allow create: if isValidId(inquiryId) && isValidInquiry(incoming());
       allow update: if isValidId(inquiryId) && isAdmin() && isValidInquiry(incoming());
       allow delete: if isValidId(inquiryId) && isAdmin();
+    }
+
+    // Consultant Bookings Collection
+    match /consultant_bookings/{bookingId} {
+      allow get: if isValidId(bookingId) && (isAdmin() || (isSignedIn() && resource.data.consultantEmail == request.auth.token.email));
+      allow list: if isAdmin() || isSignedIn();
+      allow create: if isValidId(bookingId) && isValidConsultantBooking(incoming());
+      allow update: if isValidId(bookingId) && (isAdmin() || (isSignedIn() && resource.data.consultantEmail == request.auth.token.email)) && isValidConsultantBooking(incoming());
+      allow delete: if isValidId(bookingId) && isAdmin();
     }
 
     // Users Collection

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Destination } from '../types';
+import { TripPhotoSlider } from './TripPhotoSlider';
 import { 
   X, 
   MapPin, 
@@ -30,19 +31,24 @@ export const DestinationModal: React.FC<DestinationModalProps> = ({
 }) => {
   if (!destination) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+  const destinationImages = destination.images && destination.images.length > 0
+    ? destination.images
+    : [destination.heroImage, ...(destination.galleryImages || [])];
+  const destinationCaptions = destination.imageCaptions || [];
 
+  return (
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-2 sm:p-4 md:p-6 flex justify-center items-start animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       {/* Modal Container */}
-      <div className="relative bg-white w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden z-10 my-6 animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
+      <div 
+        className="relative bg-white w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden z-10 my-2 sm:my-6 border border-neutral-200 animate-in fade-in zoom-in-95 duration-200 flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         
-        {/* Top Clean Header Bar: Crisp, 100% Readable Text */}
-        <div className="px-6 py-4 bg-white border-b border-neutral-200 flex items-center justify-between gap-4 shrink-0">
+        {/* Top Sticky Clean Header Bar */}
+        <div className="sticky top-0 z-30 px-6 py-3.5 bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-xs flex items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#F05A28]">
               <span>{destination.region} Region</span>
@@ -62,27 +68,27 @@ export const DestinationModal: React.FC<DestinationModalProps> = ({
 
             {/* Close Button */}
             <button
+              type="button"
               onClick={onClose}
-              className="p-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-neutral-900 transition-colors"
+              className="p-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-neutral-900 transition-colors cursor-pointer border border-neutral-200"
               aria-label="Close modal"
+              title="Close"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* Narrow Compact Photo Banner (Slim 21/6 aspect ratio) */}
-        <div className="relative aspect-[21/6] w-full bg-neutral-900 shrink-0 overflow-hidden">
-          <img
-            src={destination.heroImage}
-            alt={destination.name}
-            className="w-full h-full object-cover object-center"
-            referrerPolicy="no-referrer"
-          />
-        </div>
+        {/* 5-Photo Interactive Slider */}
+        <TripPhotoSlider
+          images={destinationImages}
+          captions={destinationCaptions}
+          title={destination.name}
+          aspectRatioClassName="h-56 sm:h-72"
+        />
 
         {/* Modal Scrollable Body */}
-        <div className="p-6 sm:p-7 overflow-y-auto space-y-6 text-neutral-800">
+        <div className="p-6 sm:p-7 space-y-6 text-neutral-800">
           {/* Tagline */}
           <div className="text-sm sm:text-base font-serif italic text-neutral-800 bg-[#FAF9F6] p-3.5 rounded-md border-l-4 border-[#F05A28] border-r border-t border-b border-neutral-200">
             "{destination.tagline}"

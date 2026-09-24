@@ -78,10 +78,10 @@ export interface WhiteLabelAsset {
 export const DEMO_PARTNER_ACCOUNTS: B2BPartnerAccount[] = [
   {
     id: 'partner-001',
-    agencyName: 'Atlas Travel Horizons',
+    agencyName: 'Horizon Travel Partners',
     contactPerson: 'Sarah Jenkins',
     role: 'Head of Product & Contracting',
-    email: 'sarah.jenkins@atlastravel.co.uk',
+    email: 'sarah.jenkins@horizontravel.co.uk',
     phone: '+44 20 7946 0192',
     country: 'United Kingdom',
     city: 'London',

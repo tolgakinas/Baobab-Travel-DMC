@@ -230,7 +230,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Compass className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
-                  <span>Turkey Trips Portfolio (15)</span>
+                  <span>Turkey Trips Portfolio</span>
                 </button>
               </li>
               <li>
@@ -239,7 +239,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Users className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
-                  <span>Small Group Tours (6–14)</span>
+                  <span>Small Group Tours</span>
                 </button>
               </li>
               <li>

@@ -9,8 +9,24 @@ export const DestinationsManagerTab: React.FC = () => {
   const [editingDestId, setEditingDestId] = useState<string | null>(null);
   const [deletingDestId, setDeletingDestId] = useState<string | null>(null);
   const [photoPickerOpen, setPhotoPickerOpen] = useState(false);
+  const [photoPickerTarget, setPhotoPickerTarget] = useState<'hero' | number | 'add_gallery'>('hero');
 
   const editingDest = content.destinations.find(d => d.id === editingDestId);
+
+  const handleSelectPhoto = (url: string) => {
+    if (!editingDest) return;
+
+    if (photoPickerTarget === 'hero') {
+      updateDestination(editingDest.id, { heroImage: url });
+    } else if (typeof photoPickerTarget === 'number') {
+      const updatedGallery = [...(editingDest.galleryImages || [])];
+      updatedGallery[photoPickerTarget] = url;
+      updateDestination(editingDest.id, { galleryImages: updatedGallery });
+    } else if (photoPickerTarget === 'add_gallery') {
+      const updatedGallery = [...(editingDest.galleryImages || []), url];
+      updateDestination(editingDest.id, { galleryImages: updatedGallery });
+    }
+  };
 
   const handleCreateNew = () => {
     const id = `dest-${Date.now()}`;
@@ -50,8 +66,13 @@ export const DestinationsManagerTab: React.FC = () => {
         <PhotoLibraryModal
           isOpen={photoPickerOpen}
           onClose={() => setPhotoPickerOpen(false)}
-          onSelectPhoto={(url) => updateDestination(editingDest.id, { heroImage: url })}
-          currentUrl={editingDest.heroImage}
+          onSelectPhoto={handleSelectPhoto}
+          currentUrl={
+            photoPickerTarget === 'hero'
+              ? editingDest.heroImage
+              : (typeof photoPickerTarget === 'number' ? editingDest.galleryImages?.[photoPickerTarget] : undefined)
+          }
+          title={`Select Photo for ${editingDest.name} (${photoPickerTarget === 'hero' ? 'Hero Banner' : 'Gallery Image'})`}
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-lg border border-neutral-200">
@@ -193,11 +214,15 @@ export const DestinationsManagerTab: React.FC = () => {
               </div>
               <div className="sm:col-span-8 space-y-2">
                 <button
-                  onClick={() => setPhotoPickerOpen(true)}
-                  className="px-3.5 py-1.5 bg-neutral-900 hover:bg-black text-white text-xs font-bold uppercase rounded flex items-center gap-1.5"
+                  type="button"
+                  onClick={() => {
+                    setPhotoPickerTarget('hero');
+                    setPhotoPickerOpen(true);
+                  }}
+                  className="px-3.5 py-1.5 bg-neutral-900 hover:bg-black text-white text-xs font-bold uppercase rounded flex items-center gap-1.5 transition-colors"
                 >
                   <ImageIcon className="w-3.5 h-3.5 text-[#F05A28]" />
-                  <span>Choose Photo from Library</span>
+                  <span>Choose Hero Photo from Central Library</span>
                 </button>
                 <input
                   type="url"
@@ -207,6 +232,69 @@ export const DestinationsManagerTab: React.FC = () => {
                   placeholder="Direct image URL"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Regional Showcase Photo Gallery */}
+          <div className="border-t border-neutral-100 pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider">
+                  Regional Photo Gallery ({editingDest.galleryImages?.length || 0} Photos)
+                </label>
+                <p className="text-[11px] text-neutral-500">
+                  Curated regional photos displayed in the interactive destination explorer.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setPhotoPickerTarget('add_gallery');
+                  setPhotoPickerOpen(true);
+                }}
+                className="px-3 py-1.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase rounded flex items-center gap-1 transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add Photo from Library</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {(editingDest.galleryImages || []).map((imgUrl, gIdx) => (
+                <div key={gIdx} className="group relative rounded border border-neutral-200 overflow-hidden bg-neutral-900">
+                  <div className="aspect-[4/3]">
+                    <img
+                      src={imgUrl}
+                      alt={`${editingDest.name} gallery ${gIdx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-1.5 bg-white flex items-center justify-between gap-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhotoPickerTarget(gIdx);
+                        setPhotoPickerOpen(true);
+                      }}
+                      className="text-[10px] font-bold text-neutral-700 hover:text-[#F05A28] flex items-center gap-1"
+                    >
+                      <ImageIcon className="w-3 h-3 text-[#F05A28]" />
+                      <span>Replace</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = (editingDest.galleryImages || []).filter((_, idx) => idx !== gIdx);
+                        updateDestination(editingDest.id, { galleryImages: updated });
+                      }}
+                      className="text-[10px] font-bold text-red-600 hover:text-red-800"
+                      title="Remove from Gallery"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

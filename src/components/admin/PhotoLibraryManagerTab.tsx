@@ -42,6 +42,7 @@ interface PhotoLibraryManagerTabProps {
   onSelectPhoto?: (url: string) => void;
   currentUrl?: string;
   isModalMode?: boolean;
+  initialCategory?: string;
 }
 
 export interface UploadQueueItem {
@@ -90,12 +91,13 @@ const SUGGESTED_SEO_TAGS = [
 export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
   onSelectPhoto,
   currentUrl,
-  isModalMode = false
+  isModalMode = false,
+  initialCategory
 }) => {
   const { content, addCustomPhoto, deleteCustomPhoto, updateCustomPhoto } = useSiteContent();
 
   const [activeSubView, setActiveSubView] = useState<'browse' | 'upload' | 'manual_add'>('browse');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'error' } | null>(null);

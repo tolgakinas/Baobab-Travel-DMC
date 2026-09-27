@@ -37,6 +37,8 @@ import { VenuesManagerTab } from './VenuesManagerTab';
 import { ServicesManagerTab } from './ServicesManagerTab';
 import { AboutTestimonialsTab } from './AboutTestimonialsTab';
 import { InquiriesCrmTab } from './InquiriesCrmTab';
+import { PhotoLibraryManagerTab } from './PhotoLibraryManagerTab';
+import { Image as ImageIcon } from 'lucide-react';
 
 interface SuperAdminModalProps {
   isOpen: boolean;
@@ -128,6 +130,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
 
   const navTabs = [
     { id: 'hero', label: 'Hero & Branding', icon: Sparkles, count: content.hero.slides.length },
+    { id: 'photos', label: 'Photo Library (AI SEO)', icon: ImageIcon, count: (content.customPhotos?.length || 0) + 20, badge: 'AI' },
     { id: 'metrics', label: 'Metrics & Numbers', icon: Hash, count: content.stats.length },
     { id: 'contact', label: 'Contact & Ops', icon: Phone },
     { id: 'trips', label: 'Trips & Expeditions', icon: Compass, count: content.trips.length },
@@ -423,6 +426,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <div className="max-w-5xl mx-auto">
             {activeAdminTab === 'hero' && <HeroBrandingTab />}
+            {activeAdminTab === 'photos' && <PhotoLibraryManagerTab />}
             {activeAdminTab === 'metrics' && <MetricsNumbersTab />}
             {activeAdminTab === 'contact' && <CompanyContactTab />}
             {activeAdminTab === 'trips' && <TripsManagerTab />}

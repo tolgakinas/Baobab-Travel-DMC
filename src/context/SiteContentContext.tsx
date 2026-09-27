@@ -79,6 +79,30 @@ export interface AboutSettings {
   faqItems: typeof DEFAULT_FAQ_ITEMS;
 }
 
+export interface LibraryPhotoItem {
+  id?: string;
+  url: string;
+  title: string;
+  location: string;
+  category?: string;
+  caption?: string;
+  description?: string;
+  altText?: string;
+  seoKeywords?: string[];
+  originalSizeFormatted?: string;
+  optimizedSizeFormatted?: string;
+  compressionRatio?: string;
+  dimensions?: string;
+  format?: string;
+  uploadedAt?: string;
+  isCustom?: boolean;
+}
+
+export interface PhotoPreset {
+  category: string;
+  photos: LibraryPhotoItem[];
+}
+
 export interface SiteContentData {
   branding: BrandingSettings;
   hero: HeroSettings;
@@ -89,15 +113,7 @@ export interface SiteContentData {
   venues: VenueShowcase[];
   services: DmcService[];
   about: AboutSettings;
-}
-
-export interface PhotoPreset {
-  category: string;
-  photos: {
-    url: string;
-    title: string;
-    location: string;
-  }[];
+  customPhotos?: LibraryPhotoItem[];
 }
 
 const DEFAULT_HERO_SLIDES: HeroSlide[] = [
@@ -294,7 +310,8 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
       rating: t.rating || 5
     })),
     faqItems: DEFAULT_FAQ_ITEMS
-  }
+  },
+  customPhotos: []
 };
 
 const STORAGE_KEY = 'baobab_dmc_super_admin_content_v2';
@@ -337,6 +354,11 @@ interface SiteContentContextType {
   deleteVenue: (venueId: string) => void;
   updateService: (serviceId: string, updates: Partial<DmcService>) => void;
   updateAbout: (updates: Partial<AboutSettings>) => void;
+  
+  // Photo Library Management
+  addCustomPhoto: (photo: LibraryPhotoItem) => void;
+  deleteCustomPhoto: (urlOrId: string) => void;
+  updateCustomPhoto: (urlOrId: string, updates: Partial<LibraryPhotoItem>) => void;
 }
 
 const SiteContentContext = createContext<SiteContentContextType | undefined>(undefined);
@@ -691,6 +713,45 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setIsDirty(true);
   }, []);
 
+  // 10. Photo Library Custom Photos
+  const addCustomPhoto = useCallback((photo: LibraryPhotoItem) => {
+    setContent(prev => {
+      const existing = prev.customPhotos || [];
+      // Prevent duplicates by URL
+      const filtered = existing.filter(p => p.url !== photo.url);
+      return {
+        ...prev,
+        customPhotos: [
+          {
+            ...photo,
+            isCustom: true,
+            uploadedAt: photo.uploadedAt || new Date().toISOString()
+          },
+          ...filtered
+        ]
+      };
+    });
+    setIsDirty(true);
+  }, []);
+
+  const deleteCustomPhoto = useCallback((urlOrId: string) => {
+    setContent(prev => ({
+      ...prev,
+      customPhotos: (prev.customPhotos || []).filter(p => p.url !== urlOrId && p.id !== urlOrId)
+    }));
+    setIsDirty(true);
+  }, []);
+
+  const updateCustomPhoto = useCallback((urlOrId: string, updates: Partial<LibraryPhotoItem>) => {
+    setContent(prev => ({
+      ...prev,
+      customPhotos: (prev.customPhotos || []).map(p => 
+        (p.url === urlOrId || p.id === urlOrId) ? { ...p, ...updates } : p
+      )
+    }));
+    setIsDirty(true);
+  }, []);
+
   const value = useMemo(() => ({
     content,
     isSuperAdmin,
@@ -725,7 +786,10 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     addVenue,
     deleteVenue,
     updateService,
-    updateAbout
+    updateAbout,
+    addCustomPhoto,
+    deleteCustomPhoto,
+    updateCustomPhoto
   }), [
     content,
     isSuperAdmin,
@@ -758,7 +822,10 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     addVenue,
     deleteVenue,
     updateService,
-    updateAbout
+    updateAbout,
+    addCustomPhoto,
+    deleteCustomPhoto,
+    updateCustomPhoto
   ]);
 
   return (

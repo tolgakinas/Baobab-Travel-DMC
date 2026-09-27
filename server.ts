@@ -3,13 +3,28 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
 import { Resend } from 'resend';
+import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
-app.use(express.json());
+app.use(express.json({ limit: '30mb' }));
+app.use(express.urlencoded({ extended: true, limit: '30mb' }));
+
+// Lazy-initialized Gemini AI Client
+let geminiClient: GoogleGenAI | null = null;
+function getGeminiClient(): GoogleGenAI | null {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey.trim() === '') {
+    return null;
+  }
+  if (!geminiClient) {
+    geminiClient = new GoogleGenAI({ apiKey });
+  }
+  return geminiClient;
+}
 
 // Lazy-initialized Resend client
 let resendClient: Resend | null = null;
@@ -29,8 +44,117 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     resendConfigured: Boolean(process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'MY_RESEND_API_KEY'),
+    geminiConfigured: Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'MY_GEMINI_API_KEY'),
     timestamp: new Date().toISOString(),
   });
+});
+
+// API Route: AI Photo Examination & SEO Metadata Generation
+app.post('/api/analyze-photo', async (req, res) => {
+  try {
+    const { base64Image, mimeType = 'image/webp', originalName = 'photo.jpg', categoryHint, locationHint } = req.body;
+
+    if (!base64Image) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing base64Image data in request.'
+      });
+    }
+
+    // Clean base64 string if data URL prefix was included
+    const cleanBase64 = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
+
+    const gemini = getGeminiClient();
+
+    if (gemini) {
+      try {
+        const prompt = `You are a senior SEO copywriter and travel curator for Baobab DMC Turkey, an incoming luxury B2B Tour Operator & Destination Management Company in Turkey.
+Examine this uploaded travel photograph in detail.
+
+Provide structured, high-ranking SEO metadata in valid JSON with these exact keys:
+- "title": A concise, engaging, keyword-rich title for the image (5-10 words, e.g. "Sunrise Hot Air Balloons Floating Over Göreme Valley").
+- "caption": A compelling 1-2 sentence travel catalog description highlighting what makes this scene memorable for small groups or private travelers.
+- "description": A thorough 2-3 sentence overview describing the visual elements, architectural/geological features, atmosphere, time of day, and location for search engine indexing.
+- "altText": An accessibility-compliant, descriptive alt text under 125 characters (e.g. "Hot air balloons drifting over fairy chimneys in Cappadocia Turkey at dawn").
+- "location": The specific landmark, district, or Turkish city (e.g. "Göreme, Cappadocia", "Bosphorus Strait, Istanbul", "Ancient Ephesus, Selçuk", "Ölüdeniz & Fethiye Coast", "Pamukkale Travertines", "Sumela Monastery, Trabzon").
+- "category": Choose the single closest category from: "Cappadocia & Balloons", "Istanbul & Bosphorus", "Aegean & Classical Ruins", "Turquoise Coast & Gulets", "Black Sea & Highlands", "Eastern Anatolia & Mesopotamia", "Gastronomy & Bazaars", "Luxury Boutique Venues".
+- "seoKeywords": An array of 6-8 search terms for Google/Bing image search (e.g. ["Cappadocia hot air balloons", "Turkey DMC travel", "Goreme fairy chimneys", "luxury Turkey small group tour"]).
+
+Hints provided: ${locationHint ? `Location: ${locationHint}, ` : ''}${categoryHint ? `Category: ${categoryHint}, ` : ''}File: ${originalName}.
+Return valid JSON only.`;
+
+        const aiResponse = await gemini.models.generateContent({
+          model: 'gemini-3.8-flash',
+          contents: [
+            {
+              inlineData: {
+                mimeType: mimeType || 'image/jpeg',
+                data: cleanBase64
+              }
+            },
+            prompt
+          ],
+          config: {
+            responseMimeType: 'application/json'
+          }
+        });
+
+        const textOutput = aiResponse.text || '{}';
+        const parsed = JSON.parse(textOutput);
+
+        return res.json({
+          success: true,
+          source: 'gemini-ai',
+          analysis: {
+            title: parsed.title || 'Curated Turkey Travel Experience',
+            caption: parsed.caption || 'Authentic regional discovery and cultural heritage in Turkey.',
+            description: parsed.description || 'High-resolution travel imagery curated for bespoke and small group Turkey itineraries.',
+            altText: parsed.altText || 'Scenic Turkey landscape and cultural landmark by Baobab DMC',
+            location: parsed.location || locationHint || 'Turkiye',
+            category: parsed.category || categoryHint || 'Cappadocia & Balloons',
+            seoKeywords: Array.isArray(parsed.seoKeywords) ? parsed.seoKeywords : [
+              'Turkey DMC', 'Turkey tours', 'Inbound Turkish ground operator', 'Bespoke travel Turkey'
+            ]
+          }
+        });
+      } catch (aiErr: any) {
+        console.warn('[Gemini AI Photo Analysis Warning]:', aiErr?.message || aiErr);
+        // Fall back to rule-based analysis below
+      }
+    }
+
+    // Fallback rule-based SEO metadata generation when API key is unconfigured
+    const cleanFileName = originalName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+    const fallbackCategory = categoryHint || 'Cappadocia & Balloons';
+    const fallbackLocation = locationHint || (cleanFileName.length > 3 ? cleanFileName : 'Turkiye');
+
+    return res.json({
+      success: true,
+      source: 'smart-heuristic-seo',
+      analysis: {
+        title: `${cleanFileName.charAt(0).toUpperCase() + cleanFileName.slice(1)} - Authentic Turkey Experience`,
+        caption: `Exclusive small group discovery highlighting the natural landscapes and cultural heritage of ${fallbackLocation}.`,
+        description: `High-resolution photograph featuring ${fallbackLocation}. Professionally curated for inbound luxury tour operators, FIT itineraries, and travel advisors partnering with Baobab DMC Turkey.`,
+        altText: `Scenic view of ${fallbackLocation} in Turkey for guided tours and itineraries`,
+        location: fallbackLocation,
+        category: fallbackCategory,
+        seoKeywords: [
+          `${fallbackLocation} Turkey`,
+          'Turkey DMC ground operator',
+          'Baobab DMC Turkey tours',
+          'Authentic Turkey travel photography',
+          'B2B travel trade partner Turkey',
+          'Small group guided expeditions'
+        ]
+      }
+    });
+  } catch (error: any) {
+    console.error('[Analyze Photo Error]:', error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || 'Failed to analyze photo for SEO.'
+    });
+  }
 });
 
 // API Route: Send Tour / B2B Inquiry Email via Resend

@@ -8,6 +8,7 @@ interface PhotoLibraryModalProps {
   onSelectPhoto: (url: string) => void;
   currentUrl?: string;
   title?: string;
+  initialCategory?: string;
   zIndexClass?: string;
 }
 
@@ -17,6 +18,7 @@ export const PhotoLibraryModal: React.FC<PhotoLibraryModalProps> = ({
   onSelectPhoto,
   currentUrl,
   title = 'Turkey Photography Library & AI SEO Optimizer',
+  initialCategory,
   zIndexClass = 'z-[160]'
 }) => {
   if (!isOpen) return null;
@@ -51,7 +53,7 @@ export const PhotoLibraryModal: React.FC<PhotoLibraryModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-neutral-400">
-                Upload raw photos, auto-compress to WebP, inspect AI SEO descriptions & apply to website in 1 click
+                Unified Centralized Photo Library • Upload, auto-compress to WebP, inspect AI SEO & sync live across all components
               </p>
             </div>
           </div>
@@ -69,6 +71,7 @@ export const PhotoLibraryModal: React.FC<PhotoLibraryModalProps> = ({
           <PhotoLibraryManagerTab
             onSelectPhoto={handleSelect}
             currentUrl={currentUrl}
+            initialCategory={initialCategory}
             isModalMode={true}
           />
         </div>

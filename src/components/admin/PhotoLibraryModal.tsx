@@ -8,6 +8,7 @@ interface PhotoLibraryModalProps {
   onSelectPhoto: (url: string) => void;
   currentUrl?: string;
   title?: string;
+  zIndexClass?: string;
 }
 
 export const PhotoLibraryModal: React.FC<PhotoLibraryModalProps> = ({
@@ -15,7 +16,8 @@ export const PhotoLibraryModal: React.FC<PhotoLibraryModalProps> = ({
   onClose,
   onSelectPhoto,
   currentUrl,
-  title = 'Turkey Photography Library & AI SEO Optimizer'
+  title = 'Turkey Photography Library & AI SEO Optimizer',
+  zIndexClass = 'z-[160]'
 }) => {
   if (!isOpen) return null;
 
@@ -25,7 +27,7 @@ export const PhotoLibraryModal: React.FC<PhotoLibraryModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm animate-in fade-in">
+    <div className={`fixed inset-0 ${zIndexClass} flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm animate-in fade-in`}>
       <div 
         className="bg-neutral-100 rounded-xl shadow-2xl w-full max-w-6xl max-h-[92vh] flex flex-col overflow-hidden border border-neutral-700"
         role="dialog"

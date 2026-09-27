@@ -1,32 +1,73 @@
+export interface BlogSectionItem {
+  heading: string;
+  body: string[];
+  image?: string;
+  imageAlt?: string;
+  imageCaption?: string;
+  tipBox?: string;
+  geoHighlight?: string;
+}
+
+export interface BlogFaqItem {
+  q: string;
+  a: string;
+}
+
+export interface BlogAiOptimization {
+  metaTitle?: string;
+  metaDescription?: string;
+  primaryKeywords?: string[];
+  secondaryKeywords?: string[];
+  aeoDirectAnswer?: string;
+  aioKeyTakeaways?: string[];
+  semanticEntities?: string[];
+  searchIntent?: 'Informational' | 'Commercial / B2B Ground Operations' | 'Transactional' | string;
+  readingTimeMinutes?: number;
+  scores?: {
+    overallScore: number;
+    seoScore: number;
+    aeoScore: number;
+    aioScore: number;
+  };
+  auditChecklist?: {
+    item: string;
+    passed: boolean;
+    tip: string;
+  }[];
+  recommendations?: string[];
+  schemaJsonLd?: string;
+  lastOptimizedAt?: string;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
   title: string;
   excerpt: string;
-  category: 'Destination Guide' | 'Trip Logistics' | 'Travel Tips' | 'B2B Trade Insights';
+  category: 'Destination Guide' | 'Trip Logistics' | 'Travel Tips' | 'B2B Trade Insights' | string;
   readTime: string;
   publishedDate: string;
   heroImage: string;
+  heroImageAlt?: string;
+  heroImageCaption?: string;
+  galleryImages?: string[];
   geoData: {
     region: string;
     coordinates?: string;
     keyCities: string[];
   };
   seoKeywords: string[];
+  aiOptimization?: BlogAiOptimization;
   content: {
     intro: string;
-    sections: {
-      heading: string;
-      body: string[];
-      tipBox?: string;
-      geoHighlight?: string;
-    }[];
-    faqs?: {
-      q: string;
-      a: string;
-    }[];
+    sections: BlogSectionItem[];
+    faqs?: BlogFaqItem[];
     conclusion: string;
   };
+  status?: 'published' | 'draft';
+  isCustom?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const BLOG_POSTS: BlogPost[] = [

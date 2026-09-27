@@ -4,7 +4,8 @@ import {
   DmcService, 
   SampleItinerary, 
   VenueShowcase, 
-  AtlasTrip 
+  AtlasTrip,
+  BlogPost
 } from '../types';
 import { 
   DMC_STATS, 
@@ -17,6 +18,7 @@ import {
   FAQ_ITEMS as DEFAULT_FAQ_ITEMS
 } from '../data/dmcData';
 import { ATLAS_TURKEY_TRIPS as DEFAULT_TRIPS } from '../data/tripsData';
+import { BLOG_POSTS as DEFAULT_BLOG_POSTS } from '../data/blogData';
 import { db } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
@@ -114,6 +116,7 @@ export interface SiteContentData {
   services: DmcService[];
   about: AboutSettings;
   customPhotos?: LibraryPhotoItem[];
+  blogs?: BlogPost[];
 }
 
 const DEFAULT_HERO_SLIDES: HeroSlide[] = [
@@ -311,7 +314,8 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
     })),
     faqItems: DEFAULT_FAQ_ITEMS
   },
-  customPhotos: []
+  customPhotos: [],
+  blogs: DEFAULT_BLOG_POSTS
 };
 
 const STORAGE_KEY = 'baobab_dmc_super_admin_content_v2';
@@ -355,6 +359,13 @@ interface SiteContentContextType {
   updateService: (serviceId: string, updates: Partial<DmcService>) => void;
   updateAbout: (updates: Partial<AboutSettings>) => void;
   
+  // Blog Management (SEO / AEO / AIO)
+  addBlog: (blog: BlogPost) => void;
+  updateBlog: (blogId: string, updates: Partial<BlogPost>) => void;
+  deleteBlog: (blogId: string) => void;
+  duplicateBlog: (blogId: string) => void;
+  optimizeBlogWithAI: (blog: Partial<BlogPost>) => Promise<{ success: boolean; optimization?: any; error?: string }>;
+
   // Photo Library Management
   addCustomPhoto: (photo: LibraryPhotoItem) => void;
   deleteCustomPhoto: (urlOrId: string) => void;
@@ -377,6 +388,7 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
           hero: { ...DEFAULT_SITE_CONTENT.hero, ...(parsed.hero || {}) },
           companyContact: { ...DEFAULT_SITE_CONTENT.companyContact, ...(parsed.companyContact || {}) },
           about: { ...DEFAULT_SITE_CONTENT.about, ...(parsed.about || {}) },
+          blogs: Array.isArray(parsed.blogs) && parsed.blogs.length > 0 ? parsed.blogs : DEFAULT_BLOG_POSTS
         };
       }
     } catch (e) {
@@ -743,13 +755,141 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, []);
 
   const updateCustomPhoto = useCallback((urlOrId: string, updates: Partial<LibraryPhotoItem>) => {
+    setContent(prev => {
+      const existing = prev.customPhotos || [];
+      const foundIndex = existing.findIndex(p => p.url === urlOrId || p.id === urlOrId);
+      if (foundIndex >= 0) {
+        const updated = [...existing];
+        updated[foundIndex] = { ...updated[foundIndex], ...updates };
+        return { ...prev, customPhotos: updated };
+      } else {
+        // Find in preset library if it was a preset photo
+        let basePhoto: LibraryPhotoItem | undefined;
+        for (const cat of PHOTO_PRESET_LIBRARY) {
+          const match = cat.photos.find(p => p.url === urlOrId);
+          if (match) {
+            basePhoto = {
+              ...match,
+              category: match.category || cat.category,
+              altText: match.altText || `${match.title} in ${match.location}, Turkey`,
+              caption: match.caption || `Curated high-resolution photography of ${match.location}.`,
+              seoKeywords: match.seoKeywords || ['Turkey DMC', match.location, cat.category, 'Turkey tours'],
+              isCustom: true
+            };
+            break;
+          }
+        }
+        if (basePhoto) {
+          return {
+            ...prev,
+            customPhotos: [{ ...basePhoto, ...updates, isCustom: true }, ...existing]
+          };
+        }
+        return {
+          ...prev,
+          customPhotos: [{ url: urlOrId, title: 'Custom Photo', location: 'Turkiye', ...updates, isCustom: true }, ...existing]
+        };
+      }
+    });
+    setIsDirty(true);
+  }, []);
+
+  // 11. Blog Post Management (SEO / AEO / AIO)
+  const addBlog = useCallback((blog: BlogPost) => {
     setContent(prev => ({
       ...prev,
-      customPhotos: (prev.customPhotos || []).map(p => 
-        (p.url === urlOrId || p.id === urlOrId) ? { ...p, ...updates } : p
-      )
+      blogs: [
+        {
+          ...blog,
+          id: blog.id || `blog-${Date.now()}`,
+          isCustom: true,
+          createdAt: blog.createdAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        ...(prev.blogs || DEFAULT_BLOG_POSTS)
+      ]
     }));
     setIsDirty(true);
+  }, []);
+
+  const updateBlog = useCallback((blogId: string, updates: Partial<BlogPost>) => {
+    setContent(prev => {
+      const currentBlogs = prev.blogs || DEFAULT_BLOG_POSTS;
+      return {
+        ...prev,
+        blogs: currentBlogs.map(b => b.id === blogId ? {
+          ...b,
+          ...updates,
+          updatedAt: new Date().toISOString()
+        } : b)
+      };
+    });
+    setIsDirty(true);
+  }, []);
+
+  const deleteBlog = useCallback((blogId: string) => {
+    setContent(prev => {
+      const currentBlogs = prev.blogs || DEFAULT_BLOG_POSTS;
+      return {
+        ...prev,
+        blogs: currentBlogs.filter(b => b.id !== blogId)
+      };
+    });
+    setIsDirty(true);
+  }, []);
+
+  const duplicateBlog = useCallback((blogId: string) => {
+    setContent(prev => {
+      const currentBlogs = prev.blogs || DEFAULT_BLOG_POSTS;
+      const target = currentBlogs.find(b => b.id === blogId);
+      if (!target) return prev;
+      const copy: BlogPost = {
+        ...target,
+        id: `blog-copy-${Date.now()}`,
+        title: `${target.title} (Draft Copy)`,
+        slug: `${target.slug}-copy`,
+        status: 'draft',
+        isCustom: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      return {
+        ...prev,
+        blogs: [copy, ...currentBlogs]
+      };
+    });
+    setIsDirty(true);
+  }, []);
+
+  const optimizeBlogWithAI = useCallback(async (blog: Partial<BlogPost>): Promise<{ success: boolean; optimization?: any; error?: string }> => {
+    try {
+      const response = await fetch('/api/optimize-blog', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: blog.title || '',
+          excerpt: blog.excerpt || '',
+          category: blog.category || 'Destination Guide',
+          content: blog.content || { intro: '', sections: [], conclusion: '', faqs: [] },
+          geoData: blog.geoData || { region: 'Turkiye', keyCities: [] },
+          seoKeywords: blog.seoKeywords || [],
+          currentSlug: blog.slug || ''
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Optimization API responded with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.success && data.optimization) {
+        return { success: true, optimization: data.optimization };
+      }
+      return { success: false, error: data.error || 'Failed to optimize blog content.' };
+    } catch (err: any) {
+      console.error('AI Blog Optimization Error:', err);
+      return { success: false, error: err?.message || 'Network error during blog optimization.' };
+    }
   }, []);
 
   const value = useMemo(() => ({
@@ -787,6 +927,11 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     deleteVenue,
     updateService,
     updateAbout,
+    addBlog,
+    updateBlog,
+    deleteBlog,
+    duplicateBlog,
+    optimizeBlogWithAI,
     addCustomPhoto,
     deleteCustomPhoto,
     updateCustomPhoto
@@ -823,6 +968,11 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     deleteVenue,
     updateService,
     updateAbout,
+    addBlog,
+    updateBlog,
+    deleteBlog,
+    duplicateBlog,
+    optimizeBlogWithAI,
     addCustomPhoto,
     deleteCustomPhoto,
     updateCustomPhoto

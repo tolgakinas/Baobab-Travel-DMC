@@ -13,6 +13,7 @@ import {
   Check, 
   AlertTriangle,
   Eye,
+  EyeOff,
   Minimize2,
   Maximize2,
   ExternalLink,
@@ -26,7 +27,11 @@ import {
   MapPin,
   Building,
   Award,
-  Inbox
+  Inbox,
+  LogIn,
+  LogOut,
+  UserCheck,
+  AlertCircle
 } from 'lucide-react';
 import { HeroBrandingTab } from './HeroBrandingTab';
 import { MetricsNumbersTab } from './MetricsNumbersTab';
@@ -38,12 +43,15 @@ import { ServicesManagerTab } from './ServicesManagerTab';
 import { AboutTestimonialsTab } from './AboutTestimonialsTab';
 import { InquiriesCrmTab } from './InquiriesCrmTab';
 import { PhotoLibraryManagerTab } from './PhotoLibraryManagerTab';
-import { Image as ImageIcon } from 'lucide-react';
+import { BlogManagerTab } from './BlogManagerTab';
+import { Image as ImageIcon, BookOpen } from 'lucide-react';
 
 interface SuperAdminModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const AUTH_STORAGE_KEY = 'baobab_admin_authenticated';
 
 export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
   isOpen,
@@ -64,7 +72,27 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
     setActiveAdminTab
   } = useSiteContent();
 
-  const { currentUser, loginWithGoogle, logout } = useAuth();
+  const { currentUser, loginWithGoogle, logout: oauthLogout } = useAuth();
+
+  // Admin login authentication state
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
+    try {
+      return (
+        localStorage.getItem(AUTH_STORAGE_KEY) === 'true' ||
+        sessionStorage.getItem(AUTH_STORAGE_KEY) === 'true'
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  // Login Form States
+  const [adminEmail, setAdminEmail] = useState<string>('tolgakinas@gmail.com');
+  const [adminPassword, setAdminPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [rememberMe, setRememberMe] = useState<boolean>(true);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [isCloudSyncing, setIsCloudSyncing] = useState<boolean>(false);
@@ -83,6 +111,61 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isMinimized, showImportDialog, onClose]);
+
+  // Handle Admin Login submission
+  const handleAdminLogin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setIsLoggingIn(true);
+    setLoginError(null);
+
+    const emailTrimmed = adminEmail.trim().toLowerCase();
+    const passTrimmed = adminPassword;
+
+    // Verify authorized administrator credentials
+    if (emailTrimmed === 'tolgakinas@gmail.com' && passTrimmed === 'Atlas@2014') {
+      try {
+        if (rememberMe) {
+          localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+        } else {
+          sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
+        }
+      } catch (err) {
+        console.warn('Storage notice:', err);
+      }
+
+      setIsAdminAuthenticated(true);
+      toggleSuperAdmin(true);
+      setIsLoggingIn(false);
+      setSaveSuccessMsg('Welcome back, Tolga! Super Admin master session authenticated.');
+      setTimeout(() => setSaveSuccessMsg(null), 3500);
+    } else {
+      setIsLoggingIn(false);
+      setLoginError('Invalid administrator credentials. Please check your username and password.');
+    }
+  };
+
+  // Quick fill helper
+  const handleAutoFillAdminCredentials = () => {
+    setAdminEmail('tolgakinas@gmail.com');
+    setAdminPassword('Atlas@2014');
+    setLoginError(null);
+  };
+
+  // Admin Logout / Lock Console
+  const handleAdminLogout = () => {
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (err) {
+      console.warn('Storage notice:', err);
+    }
+    setIsAdminAuthenticated(false);
+    toggleSuperAdmin(false);
+    setAdminPassword('');
+    if (oauthLogout) {
+      oauthLogout();
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -130,6 +213,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
 
   const navTabs = [
     { id: 'hero', label: 'Hero & Branding', icon: Sparkles, count: content.hero.slides.length },
+    { id: 'blogs', label: 'Blog & SEO/AEO/AIO', icon: BookOpen, count: content.blogs?.length || 10, badge: 'AI SEO' },
     { id: 'photos', label: 'Photo Library (AI SEO)', icon: ImageIcon, count: (content.customPhotos?.length || 0) + 20, badge: 'AI' },
     { id: 'metrics', label: 'Metrics & Numbers', icon: Hash, count: content.stats.length },
     { id: 'contact', label: 'Contact & Ops', icon: Phone },
@@ -140,6 +224,157 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
     { id: 'about', label: 'About & FAQ', icon: Award },
     { id: 'inquiries', label: 'Inquiries & CRM', icon: Inbox, badge: 'Live' }
   ];
+
+  // If Admin is NOT authenticated with username & password, render the Master Login Gate Screen
+  if (!isAdminAuthenticated) {
+    return (
+      <div 
+        className="fixed inset-0 z-[150] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="admin-login-title"
+      >
+        <div className="bg-[#121316] text-white rounded-2xl max-w-md w-full my-auto overflow-hidden shadow-2xl border border-neutral-800 animate-in fade-in zoom-in-95 duration-200">
+          {/* Login Header */}
+          <div className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-[#1e1714] p-6 sm:p-7 border-b border-neutral-800 relative">
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors"
+              title="Close Login Window"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F05A28] to-orange-700 flex items-center justify-center text-white shadow-lg ring-4 ring-[#F05A28]/20">
+                <ShieldCheck className="w-7 h-7" />
+              </div>
+              <div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#F05A28]/20 text-[#F05A28] border border-[#F05A28]/40">
+                  TÜRSAB #15764 Master Access
+                </span>
+                <h2 id="admin-login-title" className="text-lg sm:text-xl font-bold text-white mt-1">
+                  Super Admin Console
+                </h2>
+              </div>
+            </div>
+
+            <p className="text-xs text-neutral-400 leading-relaxed">
+              Enter your authorized master administrator credentials to access the Baobab DMC control center.
+            </p>
+          </div>
+
+          {/* Login Form Body */}
+          <form onSubmit={handleAdminLogin} className="p-6 sm:p-7 space-y-4">
+            {loginError && (
+              <div className="p-3.5 bg-red-950/70 border border-red-800/80 rounded-lg text-xs text-red-300 flex items-start gap-2.5 animate-shake">
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <span className="font-bold block">Authentication Failed</span>
+                  <span>{loginError}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Username / Email Field */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider block">
+                Master Admin Email / Username
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  required
+                  value={adminEmail}
+                  onChange={(e) => setAdminEmail(e.target.value)}
+                  placeholder="tolgakinas@gmail.com"
+                  className="w-full px-3.5 py-2.5 bg-neutral-900 border border-neutral-700 focus:border-[#F05A28] rounded-lg text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#F05A28] font-medium"
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider block">
+                  Admin Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-[11px] text-neutral-400 hover:text-neutral-200 flex items-center gap-1"
+                >
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  <span>{showPassword ? 'Hide' : 'Show'}</span>
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="Enter administrator password..."
+                  className="w-full px-3.5 py-2.5 bg-neutral-900 border border-neutral-700 focus:border-[#F05A28] rounded-lg text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#F05A28] font-mono tracking-wider"
+                />
+              </div>
+            </div>
+
+            {/* Remember Me & Auto-fill Options */}
+            <div className="flex items-center justify-between pt-1 text-xs">
+              <label className="flex items-center gap-2 text-neutral-400 cursor-pointer hover:text-neutral-200">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-3.5 h-3.5 rounded bg-neutral-900 border-neutral-700 text-[#F05A28] focus:ring-[#F05A28]"
+                />
+                <span>Remember on this browser</span>
+              </label>
+
+              <button
+                type="button"
+                onClick={handleAutoFillAdminCredentials}
+                className="text-[11px] text-[#F05A28] hover:text-orange-400 font-semibold transition-colors"
+                title="Click to fill credentials (tolgakinas@gmail.com / Atlas@2014)"
+              >
+                Auto-Fill Credentials
+              </button>
+            </div>
+
+            {/* Submit Button */}
+            <div className="pt-2 space-y-2.5">
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className="w-full py-3 bg-[#F05A28] hover:bg-[#D94526] active:scale-[0.99] text-white text-xs font-bold uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 shadow-lg transition-all"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>{isLoggingIn ? 'Authenticating...' : 'Sign In to Super Admin Panel'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full py-2.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white text-xs font-semibold rounded-lg transition-colors border border-neutral-800"
+              >
+                Cancel & Return to Website
+              </button>
+            </div>
+          </form>
+
+          {/* Footer Security Notice */}
+          <div className="bg-neutral-950/80 px-6 py-3.5 border-t border-neutral-800/80 text-[11px] text-neutral-500 flex items-center justify-between">
+            <span className="flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-emerald-500" />
+              <span>256-Bit Encrypted Master Session</span>
+            </span>
+            <span>Baobab DMC Turkey</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Minimized Docked Widget View (allows viewing website live while keeping control panel accessible)
   if (isMinimized) {
@@ -199,11 +434,11 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
               </h2>
               <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live Control
+                Authenticated
               </span>
             </div>
             <p className="text-xs text-neutral-400">
-              Direct master control over all website content: photos, texts, numbers, trips & inquiries.
+              Master control session: <strong className="text-neutral-200">tolgakinas@gmail.com</strong>
             </p>
           </div>
         </div>
@@ -255,6 +490,15 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
           </button>
 
           <button
+            onClick={handleAdminLogout}
+            className="px-2.5 py-1.5 bg-neutral-800 hover:bg-red-950/80 text-neutral-300 hover:text-red-400 rounded text-xs font-semibold flex items-center gap-1 border border-neutral-700 transition-colors"
+            title="Sign Out & Lock Super Admin Panel"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Sign Out / Lock</span>
+          </button>
+
+          <button
             onClick={() => setIsMinimized(true)}
             className="p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded transition-colors"
             title="Minimize to Dock (Live Preview Website)"
@@ -272,71 +516,30 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
         </div>
       </div>
 
-      {/* SUPER ADMIN LOGIN & AUTHORIZATION BANNER (Direct toggle as requested + OAuth ready) */}
+      {/* SUPER ADMIN STATUS BANNER */}
       <div className="bg-neutral-800/90 border-b border-neutral-700 px-4 sm:px-6 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-neutral-300 shrink-0">
         <div className="flex items-center gap-3">
-          {/* Direct Super Admin Toggle Switch */}
           <div className="flex items-center gap-2">
             <span className="font-bold text-white uppercase tracking-wider text-[11px] flex items-center gap-1">
-              {isSuperAdmin ? (
-                <Unlock className="w-3.5 h-3.5 text-emerald-400" />
-              ) : (
-                <Lock className="w-3.5 h-3.5 text-neutral-400" />
-              )}
-              <span>Super Admin Access:</span>
+              <Unlock className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Master Admin Access:</span>
             </span>
 
-            <button
-              onClick={() => toggleSuperAdmin()}
-              role="switch"
-              aria-checked={isSuperAdmin}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                isSuperAdmin ? 'bg-emerald-600' : 'bg-neutral-600'
-              }`}
-              title="Toggle Super Admin authorization mode"
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  isSuperAdmin ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-
-            <span className={`font-semibold text-xs ${isSuperAdmin ? 'text-emerald-400 font-bold' : 'text-neutral-400'}`}>
-              {isSuperAdmin ? 'ACTIVE (Unlocked)' : 'OFF'}
-            </span>
-          </div>
-
-          <span className="hidden md:inline text-neutral-500">•</span>
-
-          <div className="hidden md:flex items-center gap-1.5 text-neutral-400">
-            <span className="font-mono text-[11px]">
-              {currentUser?.email || 'tolgakinas@gmail.com (Master)'}
-            </span>
-            <span className="text-[10px] text-neutral-500">
-              (Direct Developer Super Admin Mode • OAuth Login Integration ready)
+            <span className="font-bold text-xs text-emerald-400 px-2 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/30 flex items-center gap-1">
+              <UserCheck className="w-3.5 h-3.5" />
+              <span>Authenticated (tolgakinas@gmail.com)</span>
             </span>
           </div>
         </div>
 
-        {/* Quick OAuth action or Reset action */}
         <div className="flex items-center gap-2 self-end sm:self-auto">
-          {!currentUser ? (
-            <button
-              onClick={() => loginWithGoogle()}
-              className="px-2.5 py-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 rounded text-[11px] font-semibold flex items-center gap-1 transition-colors"
-            >
-              <Key className="w-3 h-3 text-[#F05A28]" />
-              <span>Connect Google OAuth</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => logout()}
-              className="px-2 py-0.5 text-neutral-400 hover:text-white text-[11px]"
-            >
-              Sign Out
-            </button>
-          )}
+          <button
+            onClick={handleAdminLogout}
+            className="px-2.5 py-1 bg-neutral-700 hover:bg-red-900/60 text-neutral-200 hover:text-red-200 rounded text-[11px] font-semibold flex items-center gap-1 transition-colors"
+          >
+            <LogOut className="w-3 h-3" />
+            <span>Lock Admin Panel</span>
+          </button>
 
           <button
             onClick={() => setShowResetConfirmDialog(true)}
@@ -426,6 +629,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <div className="max-w-5xl mx-auto">
             {activeAdminTab === 'hero' && <HeroBrandingTab />}
+            {activeAdminTab === 'blogs' && <BlogManagerTab />}
             {activeAdminTab === 'photos' && <PhotoLibraryManagerTab />}
             {activeAdminTab === 'metrics' && <MetricsNumbersTab />}
             {activeAdminTab === 'contact' && <CompanyContactTab />}

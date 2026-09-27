@@ -1,3 +1,5 @@
+export type { BlogPost, BlogSectionItem, BlogFaqItem, BlogAiOptimization } from './data/blogData';
+
 export interface DestinationQuickFacts {
   idealDuration: string;
   bestFor: string;

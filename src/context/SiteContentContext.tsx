@@ -446,6 +446,18 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [content]);
 
+  // Real-time Automatic Persistence: Every update immediately reflects on live site and persists
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(content));
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      localStorage.setItem('baobab_dmc_last_saved', now);
+      setLastSavedAt(now);
+    } catch (e) {
+      console.error('Error auto-saving content:', e);
+    }
+  }, [content]);
+
   // Reset all content to original defaults
   const resetToDefaults = useCallback(() => {
     setContent(DEFAULT_SITE_CONTENT);

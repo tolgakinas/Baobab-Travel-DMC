@@ -381,9 +381,21 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        // Ensure trip-9467 is synced to the single-day tour definition
+        const correctedTrips = Array.isArray(parsed.trips) && parsed.trips.length > 0 
+          ? parsed.trips.map((t: AtlasTrip) => {
+              if (t.id === 'trip-9467') {
+                const fresh = DEFAULT_TRIPS.find(dt => dt.id === 'trip-9467');
+                return fresh || t;
+              }
+              return t;
+            })
+          : DEFAULT_TRIPS;
+
         return {
           ...DEFAULT_SITE_CONTENT,
           ...parsed,
+          trips: correctedTrips,
           branding: { ...DEFAULT_SITE_CONTENT.branding, ...(parsed.branding || {}) },
           hero: { ...DEFAULT_SITE_CONTENT.hero, ...(parsed.hero || {}) },
           companyContact: { ...DEFAULT_SITE_CONTENT.companyContact, ...(parsed.companyContact || {}) },

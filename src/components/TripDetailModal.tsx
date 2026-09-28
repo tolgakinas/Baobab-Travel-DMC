@@ -15,7 +15,8 @@ import {
   ChevronDown,
   ChevronUp,
   Printer,
-  Download
+  Download,
+  Clock
 } from 'lucide-react';
 import { AtlasTrip } from '../types';
 import { COMPANY_CONTACT } from '../data/dmcData';
@@ -90,6 +91,11 @@ export const TripDetailModal: React.FC<TripDetailModalProps> = ({
   const sliderImages = (trip.images && trip.images.length > 0) ? trip.images : tripGallery.images;
   const sliderCaptions = (trip.imageCaptions && trip.imageCaptions.length > 0) ? trip.imageCaptions : tripGallery.imageCaptions;
 
+  const isDayTour = trip.daysCount === 1 || 
+    trip.category === 'Day Tours' || 
+    trip.category.toLowerCase().includes('day tour') ||
+    trip.duration.toLowerCase().includes('hour');
+
   return (
     <div 
       className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-2 sm:p-4 md:p-6 flex justify-center items-start animate-in fade-in duration-200"
@@ -111,6 +117,12 @@ export const TripDetailModal: React.FC<TripDetailModalProps> = ({
               <span className="px-3 py-1 bg-[#F05A28] text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm">
                 {trip.category}
               </span>
+              {isDayTour && (
+                <span className="px-3 py-1 bg-amber-500 text-neutral-950 text-xs font-extrabold uppercase tracking-wider rounded-sm shadow-sm flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  Day Tour
+                </span>
+              )}
               <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-semibold rounded-sm flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-[#F05A28]" />
                 {trip.duration}
@@ -213,10 +225,20 @@ export const TripDetailModal: React.FC<TripDetailModalProps> = ({
           </div>
 
           {/* Overview */}
-          <div>
-            <h3 className="text-xs font-bold tracking-widest text-[#F05A28] uppercase mb-2">
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold tracking-widest text-[#F05A28] uppercase">
               Program Overview
             </h3>
+
+            {isDayTour && (
+              <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-start sm:items-center gap-3 text-xs text-amber-950">
+                <Clock className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 sm:mt-0" />
+                <div className="leading-relaxed">
+                  <strong className="font-bold text-amber-900">Day Tour Experience ({trip.duration}):</strong> This tour is completed in a single day with morning/afternoon timing. No overnight hotel change required—ideal as an Istanbul shore excursion, layover experience, or city extension.
+                </div>
+              </div>
+            )}
+
             <p className="text-sm sm:text-base text-neutral-800 leading-relaxed">
               {trip.description}
             </p>
@@ -252,10 +274,10 @@ export const TripDetailModal: React.FC<TripDetailModalProps> = ({
                 <div className="flex items-center gap-2">
                   <h3 className="text-xs font-bold tracking-widest text-[#F05A28] uppercase flex items-center gap-1.5">
                     <Compass className="w-4 h-4 text-[#F05A28]" />
-                    Day-by-Day Detailed Itinerary
+                    {isDayTour ? 'Day Tour Program & Hourly Schedule' : 'Day-by-Day Detailed Itinerary'}
                   </h3>
                   <span className="text-[11px] text-neutral-500 font-mono bg-neutral-100 px-2 py-0.5 rounded">
-                    {trip.itinerary.length} Days Total
+                    {isDayTour ? `Day Tour (${trip.duration})` : `${trip.itinerary.length} Days Total`}
                   </span>
                 </div>
 
@@ -312,7 +334,7 @@ export const TripDetailModal: React.FC<TripDetailModalProps> = ({
                           <span className={`px-2.5 py-1 text-xs font-bold rounded uppercase tracking-wider shrink-0 transition-colors ${
                             isExpanded ? 'bg-[#F05A28] text-white' : 'bg-neutral-900 text-white'
                           }`}>
-                            Day {day.dayNumber}
+                            {isDayTour ? (trip.itinerary.length === 1 ? 'Tour Schedule' : `Part ${day.dayNumber}`) : `Day ${day.dayNumber}`}
                           </span>
                           <div className="min-w-0 flex-1">
                             <h4 className="font-semibold text-neutral-900 text-xs sm:text-sm truncate">

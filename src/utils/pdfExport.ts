@@ -14,13 +14,19 @@ export function exportItineraryToPdf(trip: AtlasTrip): void {
     return;
   }
 
+  const isDayTour = trip.daysCount === 1 || 
+    trip.category === 'Day Tours' || 
+    trip.category.toLowerCase().includes('day') ||
+    trip.duration.toLowerCase().includes('hour');
+
   const daysHtml = (trip.itinerary || []).map((day) => {
     const parsed = parseItineraryDayDetails(day.title, day.description);
+    const badgeLabel = isDayTour ? (trip.itinerary?.length === 1 ? 'Tour Schedule' : `Part ${day.dayNumber}`) : `Day ${day.dayNumber}`;
     
     return `
       <div class="day-card">
         <div class="day-header">
-          <div class="day-badge">Day ${day.dayNumber}</div>
+          <div class="day-badge">${badgeLabel}</div>
           <div class="day-title">${escapeHtml(day.title)}</div>
         </div>
         

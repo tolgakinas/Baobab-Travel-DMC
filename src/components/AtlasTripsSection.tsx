@@ -12,7 +12,8 @@ import {
   ChevronRight,
   ShieldCheck,
   FileText,
-  Printer
+  Printer,
+  Clock
 } from 'lucide-react';
 import { AtlasTrip } from '../types';
 import { ATLAS_TURKEY_TRIPS } from '../data/tripsData';
@@ -244,6 +245,12 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                     <span className="px-2.5 py-0.5 bg-[#F05A28] text-white text-[11px] font-bold uppercase tracking-wider rounded-sm shadow-xs">
                       {trip.category}
                     </span>
+                    {trip.daysCount === 1 && (
+                      <span className="px-2 py-0.5 bg-amber-500 text-neutral-950 text-[10px] font-extrabold uppercase tracking-wider rounded-sm shadow-xs flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        Day Tour
+                      </span>
+                    )}
                   </div>
 
                   <div className="absolute top-3 right-3 pointer-events-none">
@@ -269,7 +276,7 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div>
                     {/* Destinations Tags */}
-                    <div className="flex flex-wrap items-center gap-1 mb-2.5 text-[11px] text-neutral-400">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-2.5 text-[11px] text-neutral-400">
                       <MapPin className="w-3 h-3 text-[#F05A28] shrink-0" />
                       {trip.destinations.slice(0, 4).map((d, idx) => (
                         <span key={idx} className="bg-neutral-700/60 text-neutral-300 px-1.5 py-0.5 rounded text-[10px] font-medium">
@@ -279,6 +286,12 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                       {trip.destinations.length > 4 && (
                         <span className="text-neutral-500 text-[10px]">
                           +{trip.destinations.length - 4} more
+                        </span>
+                      )}
+                      {trip.daysCount === 1 && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-bold uppercase tracking-wider">
+                          <Clock className="w-3 h-3 text-amber-400" />
+                          <span>Day Tour</span>
                         </span>
                       )}
                     </div>
@@ -326,9 +339,9 @@ export const AtlasTripsSection: React.FC<AtlasTripsSectionProps> = ({
                       <button
                         onClick={() => onSelectTrip(trip)}
                         className="w-full py-2.5 px-2 bg-neutral-700/80 hover:bg-neutral-600 text-white rounded text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-                        title="View detailed day-by-day itinerary schedule"
+                        title={trip.daysCount === 1 ? "View tour program and timing schedule" : "View detailed day-by-day itinerary schedule"}
                       >
-                        <span>Daily Itinerary</span>
+                        <span>{trip.daysCount === 1 ? 'Tour Schedule' : 'Daily Itinerary'}</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </button>
 

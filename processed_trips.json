@@ -109,46 +109,40 @@
     "atlasId": 9467,
     "title": "Sunrise Walking Tour of Istanbul With Traditional Breakfast",
     "slug": "sunrise-walking-tour-of-istanbul-with-traditional-breakfast",
-    "category": "City Break & Walking Tour",
-    "duration": "6 Hours",
-    "daysCount": 6,
-    "groupSize": "2–10 Guests (Small Group)",
+    "category": "Day Tours",
+    "duration": "Day Tour (6 Hours)",
+    "daysCount": 1,
+    "groupSize": "Small Group (2–10 Guests) or Private",
     "image": "https://atlasglobaltours.com/wp-content/uploads/2026/08/sultan-ahmet-camii-the-blue-mosque-at-sunset-is-2026-03-13-01-58-11-utc-scaled.jpg",
     "destinations": [
       "Istanbul"
     ],
-    "description": "Experience Istanbul before the city wakes up on our  Sunrise Walking Tour , a peaceful and unforgettable way to discover the historic heart of the city. Start your morning in  Sultanahmet , where the streets and squares are beautifully quiet at sunrise. Walk through the historic Hippodrome and admire the magnificent  Blue Mosque  and  Hagia Sophia  in the soft morning light. Continue through the atmospheric streets of the Old City, discovering Istanbul’s fascinating history while avoiding the crowds of the later hours. After your morning walk, cross to the Asian side of Istanbul by local ferry and enjoy the city from the water as the Bosphorus comes alive. Finish your experience with a  traditional Turkish breakfast , featuring fresh bread, cheeses, olives, eggs, tomatoes, cucumbers, jams, honey, and Turkish tea. This experience combines  history, local life, the Bosphorus, and authentic Turkish cuisine —all in one beautiful morning.",
+    "description": "Experience Istanbul at its most serene and magical hour before the city awakes on this intimate 6-hour morning day tour. Start at sunrise in Sultanahmet, walking through the tranquil Hippodrome and admiring the Blue Mosque and Hagia Sophia bathed in soft golden dawn light with zero crowds. Cross the Bosphorus to the Asian shore on a scenic local ferry as the morning mist lifts, settling into a panoramic waterfront terrace for an elaborate traditional Turkish breakfast feast (serpme kahvaltı) with artisanal cheeses, warm sesame simit, Aegean olives, farm eggs, buffalo kaymak with honeycomb, and unlimited freshly brewed Turkish tea. Conclude your morning walking through centuries-old artisan alleys, hidden Ottoman caravanserais (hans), and historic craft workshops of the Old City as daily life begins.",
     "itinerary": [
       {
         "dayNumber": 1,
-        "title": "Sultanahmet Early Morning Walking Exploration",
-        "description": "Meet your local guide in Sultanahmet at first light. Stroll through the tranquil Hippodrome, viewing the Obelisk of Theodosius and the Blue Mosque exterior bathed in soft morning light before the crowds arrive."
-      },
-      {
-        "dayNumber": 2,
-        "title": "Traditional Turkish Breakfast on the Bosphorus Terrace",
-        "description": "Sit down for an elaborate traditional breakfast featuring artisan cheeses, warm simit breads, black and green Aegean olives, regional honey with clotted cream, menemen eggs, and freshly brewed Turkish tea with panoramic views."
-      },
-      {
-        "dayNumber": 3,
-        "title": "Historic Old Town Alleys & Hidden Courtyards",
-        "description": "Walk through atmospheric cobblestone side streets, artisan workshops, and secret Ottoman hans as the historic quarter begins its daily rhythm."
+        "title": "Sunrise Sultanahmet, Scenic Bosphorus Ferry & Traditional Turkish Breakfast (06:30 – 12:30)",
+        "description": "06:30 – 08:30 | Sultanahmet at First Light: Meet your licensed guide in central Sultanahmet as dawn breaks. Stroll through the tranquil, crowd-free Hippodrome, viewing the Obelisk of Theodosius, the Serpent Column, and the German Fountain. Admire the exterior grandeur of the Blue Mosque and Hagia Sophia glowing under the morning sunrise.\n\n08:30 – 10:15 | Scenic Bosphorus Ferry & Traditional Breakfast: Board a local commuter ferry across the glistening Bosphorus to the Asian shore as Istanbul awakens. Arrive at a scenic waterfront venue for an elaborate traditional Turkish spread breakfast (serpme kahvaltı) featuring artisan cheeses, warm oven simit, organic olives, menemen eggs, clotted buffalo kaymak with honeycomb, and unlimited freshly brewed Turkish tea.\n\n10:15 – 12:30 | Historic Old City Alleys & Ottoman Hans: Cruise back to the historic European peninsula to explore atmospheric cobblestone alleys, centuries-old artisan workshops, and secret 18th-century Ottoman caravanserais (hans) as the historic quarter begins its daily rhythm. Tour concludes at 12:30 PM with personalized dining and afternoon exploration tips from your guide.\n\nMeals: Lavish Traditional Turkish Breakfast Spread, Fresh Simit & Unlimited Tea\nAccommodation: Day Tour (Return to hotel / onward afternoon plans by 12:30 PM)\nActivity: 6-Hour Guided Walking Tour & Scenic Bosphorus Ferry (approx. 4 km)"
       }
     ],
     "includes": [
-      "Local Tour Guide",
-      "Transportation",
-      "Traditional Breakfast"
+      "Licensed professional English-speaking guide throughout the 6-hour tour",
+      "Traditional lavish Turkish breakfast spread (serpme kahvaltı) with tea",
+      "Roundtrip Bosphorus local ferry tickets (European to Asian shore)",
+      "Early morning quiet walking tour through historic Sultanahmet & Old City",
+      "All taxes and local service charges"
     ],
     "excludes": [
-      "Travel Insurance",
-      "Tiprs and Gestures"
+      "Interior museum admissions (exterior historical tour designed for sunrise quietude)",
+      "Hotel pick-up and drop-off (meeting point in central Sultanahmet)",
+      "Personal purchases and souvenirs",
+      "Gratuities for guide"
     ],
     "highlights": [
-      "Early morning quiet Sultanahmet walk",
-      "Full traditional Turkish breakfast spread",
-      "Historic Hippodrome and Blue Mosque views",
-      "Artisan alleys and historic courtyard exploration"
+      "Sunrise quietude in Sultanahmet without tourist crowds",
+      "Lavish traditional Turkish breakfast spread on a waterfront terrace",
+      "Scenic morning Bosphorus commuter ferry crossing",
+      "Hidden Ottoman caravanserais (hans) and artisan alleyways"
     ],
     "originalUrl": "https://atlasglobaltours.com/trip/sunrise-walking-tour-of-istanbul-with-traditional-breakfast/"
   },

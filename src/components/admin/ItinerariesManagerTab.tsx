@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSiteContent } from '../../context/SiteContentContext';
 import { SampleItinerary, ItineraryDay } from '../../types';
+import { PhotoLibraryModal } from './PhotoLibraryModal';
 import { 
   Sparkles, 
   Plus, 
@@ -86,6 +87,38 @@ export const ItinerariesManagerTab: React.FC = () => {
   const [editingItinerary, setEditingItinerary] = useState<SampleItinerary | null>(null);
   const [editingDayIndex, setEditingDayIndex] = useState<number | null>(0);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Photo Picker Modal State
+  const [isPhotoPickerOpen, setIsPhotoPickerOpen] = useState(false);
+  const [photoPickerTarget, setPhotoPickerTarget] = useState<'cover' | 'gallery_add' | { type: 'gallery_replace'; index: number }>('cover');
+  const [photoPickerCategory, setPhotoPickerCategory] = useState<string | undefined>(undefined);
+  const [newGalleryPhotoUrl, setNewGalleryPhotoUrl] = useState('');
+
+  const handleSelectPhotoFromLibrary = (url: string) => {
+    if (!editingItinerary) return;
+    if (photoPickerTarget === 'cover') {
+      setEditingItinerary({
+        ...editingItinerary,
+        coverImage: url
+      });
+    } else if (photoPickerTarget === 'gallery_add') {
+      const currentImages = editingItinerary.images || [];
+      const currentCaptions = editingItinerary.imageCaptions || [];
+      setEditingItinerary({
+        ...editingItinerary,
+        images: [...currentImages, url],
+        imageCaptions: [...currentCaptions, `${editingItinerary.title} Experience`]
+      });
+    } else if (typeof photoPickerTarget === 'object' && photoPickerTarget.type === 'gallery_replace') {
+      const currentImages = [...(editingItinerary.images || [])];
+      currentImages[photoPickerTarget.index] = url;
+      setEditingItinerary({
+        ...editingItinerary,
+        images: currentImages
+      });
+    }
+    setIsPhotoPickerOpen(false);
+  };
 
   // New Highlight Input
   const [newHighlightText, setNewHighlightText] = useState('');
@@ -724,67 +757,238 @@ export const ItinerariesManagerTab: React.FC = () => {
               </div>
 
               {/* Section 3: Visual Assets & Imagery */}
-              <div className="bg-neutral-50/60 p-4 rounded-xl border border-neutral-200 space-y-4">
+              <div className="bg-neutral-50/60 p-4 rounded-xl border border-neutral-200 space-y-5">
                 <div className="font-bold text-sm text-neutral-900 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <ImageIcon className="w-4 h-4 text-[#F05A28]" />
-                    <span>3. Imagery & Cover Photo</span>
+                    <span>3. Visual Assets & Photo Library</span>
                   </div>
                   <span className="text-[10px] text-neutral-400">High-resolution WebP/JPG</span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {/* Image Preview */}
-                  <div className="md:col-span-4">
-                    <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-neutral-900 border border-neutral-300 shadow-xs">
-                      <img
-                        src={editingItinerary.coverImage}
-                        alt="Cover preview"
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                      <span className="absolute bottom-2 left-2 px-2 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded">
-                        Cover Photo
-                      </span>
-                    </div>
+                {/* Cover Image Block */}
+                <div className="bg-white p-4 rounded-lg border border-neutral-200 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-neutral-800 font-bold uppercase text-[11px] tracking-wider">
+                      Primary Cover Image
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhotoPickerTarget('cover');
+                        setPhotoPickerCategory(editingItinerary.destinations[0] || 'all');
+                        setIsPhotoPickerOpen(true);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-[#F05A28] hover:opacity-95 text-white text-xs font-bold rounded-lg shadow-2xs transition-all"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                      <span>Choose Cover from Photo Library</span>
+                    </button>
                   </div>
 
-                  {/* URL and Preset Picker */}
-                  <div className="md:col-span-8 space-y-3">
-                    <div>
-                      <label className="block text-neutral-700 font-bold uppercase text-[10px] tracking-wider mb-1">
-                        Cover Image Direct URL
-                      </label>
-                      <input
-                        type="text"
-                        value={editingItinerary.coverImage}
-                        onChange={(e) => setEditingItinerary({ ...editingItinerary, coverImage: e.target.value })}
-                        placeholder="https://images.unsplash.com/..."
-                        className="w-full px-3 py-2 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28] font-mono"
-                      />
-                    </div>
-
-                    <div>
-                      <span className="text-[11px] font-semibold text-neutral-500 block mb-1.5">
-                        Select from Turkey Destination Presets:
-                      </span>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                        {PHOTO_PRESETS.map((p, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => setEditingItinerary({ ...editingItinerary, coverImage: p.url })}
-                            className={`p-1.5 rounded border text-left text-[10.5px] truncate font-medium transition-colors ${
-                              editingItinerary.coverImage === p.url
-                                ? 'bg-orange-100 border-[#F05A28] text-[#F05A28]'
-                                : 'bg-white border-neutral-200 hover:bg-neutral-100 text-neutral-700'
-                            }`}
-                          >
-                            {p.label}
-                          </button>
-                        ))}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    {/* Image Preview */}
+                    <div className="md:col-span-4">
+                      <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-neutral-900 border border-neutral-300 shadow-xs group">
+                        <img
+                          src={editingItinerary.coverImage}
+                          alt="Cover preview"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          referrerPolicy="no-referrer"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPhotoPickerTarget('cover');
+                            setPhotoPickerCategory(editingItinerary.destinations[0] || 'all');
+                            setIsPhotoPickerOpen(true);
+                          }}
+                          className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity"
+                        >
+                          Change Cover Photo
+                        </button>
                       </div>
                     </div>
+
+                    {/* URL and Preset Picker */}
+                    <div className="md:col-span-8 space-y-3">
+                      <div>
+                        <label className="block text-neutral-600 font-semibold text-[10px] mb-1">
+                          Direct URL (or pick from library above)
+                        </label>
+                        <input
+                          type="text"
+                          value={editingItinerary.coverImage}
+                          onChange={(e) => setEditingItinerary({ ...editingItinerary, coverImage: e.target.value })}
+                          placeholder="https://images.unsplash.com/..."
+                          className="w-full px-3 py-2 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28] font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <span className="text-[10.5px] font-semibold text-neutral-500 block mb-1">
+                          Quick Presets:
+                        </span>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                          {PHOTO_PRESETS.map((p, i) => (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => setEditingItinerary({ ...editingItinerary, coverImage: p.url })}
+                              className={`p-1.5 rounded border text-left text-[10px] truncate font-medium transition-colors ${
+                                editingItinerary.coverImage === p.url
+                                  ? 'bg-orange-100 border-[#F05A28] text-[#F05A28]'
+                                  : 'bg-neutral-50 border-neutral-200 hover:bg-neutral-100 text-neutral-700'
+                              }`}
+                            >
+                              {p.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Gallery & Slider Photos Block */}
+                <div className="bg-white p-4 rounded-lg border border-neutral-200 shadow-2xs space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <label className="block text-neutral-800 font-bold uppercase text-[11px] tracking-wider">
+                        Gallery & Modal Slider Photos ({editingItinerary.images?.length || 0})
+                      </label>
+                      <p className="text-[11px] text-neutral-500">
+                        Photos displayed in the interactive slider when travelers view this itinerary framework.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhotoPickerTarget('gallery_add');
+                        setPhotoPickerCategory(editingItinerary.destinations[0] || 'all');
+                        setIsPhotoPickerOpen(true);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-900 hover:bg-black text-white text-xs font-bold rounded-lg shadow-2xs transition-colors shrink-0"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Photo from Photo Library</span>
+                    </button>
+                  </div>
+
+                  {/* Gallery Thumbnails List */}
+                  {editingItinerary.images && editingItinerary.images.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+                      {editingItinerary.images.map((imgUrl, imgIdx) => (
+                        <div key={imgIdx} className="bg-neutral-50 rounded-lg border border-neutral-200 p-2.5 space-y-2 relative group">
+                          <div className="relative aspect-[16/10] rounded overflow-hidden bg-neutral-900">
+                            <img
+                              src={imgUrl}
+                              alt={`Gallery ${imgIdx + 1}`}
+                              className="w-full h-full object-cover"
+                              referrerPolicy="no-referrer"
+                            />
+                            <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-black/70 text-white text-[9px] font-mono">
+                              Photo #{imgIdx + 1}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1">
+                            <input
+                              type="text"
+                              value={editingItinerary.imageCaptions?.[imgIdx] || ''}
+                              onChange={(e) => {
+                                const updatedCaptions = [...(editingItinerary.imageCaptions || [])];
+                                updatedCaptions[imgIdx] = e.target.value;
+                                setEditingItinerary({ ...editingItinerary, imageCaptions: updatedCaptions });
+                              }}
+                              placeholder="Photo caption..."
+                              className="w-full px-2 py-1 text-[11px] border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between pt-1 border-t border-neutral-200 text-[10.5px]">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPhotoPickerTarget({ type: 'gallery_replace', index: imgIdx });
+                                setPhotoPickerCategory(editingItinerary.destinations[0] || 'all');
+                                setIsPhotoPickerOpen(true);
+                              }}
+                              className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                            >
+                              Replace from Library
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updatedImages = editingItinerary.images?.filter((_, i) => i !== imgIdx) || [];
+                                const updatedCaptions = editingItinerary.imageCaptions?.filter((_, i) => i !== imgIdx) || [];
+                                setEditingItinerary({
+                                  ...editingItinerary,
+                                  images: updatedImages,
+                                  imageCaptions: updatedCaptions
+                                });
+                              }}
+                              className="text-red-500 hover:text-red-700 font-semibold flex items-center gap-0.5"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              <span>Remove</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded border border-dashed border-neutral-300 text-center text-neutral-400 text-xs">
+                      No gallery photos added yet. Click "Add Photo from Photo Library" above to attach scenic photography.
+                    </div>
+                  )}
+
+                  {/* Direct URL Input for Gallery */}
+                  <div className="flex items-center gap-2 pt-2 border-t border-neutral-100">
+                    <input
+                      type="url"
+                      value={newGalleryPhotoUrl}
+                      onChange={(e) => setNewGalleryPhotoUrl(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (newGalleryPhotoUrl.trim()) {
+                            const currentImages = editingItinerary.images || [];
+                            const currentCaptions = editingItinerary.imageCaptions || [];
+                            setEditingItinerary({
+                              ...editingItinerary,
+                              images: [...currentImages, newGalleryPhotoUrl.trim()],
+                              imageCaptions: [...currentCaptions, `${editingItinerary.title} Highlight`]
+                            });
+                            setNewGalleryPhotoUrl('');
+                          }
+                        }
+                      }}
+                      placeholder="Or paste direct image URL to add to gallery..."
+                      className="flex-1 px-3 py-1.5 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (newGalleryPhotoUrl.trim()) {
+                          const currentImages = editingItinerary.images || [];
+                          const currentCaptions = editingItinerary.imageCaptions || [];
+                          setEditingItinerary({
+                            ...editingItinerary,
+                            images: [...currentImages, newGalleryPhotoUrl.trim()],
+                            imageCaptions: [...currentCaptions, `${editingItinerary.title} Highlight`]
+                          });
+                          setNewGalleryPhotoUrl('');
+                        }
+                      }}
+                      className="px-3 py-1.5 bg-neutral-800 text-white rounded text-xs font-bold"
+                    >
+                      Add URL
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1278,6 +1482,23 @@ export const ItinerariesManagerTab: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Central Photo Library Picker Modal */}
+      <PhotoLibraryModal
+        isOpen={isPhotoPickerOpen}
+        onClose={() => setIsPhotoPickerOpen(false)}
+        onSelectPhoto={handleSelectPhotoFromLibrary}
+        currentUrl={
+          photoPickerTarget === 'cover' 
+            ? editingItinerary?.coverImage 
+            : typeof photoPickerTarget === 'object' && photoPickerTarget.type === 'gallery_replace'
+            ? editingItinerary?.images?.[photoPickerTarget.index]
+            : undefined
+        }
+        title={`Select Photo for ${editingItinerary?.title || 'Itinerary Framework'}`}
+        initialCategory={photoPickerCategory}
+        zIndexClass="z-[160]"
+      />
     </div>
   );
 };

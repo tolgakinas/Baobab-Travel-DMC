@@ -49,6 +49,7 @@ export interface BrandingSettings {
   foundedYear: number;
   tagline: string;
   googleSiteVerification?: string;
+  googleAnalyticsId?: string;
   canonicalDomain?: string;
 }
 
@@ -264,6 +265,7 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
     foundedYear: 2000,
     tagline: 'Curated Small Group Journeys, Active Adventures & B2B Ground Operations Across Turkiye',
     googleSiteVerification: 'BAOBAB_DMC_TURKEY_GSC_VERIFICATION',
+    googleAnalyticsId: '',
     canonicalDomain: 'https://baobabdmc.com'
   },
   hero: {
@@ -484,6 +486,31 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
     }
   }, [content.branding?.googleSiteVerification]);
+
+  // Synchronize Google Analytics (GA4) tag dynamically if configured
+  useEffect(() => {
+    const gaId = content.branding?.googleAnalyticsId?.trim();
+    if (gaId && gaId.startsWith('G-')) {
+      const existingScript = document.getElementById('ga4-script');
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.id = 'ga4-script';
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(script);
+
+        const inlineScript = document.createElement('script');
+        inlineScript.id = 'ga4-inline';
+        inlineScript.innerHTML = `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaId}');
+        `;
+        document.head.appendChild(inlineScript);
+      }
+    }
+  }, [content.branding?.googleAnalyticsId]);
 
   // Reset all content to original defaults
   const resetToDefaults = useCallback(() => {

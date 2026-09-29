@@ -195,14 +195,14 @@ export const HeroBrandingTab: React.FC = () => {
         </div>
 
         {/* Verification Inputs */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider">
-                Google Site Verification Code / Tag
+                Google Site Verification
               </label>
               <span className="text-[11px] text-neutral-400">
-                HTML Tag Method
+                HTML Tag
               </span>
             </div>
             <input
@@ -217,15 +217,36 @@ export const HeroBrandingTab: React.FC = () => {
                 }
                 updateBranding({ googleSiteVerification: val });
               }}
-              placeholder="e.g. google4b76e27a6f3b0e12 or paste full <meta> tag"
+              placeholder="e.g. google4b76e27a6f3b0e12"
               className="w-full px-3 py-2 text-xs font-mono border border-neutral-300 rounded focus:border-[#F05A28] focus:outline-none"
             />
             <p className="text-[11px] text-neutral-500">
-              Paste the verification code from Google Search Console. It is automatically synced live to the &lt;head&gt; of your website.
+              Paste your GSC verification code. Automatically synced live to the &lt;head&gt;.
             </p>
           </div>
 
           <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider">
+                Google Analytics 4 (GA4) ID
+              </label>
+              <span className="text-[11px] text-emerald-600 font-semibold">
+                Powers Insights
+              </span>
+            </div>
+            <input
+              type="text"
+              value={content.branding.googleAnalyticsId || ''}
+              onChange={(e) => updateBranding({ googleAnalyticsId: e.target.value.trim() })}
+              placeholder="e.g. G-ABC123XYZ4"
+              className="w-full px-3 py-2 text-xs font-mono border border-neutral-300 rounded focus:border-[#F05A28] focus:outline-none"
+            />
+            <p className="text-[11px] text-neutral-500">
+              Required for Search Console Insights (pageviews, referring sites, time on site).
+            </p>
+          </div>
+
+          <div className="space-y-1.5 md:col-span-2 lg:col-span-1">
             <div className="flex items-center justify-between">
               <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider">
                 Canonical Website Domain
@@ -242,7 +263,7 @@ export const HeroBrandingTab: React.FC = () => {
               className="w-full px-3 py-2 text-xs font-mono border border-neutral-300 rounded focus:border-[#F05A28] focus:outline-none"
             />
             <p className="text-[11px] text-neutral-500">
-              The primary root domain indexed by search engines and declared in XML sitemaps.
+              The primary root domain indexed by search engines and declared in sitemaps.
             </p>
           </div>
         </div>

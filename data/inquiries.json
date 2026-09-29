@@ -1,0 +1,145 @@
+[
+  {
+    "id": "TR-BAOBAB-2792",
+    "referenceNumber": "TR-BAOBAB-2792",
+    "fullName": "Sophia Al-Mansoor",
+    "email": "sophia@emiratesluxurytravel.ae",
+    "phone": "+971 4 312 9876",
+    "companyOrAgency": "Emirates Luxury Journeys Dubai",
+    "country": "United Arab Emirates",
+    "role": "VIP Client Director",
+    "tripType": "",
+    "selectedTripTitle": "Bosphorus Palaces, Cappadocia Balloons & Turquoise Gulet",
+    "guestCount": "6 Pax",
+    "budgetTier": "Ultra-Luxury ($800+/day/pax)",
+    "estimatedDate": "November 2026",
+    "destinations": [
+      "Istanbul",
+      "Cappadocia",
+      "Bodrum"
+    ],
+    "preferredExperiences": [
+      "Private Helicopter Transfers",
+      "Private Bosphorus Superyacht",
+      "Exclusive Museum Access"
+    ],
+    "specialRequests": "Royal family private booking. Mandatory 24/7 security protocol and discreet VIP service throughout.",
+    "formMode": "b2b-partner",
+    "status": "new",
+    "createdAt": "2026-09-29T17:31:23.499Z"
+  },
+  {
+    "id": "TR-BAOBAB-5026",
+    "referenceNumber": "TR-BAOBAB-5026",
+    "fullName": "Claire Delacroix",
+    "email": "c.delacroix@voyages-prestige.fr",
+    "phone": "+33 1 42 68 55 00",
+    "companyOrAgency": "Voyages Prestige Paris",
+    "country": "France",
+    "role": "",
+    "tripType": "",
+    "selectedTripTitle": "Aegean Classical Wonders & Turquoise Coast",
+    "guestCount": "10 Pax",
+    "budgetTier": "Luxury Boutique ($400 - $600/day/pax)",
+    "estimatedDate": "September 2026",
+    "destinations": [
+      "Istanbul",
+      "Bodrum",
+      "Ephesus"
+    ],
+    "preferredExperiences": [],
+    "specialRequests": "French speaking certified scholar guide needed throughout.",
+    "formMode": "b2b-partner",
+    "status": "new",
+    "createdAt": "2026-09-29T17:29:37.055Z"
+  },
+  {
+    "id": "TR-BAOBAB-7821",
+    "referenceNumber": "TR-BAOBAB-7821",
+    "fullName": "David Sterling",
+    "email": "d.sterling@horizonjourneys.co.uk",
+    "phone": "+44 20 7946 0912",
+    "companyOrAgency": "Horizon Journeys UK",
+    "country": "United Kingdom",
+    "role": "Managing Director",
+    "tripType": "Cultural & Historical Expedition",
+    "selectedTripTitle": "10-Day Classical Turkey & Cappadocia Overland",
+    "guestCount": "12 Pax",
+    "budgetTier": "Luxury Boutique ($350 - $550/day/pax)",
+    "estimatedDate": "October 2026",
+    "destinations": [
+      "Istanbul",
+      "Cappadocia",
+      "Ephesus"
+    ],
+    "preferredExperiences": [
+      "Private Scholar Tour",
+      "Cave Wine Cellar Dinner",
+      "Hot Air Ballooning"
+    ],
+    "specialRequests": "Requires private scholar guide for Ephesus and exclusive cave wine cellar dinner in Urgup. High VIP guests.",
+    "status": "in_review",
+    "formMode": "b2b-partner",
+    "createdAt": "2026-09-29T15:29:25.497Z",
+    "updatedAt": "2026-09-29T17:29:32.527Z"
+  },
+  {
+    "id": "TR-BAOBAB-7819",
+    "referenceNumber": "TR-BAOBAB-7819",
+    "fullName": "Elena Rostova",
+    "email": "elena@nordicadventures.se",
+    "phone": "+46 8 123 4567",
+    "companyOrAgency": "Nordic Expeditions Stockholm",
+    "country": "Sweden",
+    "role": "Senior Product Manager",
+    "tripType": "Active Adventure & Hiking",
+    "selectedTripTitle": "Lycian Way Coastal Trek & Private Gulet",
+    "guestCount": "8 Pax",
+    "budgetTier": "Premium ($250 - $350/day/pax)",
+    "estimatedDate": "May 2026",
+    "destinations": [
+      "Antalya",
+      "Lycian Way",
+      "Kas",
+      "Fethiye"
+    ],
+    "preferredExperiences": [
+      "Private Gulet Cruise",
+      "Coastal Hiking",
+      "Seafood Gastronomy"
+    ],
+    "specialRequests": "All luggage transfers between trekking stages required. Need gulet charter with private chef and captain.",
+    "status": "in_review",
+    "formMode": "tour-inquiry",
+    "createdAt": "2026-09-28T17:29:25.498Z"
+  },
+  {
+    "id": "TR-BAOBAB-7804",
+    "referenceNumber": "TR-BAOBAB-7804",
+    "fullName": "Marcus Vance",
+    "email": "m.vance@vancetravel.com",
+    "phone": "+1 415 889 0123",
+    "companyOrAgency": "Vance Luxury Travel (Virtuoso)",
+    "country": "United States",
+    "role": "Private Travel Designer",
+    "tripType": "Small Group Tour",
+    "selectedTripTitle": "Culinary Crossroads of Istanbul & Aegean",
+    "guestCount": "6 Pax",
+    "budgetTier": "Ultra-Luxury ($600+/day/pax)",
+    "estimatedDate": "September 2026",
+    "destinations": [
+      "Istanbul",
+      "Bodrum",
+      "Ephesus"
+    ],
+    "preferredExperiences": [
+      "Michelin Dining",
+      "Private Yacht",
+      "VIP Airport Fast Track"
+    ],
+    "specialRequests": "Requires Ciragan Palace Kempinski suites and private helicopter transfers between IST and Bodrum.",
+    "status": "proposal_sent",
+    "formMode": "b2b-partner",
+    "createdAt": "2026-09-27T17:29:25.498Z"
+  }
+]

@@ -521,6 +521,230 @@ Return strictly valid JSON only.`;
   }
 });
 
+// ==========================================
+// INQUIRIES & TRADE BOOKING DATA STORE (CRM)
+// ==========================================
+const INQUIRIES_FILE = path.join(process.cwd(), 'data', 'inquiries.json');
+
+const INITIAL_INQUIRIES = [
+  {
+    id: 'TR-BAOBAB-7821',
+    referenceNumber: 'TR-BAOBAB-7821',
+    fullName: 'David Sterling',
+    email: 'd.sterling@horizonjourneys.co.uk',
+    phone: '+44 20 7946 0912',
+    companyOrAgency: 'Horizon Journeys UK',
+    country: 'United Kingdom',
+    role: 'Managing Director',
+    tripType: 'Cultural & Historical Expedition',
+    selectedTripTitle: '10-Day Classical Turkey & Cappadocia Overland',
+    guestCount: '12 Pax',
+    budgetTier: 'Luxury Boutique ($350 - $550/day/pax)',
+    estimatedDate: 'October 2026',
+    destinations: ['Istanbul', 'Cappadocia', 'Ephesus'],
+    preferredExperiences: ['Private Scholar Tour', 'Cave Wine Cellar Dinner', 'Hot Air Ballooning'],
+    specialRequests: 'Requires private scholar guide for Ephesus and exclusive cave wine cellar dinner in Urgup. High VIP guests.',
+    status: 'new',
+    formMode: 'b2b-partner',
+    createdAt: new Date(Date.now() - 2 * 3600000).toISOString()
+  },
+  {
+    id: 'TR-BAOBAB-7819',
+    referenceNumber: 'TR-BAOBAB-7819',
+    fullName: 'Elena Rostova',
+    email: 'elena@nordicadventures.se',
+    phone: '+46 8 123 4567',
+    companyOrAgency: 'Nordic Expeditions Stockholm',
+    country: 'Sweden',
+    role: 'Senior Product Manager',
+    tripType: 'Active Adventure & Hiking',
+    selectedTripTitle: 'Lycian Way Coastal Trek & Private Gulet',
+    guestCount: '8 Pax',
+    budgetTier: 'Premium ($250 - $350/day/pax)',
+    estimatedDate: 'May 2026',
+    destinations: ['Antalya', 'Lycian Way', 'Kas', 'Fethiye'],
+    preferredExperiences: ['Private Gulet Cruise', 'Coastal Hiking', 'Seafood Gastronomy'],
+    specialRequests: 'All luggage transfers between trekking stages required. Need gulet charter with private chef and captain.',
+    status: 'in_review',
+    formMode: 'tour-inquiry',
+    createdAt: new Date(Date.now() - 24 * 3600000).toISOString()
+  },
+  {
+    id: 'TR-BAOBAB-7804',
+    referenceNumber: 'TR-BAOBAB-7804',
+    fullName: 'Marcus Vance',
+    email: 'm.vance@vancetravel.com',
+    phone: '+1 415 889 0123',
+    companyOrAgency: 'Vance Luxury Travel (Virtuoso)',
+    country: 'United States',
+    role: 'Private Travel Designer',
+    tripType: 'Small Group Tour',
+    selectedTripTitle: 'Culinary Crossroads of Istanbul & Aegean',
+    guestCount: '6 Pax',
+    budgetTier: 'Ultra-Luxury ($600+/day/pax)',
+    estimatedDate: 'September 2026',
+    destinations: ['Istanbul', 'Bodrum', 'Ephesus'],
+    preferredExperiences: ['Michelin Dining', 'Private Yacht', 'VIP Airport Fast Track'],
+    specialRequests: 'Requires Ciragan Palace Kempinski suites and private helicopter transfers between IST and Bodrum.',
+    status: 'proposal_sent',
+    formMode: 'b2b-partner',
+    createdAt: new Date(Date.now() - 48 * 3600000).toISOString()
+  }
+];
+
+function readInquiries(): any[] {
+  try {
+    if (!fs.existsSync(INQUIRIES_FILE)) {
+      const dir = path.dirname(INQUIRIES_FILE);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(INITIAL_INQUIRIES, null, 2), 'utf-8');
+      return INITIAL_INQUIRIES;
+    }
+    const raw = fs.readFileSync(INQUIRIES_FILE, 'utf-8');
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error('[Inquiries Read Error]:', err);
+    return INITIAL_INQUIRIES;
+  }
+}
+
+function saveInquiries(list: any[]) {
+  try {
+    const dir = path.dirname(INQUIRIES_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(list, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('[Inquiries Save Error]:', err);
+  }
+}
+
+function saveInquiryRecord(record: any) {
+  const current = readInquiries();
+  // Check if already exists (update if exists, otherwise prepend)
+  const existingIdx = current.findIndex((i: any) => i.referenceNumber === record.referenceNumber || i.id === record.id);
+  if (existingIdx !== -1) {
+    current[existingIdx] = { ...current[existingIdx], ...record, updatedAt: new Date().toISOString() };
+  } else {
+    current.unshift(record);
+  }
+  saveInquiries(current);
+}
+
+// API Route: List All Inquiries for Super Admin Panel
+app.get('/api/inquiries', (req, res) => {
+  try {
+    const inquiries = readInquiries();
+    const { status, search } = req.query;
+
+    let filtered = inquiries;
+    if (status && status !== 'all') {
+      filtered = filtered.filter((i: any) => i.status === status);
+    }
+    if (search && typeof search === 'string') {
+      const q = search.toLowerCase();
+      filtered = filtered.filter((i: any) =>
+        (i.fullName && i.fullName.toLowerCase().includes(q)) ||
+        (i.email && i.email.toLowerCase().includes(q)) ||
+        (i.companyOrAgency && i.companyOrAgency.toLowerCase().includes(q)) ||
+        (i.referenceNumber && i.referenceNumber.toLowerCase().includes(q)) ||
+        (i.selectedTripTitle && i.selectedTripTitle.toLowerCase().includes(q))
+      );
+    }
+
+    return res.json({
+      success: true,
+      count: filtered.length,
+      total: inquiries.length,
+      newCount: inquiries.filter((i: any) => i.status === 'new').length,
+      inquiries: filtered
+    });
+  } catch (error: any) {
+    console.error('[Get Inquiries Error]:', error);
+    return res.status(500).json({ success: false, error: 'Failed to fetch inquiries' });
+  }
+});
+
+// API Route: Add or Update an Inquiry
+app.post('/api/inquiries', (req, res) => {
+  try {
+    const data = req.body;
+    if (!data.fullName || !data.email) {
+      return res.status(400).json({ success: false, error: 'Missing required fullName or email' });
+    }
+    const referenceNumber = data.referenceNumber || ('TR-BAOBAB-' + Math.floor(1000 + Math.random() * 9000));
+    const newRecord = {
+      id: referenceNumber,
+      referenceNumber,
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone || '',
+      companyOrAgency: data.companyOrAgency || '',
+      country: data.country || '',
+      role: data.role || data.partnerType || '',
+      tripType: data.tripType || '',
+      selectedTripTitle: data.selectedTripTitle || '',
+      guestCount: data.guestCount || '',
+      budgetTier: data.budgetTier || '',
+      estimatedDate: data.estimatedDate || '',
+      destinations: Array.isArray(data.destinations) ? data.destinations : [],
+      preferredExperiences: Array.isArray(data.preferredExperiences) ? data.preferredExperiences : [],
+      specialRequests: data.specialRequests || '',
+      formMode: data.formMode || 'tour-inquiry',
+      status: data.status || 'new',
+      createdAt: data.createdAt || new Date().toISOString()
+    };
+    saveInquiryRecord(newRecord);
+    return res.json({ success: true, inquiry: newRecord });
+  } catch (error: any) {
+    console.error('[Post Inquiry Error]:', error);
+    return res.status(500).json({ success: false, error: 'Failed to record inquiry' });
+  }
+});
+
+// API Route: Update Inquiry Status or Notes
+app.patch('/api/inquiries/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, notes } = req.body;
+    const inquiries = readInquiries();
+    const index = inquiries.findIndex((i: any) => i.id === id || i.referenceNumber === id);
+
+    if (index === -1) {
+      return res.status(404).json({ success: false, error: 'Inquiry not found' });
+    }
+
+    if (status) inquiries[index].status = status;
+    if (notes !== undefined) inquiries[index].internalNotes = notes;
+    inquiries[index].updatedAt = new Date().toISOString();
+
+    saveInquiries(inquiries);
+    return res.json({ success: true, inquiry: inquiries[index] });
+  } catch (error: any) {
+    console.error('[Patch Inquiry Error]:', error);
+    return res.status(500).json({ success: false, error: 'Failed to update inquiry' });
+  }
+});
+
+// API Route: Delete Inquiry
+app.delete('/api/inquiries/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    let inquiries = readInquiries();
+    const initialLen = inquiries.length;
+    inquiries = inquiries.filter((i: any) => i.id !== id && i.referenceNumber !== id);
+
+    if (inquiries.length === initialLen) {
+      return res.status(404).json({ success: false, error: 'Inquiry not found' });
+    }
+
+    saveInquiries(inquiries);
+    return res.json({ success: true, message: 'Inquiry removed successfully' });
+  } catch (error: any) {
+    console.error('[Delete Inquiry Error]:', error);
+    return res.status(500).json({ success: false, error: 'Failed to delete inquiry' });
+  }
+});
+
 // API Route: Send Tour / B2B Inquiry Email via Resend
 app.post('/api/inquiry', async (req, res) => {
   try {
@@ -538,6 +762,29 @@ app.post('/api/inquiry', async (req, res) => {
     const recipientEmails = getInternalRecipients();
     const fromEmail = getSenderAddress('Baobab DMC Inquiries');
     const isB2B = data.formMode === 'b2b-partner';
+
+    // Persist to CRM store for Super Admin Panel
+    saveInquiryRecord({
+      id: referenceNumber,
+      referenceNumber,
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone || '',
+      companyOrAgency: data.companyOrAgency || '',
+      country: data.country || '',
+      role: data.role || data.partnerType || '',
+      tripType: data.tripType || '',
+      selectedTripTitle: data.selectedTripTitle || '',
+      guestCount: data.guestCount ? `${data.guestCount} Pax` : '',
+      budgetTier: data.budgetTier || '',
+      estimatedDate: data.estimatedDate || '',
+      destinations: Array.isArray(data.destinations) ? data.destinations : [],
+      preferredExperiences: Array.isArray(data.preferredExperiences) ? data.preferredExperiences : [],
+      specialRequests: data.specialRequests || '',
+      formMode: data.formMode || (isB2B ? 'b2b-partner' : 'tour-inquiry'),
+      status: 'new',
+      createdAt: new Date().toISOString()
+    });
 
     const subject = isB2B 
       ? `[B2B Partner Registration] ${data.companyOrAgency || data.fullName} - Ref: ${referenceNumber}`
@@ -799,6 +1046,29 @@ app.post('/api/consultant-booking', async (req, res) => {
     const totalGrossRetail = Number(data.totalGrossRetail) || (retailPricePerPax * guestCount);
     const totalNetPayable = Number(data.totalNetPayable) || (netPricePerPax * guestCount);
     const advisorCommission = Number(data.advisorCommission) || (totalGrossRetail - totalNetPayable);
+
+    // Persist Trade Booking to CRM store for Super Admin Panel
+    saveInquiryRecord({
+      id: bookingReference,
+      referenceNumber: bookingReference,
+      fullName: data.leadCustomerName,
+      email: data.customerEmail || data.consultantEmail,
+      phone: data.customerPhone || data.consultantPhone || '',
+      companyOrAgency: data.agencyName || data.consultantName || 'Travel Advisor Trade',
+      country: 'Travel Trade Partner',
+      role: `Advisor: ${data.consultantName} (${data.agencyName || 'Independent'})`,
+      tripType: 'Confirmed Trade Booking',
+      selectedTripTitle: data.tripTitle,
+      guestCount: `${guestCount} Guest(s)`,
+      budgetTier: `Wholesale Net: $${totalNetPayable.toLocaleString()} USD (Gross $${totalGrossRetail.toLocaleString()})`,
+      estimatedDate: data.travelDate || '',
+      destinations: ['Confirmed Booking'],
+      preferredExperiences: ['Trade Booking Voucher Issued'],
+      specialRequests: `Advisor: ${data.consultantName} (${data.consultantEmail}, ${data.consultantPhone || 'N/A'}) • Commission: +$${advisorCommission.toLocaleString()} USD • Room Setup: ${data.roomType || 'Standard'} • Special Notes: ${data.specialRequests || 'None'}`,
+      status: 'confirmed',
+      formMode: 'consultant-booking',
+      createdAt: new Date().toISOString()
+    });
 
     const subject = `[CONFIRMED TRADE BOOKING] ${data.agencyName || data.consultantName} - For ${data.leadCustomerName} (${data.tripTitle}) - Ref: ${bookingReference}`;
 

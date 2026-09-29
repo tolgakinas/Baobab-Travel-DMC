@@ -101,6 +101,23 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
   const [showImportDialog, setShowImportDialog] = useState<boolean>(false);
   const [showResetConfirmDialog, setShowResetConfirmDialog] = useState<boolean>(false);
   const [importJsonText, setImportJsonText] = useState<string>('');
+  const [newInquiriesCount, setNewInquiriesCount] = useState<number>(0);
+  const [totalInquiriesCount, setTotalInquiriesCount] = useState<number>(0);
+
+  // Fetch inquiries count on modal open
+  useEffect(() => {
+    if (isOpen) {
+      fetch('/api/inquiries')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.success) {
+            setTotalInquiriesCount(data.total || 0);
+            setNewInquiriesCount(data.newCount || 0);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   // Close on Escape if not minimized
   useEffect(() => {
@@ -224,7 +241,13 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
     { id: 'venues', label: 'Venues & Lodges', icon: Building, count: content.venues.length },
     { id: 'services', label: 'Services', icon: Layers, count: content.services.length },
     { id: 'about', label: 'About & FAQ', icon: Award },
-    { id: 'inquiries', label: 'Inquiries & CRM', icon: Inbox, badge: 'Live' }
+    { 
+      id: 'inquiries', 
+      label: 'Inquiries & CRM', 
+      icon: Inbox, 
+      count: totalInquiriesCount > 0 ? totalInquiriesCount : undefined, 
+      badge: newInquiriesCount > 0 ? `${newInquiriesCount} New` : 'Live' 
+    }
   ];
 
   // If Admin is NOT authenticated with username & password, render the Master Login Gate Screen

@@ -40,6 +40,27 @@ function getResendClient(): Resend | null {
   return resendClient;
 }
 
+// Format sender email address with display label
+function getSenderAddress(label: string = 'Baobab DMC Turkey'): string {
+  const envFrom = process.env.RESEND_FROM_EMAIL;
+  if (!envFrom || envFrom.trim() === '') {
+    return `${label} <onboarding@resend.dev>`;
+  }
+  if (envFrom.includes('<') && envFrom.includes('>')) {
+    return envFrom;
+  }
+  return `${label} <${envFrom.trim()}>`;
+}
+
+// Destination recipient email addresses configured via INQUIRY_RECEIVER_EMAIL (defaults to info@baobabdmc.com)
+function getInternalRecipients(): string[] {
+  const envRecipients = (process.env.INQUIRY_RECEIVER_EMAIL?.trim() || 'info@baobabdmc.com')
+    .split(',')
+    .map(e => e.trim())
+    .filter(Boolean);
+  return envRecipients.length > 0 ? envRecipients : ['info@baobabdmc.com'];
+}
+
 // Health Check API
 app.get('/api/health', (req, res) => {
   res.json({
@@ -514,8 +535,8 @@ app.post('/api/inquiry', async (req, res) => {
     }
 
     const referenceNumber = data.referenceNumber || ('TR-BAOBAB-' + Math.floor(1000 + Math.random() * 9000));
-    const recipientEmail = process.env.INQUIRY_RECEIVER_EMAIL || 'tolgakinas@gmail.com';
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Baobab DMC Inquiries <onboarding@resend.dev>';
+    const recipientEmails = getInternalRecipients();
+    const fromEmail = getSenderAddress('Baobab DMC Inquiries');
     const isB2B = data.formMode === 'b2b-partner';
 
     const subject = isB2B 
@@ -697,7 +718,7 @@ app.post('/api/inquiry', async (req, res) => {
     const resend = getResendClient();
 
     if (!resend) {
-      console.log(`[Resend Notice] RESEND_API_KEY not configured. Simulated email delivery for Reference ${referenceNumber} to ${recipientEmail}`);
+      console.log(`[Resend Notice] RESEND_API_KEY not configured. Simulated email delivery for Reference ${referenceNumber} to ${recipientEmails.join(', ')}`);
       return res.json({
         success: true,
         simulated: true,
@@ -706,14 +727,23 @@ app.post('/api/inquiry', async (req, res) => {
       });
     }
 
-    // Send internal operations notification email
+    // Send internal operations notification email to destination inbox configured via INQUIRY_RECEIVER_EMAIL
     const internalResult = await resend.emails.send({
       from: fromEmail,
-      to: [recipientEmail],
+      to: recipientEmails,
       replyTo: data.email,
       subject: subject,
       html: internalEmailHtml,
     });
+
+    if (internalResult.error) {
+      console.error('[Resend Internal Dispatch Error]:', internalResult.error);
+      return res.status(500).json({
+        success: false,
+        error: internalResult.error.message || 'Failed to dispatch inquiry notification to internal team.',
+        details: internalResult.error
+      });
+    }
 
     // Send customer auto-acknowledgement email
     let clientResult = null;
@@ -732,6 +762,7 @@ app.post('/api/inquiry', async (req, res) => {
       success: true,
       simulated: false,
       referenceNumber,
+      recipients: recipientEmails,
       internalEmailId: internalResult?.data?.id,
       clientEmailId: clientResult?.data?.id,
       message: 'Inquiry email successfully dispatched via Resend.',
@@ -759,8 +790,8 @@ app.post('/api/consultant-booking', async (req, res) => {
     }
 
     const bookingReference = data.bookingReference || ('BAOBAB-ADV-' + Math.floor(100000 + Math.random() * 900000));
-    const recipientEmail = process.env.INQUIRY_RECEIVER_EMAIL || 'tolgakinas@gmail.com';
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Baobab DMC Trade Bookings <onboarding@resend.dev>';
+    const recipientEmails = getInternalRecipients();
+    const fromEmail = getSenderAddress('Baobab DMC Trade Bookings');
 
     const guestCount = Number(data.guestCount) || 1;
     const retailPricePerPax = Number(data.retailPricePerPax) || 0;
@@ -937,7 +968,7 @@ app.post('/api/consultant-booking', async (req, res) => {
     const resend = getResendClient();
 
     if (!resend) {
-      console.log(`[Resend Notice] RESEND_API_KEY not configured. Simulated Trade Booking email delivery for Ref ${bookingReference} to ${recipientEmail} and ${data.consultantEmail}`);
+      console.log(`[Resend Notice] RESEND_API_KEY not configured. Simulated Trade Booking email delivery for Ref ${bookingReference} to ${recipientEmails.join(', ')} and ${data.consultantEmail}`);
       return res.json({
         success: true,
         simulated: true,
@@ -946,14 +977,23 @@ app.post('/api/consultant-booking', async (req, res) => {
       });
     }
 
-    // Send internal email to DMC management
+    // Send internal email to DMC management via INQUIRY_RECEIVER_EMAIL
     const internalResult = await resend.emails.send({
       from: fromEmail,
-      to: [recipientEmail],
+      to: recipientEmails,
       replyTo: data.consultantEmail,
       subject: subject,
       html: internalBookingHtml,
     });
+
+    if (internalResult.error) {
+      console.error('[Resend Booking Internal Dispatch Error]:', internalResult.error);
+      return res.status(500).json({
+        success: false,
+        error: internalResult.error.message || 'Failed to dispatch booking notification to internal team.',
+        details: internalResult.error
+      });
+    }
 
     // Send advisor confirmation copy
     let advisorResult = null;
@@ -972,6 +1012,7 @@ app.post('/api/consultant-booking', async (req, res) => {
       success: true,
       simulated: false,
       bookingReference,
+      recipients: recipientEmails,
       internalEmailId: internalResult?.data?.id,
       advisorEmailId: advisorResult?.data?.id,
       message: 'Booking confirmation emails successfully dispatched via Resend.',
@@ -981,6 +1022,67 @@ app.post('/api/consultant-booking', async (req, res) => {
     return res.status(500).json({
       success: false,
       error: error?.message || 'Failed to dispatch booking confirmation email.',
+    });
+  }
+});
+
+// API Route: Send Diagnostic Test Email via Resend
+app.post('/api/test-resend', async (req, res) => {
+  try {
+    const targetEmail = req.body?.targetEmail || process.env.INQUIRY_RECEIVER_EMAIL?.trim() || 'info@baobabdmc.com';
+    const resend = getResendClient();
+
+    if (!resend) {
+      return res.status(400).json({
+        success: false,
+        error: 'RESEND_API_KEY is not configured in server environment variables.',
+      });
+    }
+
+    const fromEmail = getSenderAddress('Baobab DMC Verification Desk');
+    const result = await resend.emails.send({
+      from: fromEmail,
+      to: [targetEmail],
+      subject: `[Resend Verification Test] Baobab DMC - ${new Date().toLocaleTimeString()}`,
+      html: `
+        <div style="font-family: sans-serif; padding: 24px; max-width: 550px; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff;">
+          <h2 style="color: #f05a28; margin-top: 0;">Baobab DMC Email Verification Successful</h2>
+          <p>This test email confirms that your Resend email infrastructure is operating and delivering properly to your inbox.</p>
+          <ul style="line-height: 1.8; font-size: 13.5px; color: #374151;">
+            <li><strong>Recipient:</strong> ${targetEmail}</li>
+            <li><strong>Sender:</strong> ${fromEmail}</li>
+            <li><strong>Timestamp:</strong> ${new Date().toISOString()}</li>
+            <li><strong>Domain Status:</strong> Verified (baobabdmc.com)</li>
+          </ul>
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px; margin-top: 16px; font-size: 12.5px; color: #166534;">
+            ✓ Real-time delivery to your inbox is active. Incoming B2B tour inquiries and travel advisor bookings will now be sent directly to you.
+          </div>
+          <p style="color: #9ca3af; font-size: 11px; margin-top: 20px;">Baobab Destination Management Company • Istanbul, Turkey • TURSAB License #A-15764</p>
+        </div>
+      `,
+    });
+
+    if (result.error) {
+      console.error('[Resend Diagnostic Test Error]:', result.error);
+      return res.status(500).json({
+        success: false,
+        error: result.error.message || 'Resend API returned an error',
+        details: result.error,
+      });
+    }
+
+    return res.json({
+      success: true,
+      emailId: result.data?.id,
+      recipient: targetEmail,
+      from: fromEmail,
+      message: `Diagnostic test email successfully dispatched to ${targetEmail} via Resend.`,
+    });
+  } catch (error: any) {
+    console.error('[Resend Test Route Error]:', error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || 'Failed to dispatch test email',
     });
   }
 });

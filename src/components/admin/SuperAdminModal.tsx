@@ -44,7 +44,8 @@ import { AboutTestimonialsTab } from './AboutTestimonialsTab';
 import { InquiriesCrmTab } from './InquiriesCrmTab';
 import { PhotoLibraryManagerTab } from './PhotoLibraryManagerTab';
 import { BlogManagerTab } from './BlogManagerTab';
-import { Image as ImageIcon, BookOpen } from 'lucide-react';
+import { GtmConsentManagerTab } from './GtmConsentManagerTab';
+import { Image as ImageIcon, BookOpen, Tag } from 'lucide-react';
 
 interface SuperAdminModalProps {
   isOpen: boolean;
@@ -213,6 +214,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
 
   const navTabs = [
     { id: 'hero', label: 'Hero & Branding', icon: Sparkles, count: content.hero.slides.length },
+    { id: 'gtm_consent', label: 'GTM & Cookie CMP', icon: Tag, badge: 'CMP' },
     { id: 'blogs', label: 'Blog & SEO/AEO/AIO', icon: BookOpen, count: content.blogs?.length || 10, badge: 'AI SEO' },
     { id: 'photos', label: 'Photo Library (AI SEO)', icon: ImageIcon, count: (content.customPhotos?.length || 0) + 20, badge: 'AI' },
     { id: 'metrics', label: 'Metrics & Numbers', icon: Hash, count: content.stats.length },
@@ -629,6 +631,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <div className="max-w-5xl mx-auto">
             {activeAdminTab === 'hero' && <HeroBrandingTab />}
+            {activeAdminTab === 'gtm_consent' && <GtmConsentManagerTab />}
             {activeAdminTab === 'blogs' && <BlogManagerTab />}
             {activeAdminTab === 'photos' && <PhotoLibraryManagerTab />}
             {activeAdminTab === 'metrics' && <MetricsNumbersTab />}

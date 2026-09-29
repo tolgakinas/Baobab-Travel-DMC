@@ -108,6 +108,46 @@ export interface PhotoPreset {
   photos: LibraryPhotoItem[];
 }
 
+export interface GtmConsentSettings {
+  gtmEnabled: boolean;
+  gtmId: string;
+  cmpProvider: 'built_in' | 'cookiebot' | 'onetrust' | 'termly' | 'custom';
+  cmpAccountId?: string;
+  customCmpScript?: string;
+  consentModeV2Enabled: boolean;
+  defaultAnalyticsStorage: 'granted' | 'denied';
+  defaultAdStorage: 'granted' | 'denied';
+  defaultAdUserData: 'granted' | 'denied';
+  defaultAdPersonalization: 'granted' | 'denied';
+  bannerEnabled: boolean;
+  bannerTitle: string;
+  bannerMessage: string;
+  acceptButtonText: string;
+  rejectButtonText: string;
+  settingsButtonText: string;
+  privacyPolicyUrl: string;
+}
+
+export const DEFAULT_GTM_CONSENT: GtmConsentSettings = {
+  gtmEnabled: false,
+  gtmId: '',
+  cmpProvider: 'built_in',
+  cmpAccountId: '',
+  customCmpScript: '',
+  consentModeV2Enabled: true,
+  defaultAnalyticsStorage: 'denied',
+  defaultAdStorage: 'denied',
+  defaultAdUserData: 'denied',
+  defaultAdPersonalization: 'denied',
+  bannerEnabled: true,
+  bannerTitle: 'Privacy & Cookie Preferences',
+  bannerMessage: 'We use cookies, analytics, and consent-managed services to evaluate performance and provide seamless B2B partner dispatch in compliance with GDPR and Turkish KVKK regulations.',
+  acceptButtonText: 'Accept All',
+  rejectButtonText: 'Essential Only',
+  settingsButtonText: 'Preferences',
+  privacyPolicyUrl: '#about'
+};
+
 export interface SiteContentData {
   branding: BrandingSettings;
   hero: HeroSettings;
@@ -120,6 +160,7 @@ export interface SiteContentData {
   about: AboutSettings;
   customPhotos?: LibraryPhotoItem[];
   blogs?: BlogPost[];
+  gtmConsent?: GtmConsentSettings;
 }
 
 const DEFAULT_HERO_SLIDES: HeroSlide[] = [
@@ -321,7 +362,8 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
     faqItems: DEFAULT_FAQ_ITEMS
   },
   customPhotos: [],
-  blogs: DEFAULT_BLOG_POSTS
+  blogs: DEFAULT_BLOG_POSTS,
+  gtmConsent: DEFAULT_GTM_CONSENT
 };
 
 const STORAGE_KEY = 'baobab_dmc_super_admin_content_v2';
@@ -364,6 +406,7 @@ interface SiteContentContextType {
   deleteVenue: (venueId: string) => void;
   updateService: (serviceId: string, updates: Partial<DmcService>) => void;
   updateAbout: (updates: Partial<AboutSettings>) => void;
+  updateGtmConsent: (updates: Partial<GtmConsentSettings>) => void;
   
   // Blog Management (SEO / AEO / AIO)
   addBlog: (blog: BlogPost) => void;
@@ -406,7 +449,8 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
           hero: { ...DEFAULT_SITE_CONTENT.hero, ...(parsed.hero || {}) },
           companyContact: { ...DEFAULT_SITE_CONTENT.companyContact, ...(parsed.companyContact || {}) },
           about: { ...DEFAULT_SITE_CONTENT.about, ...(parsed.about || {}) },
-          blogs: Array.isArray(parsed.blogs) && parsed.blogs.length > 0 ? parsed.blogs : DEFAULT_BLOG_POSTS
+          blogs: Array.isArray(parsed.blogs) && parsed.blogs.length > 0 ? parsed.blogs : DEFAULT_BLOG_POSTS,
+          gtmConsent: { ...DEFAULT_GTM_CONSENT, ...(parsed.gtmConsent || {}) }
         };
       }
     } catch (e) {
@@ -512,6 +556,112 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [content.branding?.googleAnalyticsId]);
 
+  // Synchronize Google Tag Manager (GTM), Google Consent Mode v2 & CMP Scripts
+  useEffect(() => {
+    const gtm = content.gtmConsent || DEFAULT_GTM_CONSENT;
+
+    // 1. Google Consent Mode v2: Configure default consent before tags fire
+    if (gtm.consentModeV2Enabled) {
+      if (!(window as any).dataLayer) {
+        (window as any).dataLayer = [];
+      }
+      function gtag(...args: any[]) {
+        (window as any).dataLayer.push(arguments);
+      }
+      (window as any).gtag = (window as any).gtag || gtag;
+
+      const consentDefaults: Record<string, string> = {
+        analytics_storage: gtm.defaultAnalyticsStorage || 'denied',
+        ad_storage: gtm.defaultAdStorage || 'denied',
+        ad_user_data: gtm.defaultAdUserData || 'denied',
+        ad_personalization: gtm.defaultAdPersonalization || 'denied',
+        wait_for_update: '500'
+      };
+      (window as any).gtag('consent', 'default', consentDefaults);
+    }
+
+    // 2. Google Tag Manager Container Script
+    const existingGtm = document.getElementById('gtm-container-script');
+    if (gtm.gtmEnabled && gtm.gtmId?.trim()?.toUpperCase().startsWith('GTM-')) {
+      const gtmId = gtm.gtmId.trim().toUpperCase();
+      if (!existingGtm) {
+        const script = document.createElement('script');
+        script.id = 'gtm-container-script';
+        script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${gtmId}');`;
+        document.head.appendChild(script);
+      }
+    } else if (existingGtm && (!gtm.gtmEnabled || !gtm.gtmId?.trim())) {
+      existingGtm.remove();
+    }
+
+    // 3. CMP Provider Script Injection (Cookiebot, OneTrust, Termly, Custom)
+    const existingCmp = document.getElementById('cmp-provider-script');
+    if (existingCmp) {
+      existingCmp.remove();
+    }
+
+    if (gtm.cmpProvider === 'cookiebot' && gtm.cmpAccountId?.trim()) {
+      const script = document.createElement('script');
+      script.id = 'cmp-provider-script';
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = 'https://consent.cookiebot.com/uc.js';
+      script.setAttribute('data-cbid', gtm.cmpAccountId.trim());
+      document.head.appendChild(script);
+    } else if (gtm.cmpProvider === 'onetrust' && gtm.cmpAccountId?.trim()) {
+      const script = document.createElement('script');
+      script.id = 'cmp-provider-script';
+      script.type = 'text/javascript';
+      script.charset = 'UTF-8';
+      script.src = 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js';
+      script.setAttribute('data-domain-script', gtm.cmpAccountId.trim());
+      document.head.appendChild(script);
+    } else if (gtm.cmpProvider === 'termly' && gtm.cmpAccountId?.trim()) {
+      const script = document.createElement('script');
+      script.id = 'cmp-provider-script';
+      script.type = 'text/javascript';
+      script.src = 'https://app.termly.io/embed.min.js';
+      script.setAttribute('data-auto-block', 'on');
+      script.setAttribute('data-website-uuid', gtm.cmpAccountId.trim());
+      document.head.appendChild(script);
+    } else if (gtm.cmpProvider === 'custom' && gtm.customCmpScript?.trim()) {
+      const div = document.createElement('div');
+      div.id = 'cmp-provider-script';
+      div.innerHTML = gtm.customCmpScript.trim();
+      const scripts = div.querySelectorAll('script');
+      scripts.forEach(s => {
+        const newScript = document.createElement('script');
+        if (s.src) newScript.src = s.src;
+        if (s.type) newScript.type = s.type;
+        if (s.async) newScript.async = true;
+        if (s.innerHTML) newScript.innerHTML = s.innerHTML;
+        Array.from(s.attributes).forEach(attr => {
+          if (!['src', 'type'].includes(attr.name)) {
+            newScript.setAttribute(attr.name, attr.value);
+          }
+        });
+        document.head.appendChild(newScript);
+      });
+      document.body.appendChild(div);
+    }
+  }, [content.gtmConsent]);
+
+  // Update GTM & CMP Consent Settings
+  const updateGtmConsent = useCallback((settings: Partial<GtmConsentSettings>) => {
+    setContent(prev => ({
+      ...prev,
+      gtmConsent: {
+        ...(prev.gtmConsent || DEFAULT_GTM_CONSENT),
+        ...settings
+      }
+    }));
+    setIsDirty(true);
+  }, []);
+
   // Reset all content to original defaults
   const resetToDefaults = useCallback(() => {
     setContent(DEFAULT_SITE_CONTENT);
@@ -544,6 +694,7 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         hero: { ...DEFAULT_SITE_CONTENT.hero, ...(parsed.hero || {}) },
         companyContact: { ...DEFAULT_SITE_CONTENT.companyContact, ...(parsed.companyContact || {}) },
         about: { ...DEFAULT_SITE_CONTENT.about, ...(parsed.about || {}) },
+        gtmConsent: { ...DEFAULT_GTM_CONSENT, ...(parsed.gtmConsent || {}) },
       });
       setIsDirty(true);
       return { success: true };
@@ -1000,7 +1151,8 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     optimizeBlogWithAI,
     addCustomPhoto,
     deleteCustomPhoto,
-    updateCustomPhoto
+    updateCustomPhoto,
+    updateGtmConsent
   }), [
     content,
     isSuperAdmin,
@@ -1034,6 +1186,7 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     deleteVenue,
     updateService,
     updateAbout,
+    updateGtmConsent,
     addBlog,
     updateBlog,
     deleteBlog,

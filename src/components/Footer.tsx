@@ -30,7 +30,8 @@ import {
   ChevronRight,
   Leaf,
   HeartHandshake,
-  ExternalLink
+  ExternalLink,
+  Cookie
 } from 'lucide-react';
 import { DESTINATIONS, COMPANY_CONTACT } from '../data/dmcData';
 
@@ -566,6 +567,16 @@ export const Footer: React.FC<FooterProps> = ({
               <FileCode className="w-3.5 h-3.5 text-neutral-500" />
               <span>XML Sitemap</span>
             </a>
+
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-cookie-settings'))}
+              className="hover:text-white text-neutral-400 hover:text-[#F05A28] flex items-center gap-1.5 transition-colors cursor-pointer"
+              title="Manage GDPR & KVKK cookie consent preferences"
+            >
+              <Cookie className="w-3.5 h-3.5 text-neutral-500" />
+              <span>Cookie Preferences</span>
+            </button>
 
             {onOpenConsultantPortal && (
               <button

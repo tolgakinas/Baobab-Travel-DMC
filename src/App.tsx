@@ -30,6 +30,7 @@ import { ResponsibleTravelModal } from './components/ResponsibleTravelModal';
 import { B2BPartnerPanel } from './components/B2BPartnerPanel';
 import { TravelConsultantPortal } from './components/TravelConsultantPortal';
 import { SuperAdminModal } from './components/admin/SuperAdminModal';
+import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { QuickScrollButtons } from './components/QuickScrollButtons';
 import { Destination, SampleItinerary, VenueShowcase, InquiryFormData, AtlasTrip } from './types';
 import { DESTINATIONS, EXCLUSIVE_VENUES, COMPANY_CONTACT } from './data/dmcData';
@@ -392,6 +393,9 @@ export default function App() {
         isOpen={superAdminModalOpen}
         onClose={() => setSuperAdminModalOpen(false)}
       />
+
+      {/* Global GDPR / KVKK Cookie Consent Banner & Modal */}
+      <CookieConsentBanner />
       </div>
     </LanguageProvider>
   </SiteContentProvider>

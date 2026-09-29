@@ -266,7 +266,7 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
     });
   };
 
-  // Re-run AI Analysis on editing photo
+  // Re-run AI Analysis on editing photo (Auto-Fill unfilled parts using description as reference)
   const handleReanalyzeWithAI = async () => {
     if (!editingPhoto) return;
     setIsReanalyzingAI(true);
@@ -283,24 +283,38 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
           mimeType: 'image/jpeg',
           originalName: editingPhoto.title || 'turkey-photo.jpg',
           categoryHint: editingPhoto.category,
-          locationHint: editingPhoto.location
+          locationHint: editingPhoto.location,
+          descriptionHint: editingPhoto.description,
+          titleHint: editingPhoto.title,
+          captionHint: editingPhoto.caption,
+          altTextHint: editingPhoto.altText
         })
       });
 
       if (res.ok) {
         const data = await res.json();
         if (data.success && data.analysis) {
-          setEditingPhoto(prev => prev ? ({
-            ...prev,
-            title: data.analysis.title || prev.title,
-            caption: data.analysis.caption || prev.caption,
-            description: data.analysis.description || prev.description,
-            altText: data.analysis.altText || prev.altText,
-            location: data.analysis.location || prev.location,
-            category: data.analysis.category || prev.category,
-            seoKeywords: data.analysis.seoKeywords || prev.seoKeywords
-          }) : null);
-          showToast('Gemini AI analyzed photo and regenerated SEO metadata!', 'success');
+          const isUnfilled = (str?: string | null) => !str || str.trim() === '';
+
+          setEditingPhoto(prev => {
+            if (!prev) return null;
+            const hasExistingDescription = !isUnfilled(prev.description);
+
+            return {
+              ...prev,
+              // Fill all unfilled parts; preserve any parts already filled
+              title: isUnfilled(prev.title) ? (data.analysis.title || prev.title) : prev.title,
+              location: isUnfilled(prev.location) ? (data.analysis.location || prev.location) : prev.location,
+              category: isUnfilled(prev.category) ? (data.analysis.category || prev.category) : prev.category,
+              altText: isUnfilled(prev.altText) ? (data.analysis.altText || prev.altText) : prev.altText,
+              caption: isUnfilled(prev.caption) ? (data.analysis.caption || prev.caption) : prev.caption,
+              description: hasExistingDescription ? prev.description : (data.analysis.description || prev.description),
+              seoKeywords: (!prev.seoKeywords || prev.seoKeywords.length === 0)
+                ? (data.analysis.seoKeywords || prev.seoKeywords)
+                : Array.from(new Set([...prev.seoKeywords, ...(data.analysis.seoKeywords || [])]))
+            };
+          });
+          showToast('All unfilled fields auto-filled using Search Engine Indexing Description as reference!', 'success');
         }
       } else {
         showToast('AI analysis completed with smart heuristic rules.', 'info');
@@ -590,41 +604,61 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
     return true;
   });
 
-  // Handle Manual Add with AI auto-fill
+  // Handle Manual Add with AI auto-fill (Fill in all unfilled parts using Search Engine Indexing Description as reference)
   const handleManualAddAnalyze = async () => {
-    if (!manualForm.url.trim()) return;
+    if (!manualForm.url.trim() && !manualForm.description.trim()) {
+      showToast('Please provide an Image URL or write a Search Engine Indexing Description.', 'error');
+      return;
+    }
     setManualIsAnalyzing(true);
     try {
       const res = await fetch('/api/analyze-photo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          base64Image: manualForm.url,
+          base64Image: manualForm.url.trim(),
           mimeType: 'image/jpeg',
           originalName: manualForm.title || 'turkey-scenery.jpg',
           categoryHint: manualForm.category,
-          locationHint: manualForm.location
+          locationHint: manualForm.location,
+          descriptionHint: manualForm.description.trim(),
+          titleHint: manualForm.title.trim(),
+          captionHint: manualForm.caption.trim(),
+          altTextHint: manualForm.altText.trim()
         })
       });
 
       if (res.ok) {
         const data = await res.json();
         if (data.success && data.analysis) {
-          setManualForm(prev => ({
-            ...prev,
-            title: data.analysis.title || prev.title,
-            caption: data.analysis.caption || prev.caption,
-            description: data.analysis.description || prev.description,
-            altText: data.analysis.altText || prev.altText,
-            location: data.analysis.location || prev.location,
-            category: data.analysis.category || prev.category,
-            seoKeywords: data.analysis.seoKeywords || prev.seoKeywords
-          }));
-          showToast('AI analyzed image URL and populated SEO fields!', 'success');
+          const isUnfilled = (str?: string | null) => !str || str.trim() === '';
+
+          setManualForm(prev => {
+            const hasExistingDescription = !isUnfilled(prev.description);
+
+            return {
+              ...prev,
+              // Fill all unfilled parts; preserve any parts already filled by user
+              title: isUnfilled(prev.title) ? (data.analysis.title || prev.title) : prev.title,
+              location: isUnfilled(prev.location) ? (data.analysis.location || prev.location) : prev.location,
+              category: isUnfilled(prev.category) || (prev.category === 'Cappadocia & Balloons' && data.analysis.category && isUnfilled(prev.location))
+                ? (data.analysis.category || prev.category)
+                : prev.category,
+              altText: isUnfilled(prev.altText) ? (data.analysis.altText || prev.altText) : prev.altText,
+              caption: isUnfilled(prev.caption) ? (data.analysis.caption || prev.caption) : prev.caption,
+              // Use Search Engine Indexing Description as reference; if it was empty, fill with AI description
+              description: hasExistingDescription ? prev.description : (data.analysis.description || prev.description),
+              seoKeywords: (!prev.seoKeywords || prev.seoKeywords.length === 0)
+                ? (data.analysis.seoKeywords || prev.seoKeywords)
+                : Array.from(new Set([...prev.seoKeywords, ...(data.analysis.seoKeywords || [])]))
+            };
+          });
+          showToast('All unfilled fields auto-filled using Search Engine Indexing Description as reference!', 'success');
         }
       }
     } catch (err) {
       console.warn('Manual add AI err:', err);
+      showToast('AI analysis could not complete. Check connection.', 'error');
     } finally {
       setManualIsAnalyzing(false);
     }
@@ -775,11 +809,12 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
             <button
               type="button"
               onClick={handleManualAddAnalyze}
-              disabled={!manualForm.url.trim() || manualIsAnalyzing}
-              className="px-3.5 py-1.5 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-indigo-700 disabled:opacity-50 text-xs font-bold uppercase tracking-wider rounded flex items-center gap-1.5 transition-colors"
+              disabled={(!manualForm.url.trim() && !manualForm.description.trim()) || manualIsAnalyzing}
+              className="px-3.5 py-1.5 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-indigo-700 disabled:opacity-50 text-xs font-bold uppercase tracking-wider rounded flex items-center gap-1.5 transition-colors shadow-xs"
+              title="Auto-fill all unfilled fields using Search Engine Indexing Description and AI vision as reference"
             >
               {manualIsAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-indigo-600" />}
-              <span>{manualIsAnalyzing ? 'AI Examining...' : 'Auto-Fill with AI'}</span>
+              <span>{manualIsAnalyzing ? 'AI Auto-Filling...' : 'Auto-Fill with AI'}</span>
             </button>
           </div>
 
@@ -874,14 +909,20 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
 
             {/* Description */}
             <div className="md:col-span-6">
-              <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1">
-                Search Engine Indexing Description
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-bold text-neutral-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3 text-[#F05A28]" />
+                  <span>Search Engine Indexing Description</span>
+                </label>
+                <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">
+                  AI Reference Source
+                </span>
+              </div>
               <textarea
                 rows={2}
                 value={manualForm.description}
                 onChange={(e) => setManualForm({ ...manualForm, description: e.target.value })}
-                placeholder="Comprehensive scene description for image search crawlers..."
+                placeholder="Reference description used by AI to deduce and auto-fill all unfilled fields (title, location, alt text, keywords)..."
                 className="w-full px-3 py-2 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
               />
             </div>
@@ -1851,10 +1892,10 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
                     onClick={handleReanalyzeWithAI}
                     disabled={isReanalyzingAI}
                     className="px-3.5 py-1.5 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-indigo-700 disabled:opacity-50 text-xs font-bold uppercase tracking-wider rounded flex items-center gap-1.5 transition-colors shadow-xs"
-                    title="Examine image with Gemini Vision AI to generate fresh SEO tags"
+                    title="Auto-fill unfilled fields using Search Engine Indexing Description as reference"
                   >
                     {isReanalyzingAI ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-indigo-600" />}
-                    <span>{isReanalyzingAI ? 'AI Analyzing...' : 'Re-Analyze with AI'}</span>
+                    <span>{isReanalyzingAI ? 'AI Auto-Filling...' : 'Auto-Fill with AI'}</span>
                   </button>
                 </div>
               </div>
@@ -1976,14 +2017,20 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
 
                 {/* Indexing Description */}
                 <div className="md:col-span-12">
-                  <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1">
-                    Search Engine Indexing Description (Rich Snippet)
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-neutral-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-[#F05A28]" />
+                      <span>Search Engine Indexing Description (Rich Snippet)</span>
+                    </label>
+                    <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">
+                      AI Reference Source
+                    </span>
+                  </div>
                   <textarea
                     rows={2}
                     value={editingPhoto.description || ''}
                     onChange={(e) => setEditingPhoto({ ...editingPhoto, description: e.target.value })}
-                    placeholder="Rich description for travel advisors and search engines..."
+                    placeholder="Rich description used as reference when clicking Auto-Fill with AI..."
                     className="w-full px-3 py-2 text-xs border border-neutral-300 rounded bg-white text-neutral-900 focus:outline-none focus:border-[#F05A28]"
                   />
                 </div>

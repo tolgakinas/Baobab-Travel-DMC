@@ -74,90 +74,175 @@ app.get('/api/health', (req, res) => {
 // API Route: AI Photo Examination & SEO Metadata Generation
 app.post('/api/analyze-photo', async (req, res) => {
   try {
-    const { base64Image, mimeType = 'image/webp', originalName = 'photo.jpg', categoryHint, locationHint } = req.body;
+    const { 
+      base64Image, 
+      imageUrl, 
+      mimeType = 'image/jpeg', 
+      originalName = 'photo.jpg', 
+      categoryHint, 
+      locationHint, 
+      descriptionHint,
+      titleHint,
+      captionHint,
+      altTextHint
+    } = req.body;
 
-    if (!base64Image) {
+    const effectiveDescription = (descriptionHint || '').trim();
+    const rawImage = (base64Image || imageUrl || '').trim();
+
+    if (!rawImage && !effectiveDescription) {
       return res.status(400).json({
         success: false,
-        error: 'Missing base64Image data in request.'
+        error: 'Please provide either an image URL or a Search Engine Indexing Description.'
       });
     }
 
-    // Clean base64 string if data URL prefix was included
-    const cleanBase64 = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
+    // Resolve base64 data if URL was supplied
+    let resolvedBase64: string | null = null;
+    let resolvedMime: string = mimeType;
+
+    if (rawImage.startsWith('data:')) {
+      const parts = rawImage.split(',');
+      resolvedBase64 = parts[1] || null;
+      const mimeMatch = parts[0].match(/data:(.*?);/);
+      if (mimeMatch) resolvedMime = mimeMatch[1];
+    } else if (rawImage.startsWith('http://') || rawImage.startsWith('https://')) {
+      try {
+        const fetchRes = await fetch(rawImage, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+        if (fetchRes.ok) {
+          const arrBuf = await fetchRes.arrayBuffer();
+          resolvedBase64 = Buffer.from(arrBuf).toString('base64');
+          resolvedMime = fetchRes.headers.get('content-type') || mimeType;
+        }
+      } catch (e) {
+        // Non-fatal, will analyze with textual description
+      }
+    } else if (rawImage.length > 50 && !rawImage.includes(' ')) {
+      resolvedBase64 = rawImage;
+    }
 
     const gemini = getGeminiClient();
 
     if (gemini) {
-      try {
-        const prompt = `You are a senior SEO copywriter and travel curator for Baobab DMC Turkey, an incoming luxury B2B Tour Operator & Destination Management Company in Turkey.
-Examine this uploaded travel photograph in detail.
+      const prompt = `You are a senior SEO copywriter and luxury travel curator for Baobab DMC Turkey, an inbound luxury B2B Tour Operator & Destination Management Company in Turkey.
 
-Provide structured, high-ranking SEO metadata in valid JSON with these exact keys:
-- "title": A concise, engaging, keyword-rich title for the image (5-10 words, e.g. "Sunrise Hot Air Balloons Floating Over Göreme Valley").
-- "caption": A compelling 1-2 sentence travel catalog description highlighting what makes this scene memorable for small groups or private travelers.
-- "description": A thorough 2-3 sentence overview describing the visual elements, architectural/geological features, atmosphere, time of day, and location for search engine indexing.
-- "altText": An accessibility-compliant, descriptive alt text under 125 characters (e.g. "Hot air balloons drifting over fairy chimneys in Cappadocia Turkey at dawn").
-- "location": The specific landmark, district, or Turkish city (e.g. "Göreme, Cappadocia", "Bosphorus Strait, Istanbul", "Ancient Ephesus, Selçuk", "Ölüdeniz & Fethiye Coast", "Pamukkale Travertines", "Sumela Monastery, Trabzon").
-- "category": Choose the single closest category from: "Cappadocia & Balloons", "Istanbul & Bosphorus", "Aegean & Classical Ruins", "Turquoise Coast & Gulets", "Black Sea & Highlands", "Eastern Anatolia & Mesopotamia", "Gastronomy & Bazaars", "Luxury Boutique Venues".
+${effectiveDescription ? `PRIMARY REFERENCE (Search Engine Indexing Description provided by user):
+"${effectiveDescription}"
+
+CRITICAL INSTRUCTION: The user has provided this "Search Engine Indexing Description" as their primary reference. You MUST use this description as the authoritative reference to accurately deduce, infer, and populate all the remaining unfilled parts:` : `Examine this Turkey travel photograph and provide structured, high-ranking SEO metadata:`}
+
+Return valid JSON with these exact keys:
+- "title": A concise, engaging, keyword-rich headline for the photo (5-8 words, e.g. "Sunrise Hot Air Balloons Over Göreme Valley").
+- "location": The specific Turkish city, landmark, or district (e.g. "Göreme, Cappadocia", "Bosphorus Strait, Istanbul", "Ancient Ephesus, Selçuk", "Ölüdeniz & Fethiye Coast", "Bodrum Peninsula", "Pamukkale Travertines", "Sumela Monastery, Trabzon").
+- "category": Choose the single closest category from: ["Cappadocia & Balloons", "Istanbul & Bosphorus", "Aegean & Classical Ruins", "Turquoise Coast & Gulets", "Black Sea & Highlands", "Eastern Anatolia & Mesopotamia", "Gastronomy & Bazaars", "Luxury Boutique Venues"].
+- "altText": An accessibility-compliant, descriptive alt text under 125 characters summarizing the scene.
+- "caption": A compelling 1-2 sentence travel brochure/catalog summary highlighting what makes this scene memorable for small groups or private travelers.
+- "description": ${effectiveDescription ? `Polished 2-3 sentence overview for search engine indexing, preserving all facts from: "${effectiveDescription}"` : `A thorough 2-3 sentence overview describing the visual elements, architectural/geological features, atmosphere, time of day, and location for search engine indexing.`}
 - "seoKeywords": An array of 6-8 search terms for Google/Bing image search (e.g. ["Cappadocia hot air balloons", "Turkey DMC travel", "Goreme fairy chimneys", "luxury Turkey small group tour"]).
 
-Hints provided: ${locationHint ? `Location: ${locationHint}, ` : ''}${categoryHint ? `Category: ${categoryHint}, ` : ''}File: ${originalName}.
+Hints provided:
+${locationHint ? `Existing Location: ${locationHint}, ` : ''}${categoryHint ? `Existing Category: ${categoryHint}, ` : ''}${titleHint ? `Existing Title: ${titleHint}, ` : ''}File: ${originalName}.
 Return valid JSON only.`;
 
-        const aiResponse = await gemini.models.generateContent({
-          model: 'gemini-3.8-flash',
-          contents: [
-            {
+      // Try gemini-3.8-flash first, and if unavailable/busy, try gemini-3.1-flash-lite
+      const candidateModels = ['gemini-3.8-flash', 'gemini-3.1-flash-lite'];
+
+      for (const model of candidateModels) {
+        try {
+          const contents: any[] = [];
+          if (resolvedBase64) {
+            contents.push({
               inlineData: {
-                mimeType: mimeType || 'image/jpeg',
-                data: cleanBase64
+                mimeType: resolvedMime || 'image/jpeg',
+                data: resolvedBase64
               }
-            },
-            prompt
-          ],
-          config: {
-            responseMimeType: 'application/json'
+            });
           }
-        });
+          contents.push(prompt);
 
-        const textOutput = aiResponse.text || '{}';
-        const parsed = JSON.parse(textOutput);
+          const aiResponse = await gemini.models.generateContent({
+            model,
+            contents,
+            config: {
+              responseMimeType: 'application/json'
+            }
+          });
 
-        return res.json({
-          success: true,
-          source: 'gemini-ai',
-          analysis: {
-            title: parsed.title || 'Curated Turkey Travel Experience',
-            caption: parsed.caption || 'Authentic regional discovery and cultural heritage in Turkey.',
-            description: parsed.description || 'High-resolution travel imagery curated for bespoke and small group Turkey itineraries.',
-            altText: parsed.altText || 'Scenic Turkey landscape and cultural landmark by Baobab DMC',
-            location: parsed.location || locationHint || 'Turkiye',
-            category: parsed.category || categoryHint || 'Cappadocia & Balloons',
-            seoKeywords: Array.isArray(parsed.seoKeywords) ? parsed.seoKeywords : [
-              'Turkey DMC', 'Turkey tours', 'Inbound Turkish ground operator', 'Bespoke travel Turkey'
-            ]
-          }
-        });
-      } catch (aiErr: any) {
-        console.warn('[Gemini AI Photo Analysis Warning]:', aiErr?.message || aiErr);
-        // Fall back to rule-based analysis below
+          const textOutput = aiResponse.text || '{}';
+          const parsed = JSON.parse(textOutput);
+
+          return res.json({
+            success: true,
+            source: `gemini-ai (${model})`,
+            analysis: {
+              title: parsed.title || 'Curated Turkey Travel Experience',
+              caption: parsed.caption || 'Authentic regional discovery and cultural heritage in Turkey.',
+              description: parsed.description || effectiveDescription || 'High-resolution travel imagery curated for bespoke and small group Turkey itineraries.',
+              altText: parsed.altText || 'Scenic Turkey landscape and cultural landmark by Baobab DMC',
+              location: parsed.location || locationHint || 'Turkiye',
+              category: parsed.category || categoryHint || 'Cappadocia & Balloons',
+              seoKeywords: Array.isArray(parsed.seoKeywords) ? parsed.seoKeywords : [
+                'Turkey DMC', 'Turkey tours', 'Inbound Turkish ground operator', 'Bespoke travel Turkey'
+              ]
+            }
+          });
+        } catch (aiErr: any) {
+          console.warn(`[Gemini AI ${model} Photo Analysis Warning]:`, aiErr?.message || aiErr);
+          // try next model
+        }
       }
     }
 
-    // Fallback rule-based SEO metadata generation when API key is unconfigured
+    // Fallback rule-based SEO metadata generation from Search Engine Indexing Description or filename
     const cleanFileName = originalName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-    const fallbackCategory = categoryHint || 'Cappadocia & Balloons';
-    const fallbackLocation = locationHint || (cleanFileName.length > 3 ? cleanFileName : 'Turkiye');
+    let fallbackLocation = locationHint || (cleanFileName.length > 3 ? cleanFileName : 'Turkiye');
+    let fallbackCategory = categoryHint || 'Cappadocia & Balloons';
+
+    if (effectiveDescription) {
+      const lowerDesc = effectiveDescription.toLowerCase();
+      // Extract location
+      if (lowerDesc.includes('goreme') || lowerDesc.includes('göreme')) fallbackLocation = 'Göreme, Cappadocia';
+      else if (lowerDesc.includes('cappadocia') || lowerDesc.includes('fairy chimney') || lowerDesc.includes('uchisar') || lowerDesc.includes('urgup')) fallbackLocation = 'Cappadocia';
+      else if (lowerDesc.includes('bosphorus') || lowerDesc.includes('sultanahmet') || lowerDesc.includes('galata') || lowerDesc.includes('istanbul')) fallbackLocation = 'Istanbul & Bosphorus';
+      else if (lowerDesc.includes('ephesus') || lowerDesc.includes('selcuk') || lowerDesc.includes('selçuk')) fallbackLocation = 'Ancient Ephesus, Selçuk';
+      else if (lowerDesc.includes('bodrum')) fallbackLocation = 'Bodrum Peninsula';
+      else if (lowerDesc.includes('fethiye') || lowerDesc.includes('oludeniz') || lowerDesc.includes('ölüdeniz') || lowerDesc.includes('lycian')) fallbackLocation = 'Fethiye & Turquoise Coast';
+      else if (lowerDesc.includes('antalya') || lowerDesc.includes('kas') || lowerDesc.includes('kalkan')) fallbackLocation = 'Antalya & Mediterranean Coast';
+      else if (lowerDesc.includes('pamukkale') || lowerDesc.includes('hierapolis')) fallbackLocation = 'Pamukkale Travertines';
+      else if (lowerDesc.includes('black sea') || lowerDesc.includes('trabzon') || lowerDesc.includes('sumela') || lowerDesc.includes('rize')) fallbackLocation = 'Black Sea & Highlands';
+      else if (lowerDesc.includes('mardin') || lowerDesc.includes('mesopotamia') || lowerDesc.includes('gobeklitepe')) fallbackLocation = 'Eastern Anatolia & Mesopotamia';
+
+      // Infer category
+      if (lowerDesc.includes('balloon') || lowerDesc.includes('cappadocia') || lowerDesc.includes('fairy chimney')) fallbackCategory = 'Cappadocia & Balloons';
+      else if (lowerDesc.includes('bosphorus') || lowerDesc.includes('istanbul') || lowerDesc.includes('mosque') || lowerDesc.includes('palace')) fallbackCategory = 'Istanbul & Bosphorus';
+      else if (lowerDesc.includes('ephesus') || lowerDesc.includes('ruin') || lowerDesc.includes('ancient') || lowerDesc.includes('aegean')) fallbackCategory = 'Aegean & Classical Ruins';
+      else if (lowerDesc.includes('gulet') || lowerDesc.includes('yacht') || lowerDesc.includes('coast') || lowerDesc.includes('sea') || lowerDesc.includes('beach')) fallbackCategory = 'Turquoise Coast & Gulets';
+      else if (lowerDesc.includes('black sea') || lowerDesc.includes('highland') || lowerDesc.includes('tea') || lowerDesc.includes('plateau')) fallbackCategory = 'Black Sea & Highlands';
+      else if (lowerDesc.includes('mardin') || lowerDesc.includes('mesopotamia') || lowerDesc.includes('nemrut')) fallbackCategory = 'Eastern Anatolia & Mesopotamia';
+      else if (lowerDesc.includes('food') || lowerDesc.includes('bazaar') || lowerDesc.includes('culinary') || lowerDesc.includes('spice')) fallbackCategory = 'Gastronomy & Bazaars';
+      else if (lowerDesc.includes('hotel') || lowerDesc.includes('boutique') || lowerDesc.includes('resort')) fallbackCategory = 'Luxury Boutique Venues';
+    }
+
+    const derivedTitle = titleHint || (effectiveDescription 
+      ? effectiveDescription.split('.')[0].slice(0, 60).trim()
+      : `${cleanFileName.charAt(0).toUpperCase() + cleanFileName.slice(1)} - Authentic Turkey Experience`);
+
+    const derivedAlt = altTextHint || (effectiveDescription
+      ? effectiveDescription.slice(0, 120).trim()
+      : `Scenic view of ${fallbackLocation} in Turkey for guided tours and itineraries`);
+
+    const derivedCaption = captionHint || (effectiveDescription
+      ? `${effectiveDescription.split('.')[0].trim()}. Curated by Baobab DMC Turkey for luxury bespoke itineraries.`
+      : `Exclusive small group discovery highlighting the natural landscapes and cultural heritage of ${fallbackLocation}.`);
 
     return res.json({
       success: true,
       source: 'smart-heuristic-seo',
       analysis: {
-        title: `${cleanFileName.charAt(0).toUpperCase() + cleanFileName.slice(1)} - Authentic Turkey Experience`,
-        caption: `Exclusive small group discovery highlighting the natural landscapes and cultural heritage of ${fallbackLocation}.`,
-        description: `High-resolution photograph featuring ${fallbackLocation}. Professionally curated for inbound luxury tour operators, FIT itineraries, and travel advisors partnering with Baobab DMC Turkey.`,
-        altText: `Scenic view of ${fallbackLocation} in Turkey for guided tours and itineraries`,
+        title: derivedTitle,
+        caption: derivedCaption,
+        description: effectiveDescription || `High-resolution photograph featuring ${fallbackLocation}. Professionally curated for inbound luxury tour operators, FIT itineraries, and travel advisors partnering with Baobab DMC Turkey.`,
+        altText: derivedAlt,
         location: fallbackLocation,
         category: fallbackCategory,
         seoKeywords: [

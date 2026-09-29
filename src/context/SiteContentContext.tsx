@@ -48,6 +48,8 @@ export interface BrandingSettings {
   tursabGrade: string;
   foundedYear: number;
   tagline: string;
+  googleSiteVerification?: string;
+  canonicalDomain?: string;
 }
 
 export interface StatItem {
@@ -260,7 +262,9 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
     tursabNumber: '15764',
     tursabGrade: 'A-Grade Licensed Operator',
     foundedYear: 2000,
-    tagline: 'Curated Small Group Journeys, Active Adventures & B2B Ground Operations Across Turkiye'
+    tagline: 'Curated Small Group Journeys, Active Adventures & B2B Ground Operations Across Turkiye',
+    googleSiteVerification: 'BAOBAB_DMC_TURKEY_GSC_VERIFICATION',
+    canonicalDomain: 'https://baobabdmc.com'
   },
   hero: {
     badgeText: 'TÜRSAB Licensed A-Grade Operator • Dedicated Ground Operations',
@@ -469,6 +473,17 @@ export const SiteContentProvider: React.FC<{ children: React.ReactNode }> = ({ c
       console.error('Error auto-saving content:', e);
     }
   }, [content]);
+
+  // Synchronize Google Search Console Verification Meta Tag in Head
+  useEffect(() => {
+    const code = content.branding?.googleSiteVerification;
+    if (code) {
+      const meta = document.getElementById('google-site-verification-meta');
+      if (meta) {
+        meta.setAttribute('content', code);
+      }
+    }
+  }, [content.branding?.googleSiteVerification]);
 
   // Reset all content to original defaults
   const resetToDefaults = useCallback(() => {

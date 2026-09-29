@@ -10,7 +10,12 @@ import {
   Type, 
   ShieldCheck,
   Building2,
-  ExternalLink
+  ExternalLink,
+  Search,
+  Copy,
+  Check,
+  Globe,
+  FileCode
 } from 'lucide-react';
 import { PhotoLibraryModal } from './PhotoLibraryModal';
 
@@ -27,6 +32,13 @@ export const HeroBrandingTab: React.FC = () => {
   const [photoPickerOpen, setPhotoPickerOpen] = useState<boolean>(false);
   const [activeSlideIndexForPhoto, setActiveSlideIndexForPhoto] = useState<number | null>(null);
   const [deletingSlideIndex, setDeletingSlideIndex] = useState<number | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const handleCopy = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2500);
+  };
 
   const openPhotoPickerForSlide = (index: number) => {
     setActiveSlideIndexForPhoto(index);
@@ -151,7 +163,201 @@ export const HeroBrandingTab: React.FC = () => {
         </div>
       </div>
 
-      {/* SECTION 2: Hero Main Texts & Call-to-Actions */}
+      {/* SECTION 2: Google Search Console & SEO Webmaster Verification */}
+      <div className="bg-white rounded-lg border border-neutral-200 p-6 shadow-xs space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-neutral-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-md bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center">
+              <Search className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-neutral-900 flex items-center gap-2">
+                <span>Google Search Console & SEO Indexing</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+                  Ready to Index
+                </span>
+              </h3>
+              <p className="text-xs text-neutral-500">
+                Configure Google site ownership verification, submit XML sitemaps, and monitor search indexing status.
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://search.google.com/search-console"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#4285F4] hover:bg-[#3367D6] text-white text-xs font-bold rounded shadow-xs transition-colors self-start sm:self-auto"
+          >
+            <span>Open Google Search Console</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        {/* Verification Inputs */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider">
+                Google Site Verification Code / Tag
+              </label>
+              <span className="text-[11px] text-neutral-400">
+                HTML Tag Method
+              </span>
+            </div>
+            <input
+              type="text"
+              value={content.branding.googleSiteVerification || ''}
+              onChange={(e) => {
+                let val = e.target.value.trim();
+                // If user pasted full <meta name="google-site-verification" content="..." />
+                const match = val.match(/content=["']([^"']+)["']/i);
+                if (match) {
+                  val = match[1];
+                }
+                updateBranding({ googleSiteVerification: val });
+              }}
+              placeholder="e.g. google4b76e27a6f3b0e12 or paste full <meta> tag"
+              className="w-full px-3 py-2 text-xs font-mono border border-neutral-300 rounded focus:border-[#F05A28] focus:outline-none"
+            />
+            <p className="text-[11px] text-neutral-500">
+              Paste the verification code from Google Search Console. It is automatically synced live to the &lt;head&gt; of your website.
+            </p>
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider">
+                Canonical Website Domain
+              </label>
+              <span className="text-[11px] text-neutral-400">
+                Production URL
+              </span>
+            </div>
+            <input
+              type="text"
+              value={content.branding.canonicalDomain || 'https://baobabdmc.com'}
+              onChange={(e) => updateBranding({ canonicalDomain: e.target.value.trim() })}
+              placeholder="https://baobabdmc.com"
+              className="w-full px-3 py-2 text-xs font-mono border border-neutral-300 rounded focus:border-[#F05A28] focus:outline-none"
+            />
+            <p className="text-[11px] text-neutral-500">
+              The primary root domain indexed by search engines and declared in XML sitemaps.
+            </p>
+          </div>
+        </div>
+
+        {/* Search Console Resource Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          {/* Card 1: XML Sitemap */}
+          <div className="p-3.5 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs font-bold text-neutral-900 flex items-center gap-1.5">
+                  <FileCode className="w-3.5 h-3.5 text-[#F05A28]" />
+                  XML Sitemap
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                  Ready (40+ URLs)
+                </span>
+              </div>
+              <p className="text-[11px] text-neutral-500 line-clamp-2">
+                Submit this path into Google Search Console under <strong>Sitemaps</strong>.
+              </p>
+            </div>
+            <div className="mt-3 pt-2 border-t border-neutral-200/60 flex items-center justify-between">
+              <span className="text-[11px] font-mono text-neutral-700 truncate mr-2">
+                /sitemap.xml
+              </span>
+              <button
+                type="button"
+                onClick={() => handleCopy(`${content.branding.canonicalDomain || 'https://baobabdmc.com'}/sitemap.xml`, 'sitemap')}
+                className="text-[11px] text-[#F05A28] hover:text-[#d9491b] font-bold flex items-center gap-1 shrink-0"
+              >
+                {copiedKey === 'sitemap' ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                <span>{copiedKey === 'sitemap' ? 'Copied' : 'Copy URL'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Card 2: Robots.txt */}
+          <div className="p-3.5 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs font-bold text-neutral-900 flex items-center gap-1.5">
+                  <Globe className="w-3.5 h-3.5 text-blue-600" />
+                  Robots.txt Directive
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                  Allows Googlebot
+                </span>
+              </div>
+              <p className="text-[11px] text-neutral-500 line-clamp-2">
+                Configured with explicit Googlebot and Google-InspectionTool crawler permissions.
+              </p>
+            </div>
+            <div className="mt-3 pt-2 border-t border-neutral-200/60 flex items-center justify-between">
+              <span className="text-[11px] font-mono text-neutral-700 truncate mr-2">
+                /robots.txt
+              </span>
+              <button
+                type="button"
+                onClick={() => handleCopy(`${content.branding.canonicalDomain || 'https://baobabdmc.com'}/robots.txt`, 'robots')}
+                className="text-[11px] text-[#F05A28] hover:text-[#d9491b] font-bold flex items-center gap-1 shrink-0"
+              >
+                {copiedKey === 'robots' ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                <span>{copiedKey === 'robots' ? 'Copied' : 'Copy URL'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Card 3: Dynamic HTML File Verification */}
+          <div className="p-3.5 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs font-bold text-neutral-900 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                  HTML File Verification
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800">
+                  Auto Endpoint
+                </span>
+              </div>
+              <p className="text-[11px] text-neutral-500 line-clamp-2">
+                Server automatically responds to any Google verification file request (e.g. <code>/google*.html</code>).
+              </p>
+            </div>
+            <div className="mt-3 pt-2 border-t border-neutral-200/60 flex items-center justify-between">
+              <span className="text-[11px] font-mono text-neutral-700 truncate mr-2">
+                Auto-Handled
+              </span>
+              <span className="text-[10px] text-emerald-700 font-semibold">
+                Zero upload needed
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Step-by-Step Instructions Accordion/Box */}
+        <div className="p-4 bg-blue-50/70 border border-blue-200/80 rounded-lg text-xs text-blue-900 space-y-2">
+          <div className="font-bold flex items-center gap-1.5 text-blue-950">
+            <span>How to index in Google Search Console (3 Simple Steps):</span>
+          </div>
+          <ol className="list-decimal list-inside space-y-1.5 text-blue-900">
+            <li>
+              Open <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="underline font-bold hover:text-blue-700">Google Search Console</a> and click <strong>Add Property</strong> (choose <em>URL Prefix</em> with <code>https://baobabdmc.com</code> or your domain).
+            </li>
+            <li>
+              Under <strong>Verification Method</strong>, either choose <strong>HTML tag</strong> (copy the code and paste it into the field above) OR choose <strong>HTML file</strong> (click Verify directly—our server auto-responds).
+            </li>
+            <li>
+              Once verified, navigate to <strong>Sitemaps</strong> in the left sidebar, enter <code>sitemap.xml</code>, and click <strong>Submit</strong>. Googlebot will immediately start indexing your tours, destinations, and blog guides.
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      {/* SECTION 3: Hero Main Texts & Call-to-Actions */}
       <div className="bg-white rounded-lg border border-neutral-200 p-6 shadow-xs">
         <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-neutral-100">
           <Type className="w-5 h-5 text-[#F05A28]" />

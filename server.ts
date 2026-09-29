@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
 import { Resend } from 'resend';
@@ -982,6 +983,32 @@ app.post('/api/consultant-booking', async (req, res) => {
       error: error?.message || 'Failed to dispatch booking confirmation email.',
     });
   }
+});
+
+// Google Search Console: Dynamic Verification Route for HTML file verification method
+// Matches e.g. /google1234567890abcdef.html and automatically returns the required verification string
+app.get('/google:code([a-zA-Z0-9_-]+).html', (req, res) => {
+  const filename = `google${req.params.code}.html`;
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(`google-site-verification: ${filename}`);
+});
+
+// Serve sitemap.xml with proper XML content-type header
+app.get('/sitemap.xml', (req, res) => {
+  const sitemapPath = path.join(process.cwd(), 'public', 'sitemap.xml');
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=43200, stale-while-revalidate=86400');
+  res.sendFile(sitemapPath);
+});
+
+// Serve robots.txt with proper plain text content-type header
+app.get('/robots.txt', (req, res) => {
+  const rootRobots = path.join(process.cwd(), 'robots.txt');
+  const publicRobots = path.join(process.cwd(), 'public', 'robots.txt');
+  const robotsPath = fs.existsSync(rootRobots) ? rootRobots : publicRobots;
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=172800');
+  res.sendFile(robotsPath);
 });
 
 // Vite middleware & Production Serving

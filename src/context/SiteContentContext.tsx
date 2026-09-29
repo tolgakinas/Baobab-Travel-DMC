@@ -158,6 +158,7 @@ export interface SiteContentData {
   venues: VenueShowcase[];
   services: DmcService[];
   about: AboutSettings;
+  itineraries?: SampleItinerary[];
   customPhotos?: LibraryPhotoItem[];
   blogs?: BlogPost[];
   gtmConsent?: GtmConsentSettings;
@@ -361,6 +362,7 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
     })),
     faqItems: DEFAULT_FAQ_ITEMS
   },
+  itineraries: DEFAULT_ITINERARIES,
   customPhotos: [],
   blogs: DEFAULT_BLOG_POSTS,
   gtmConsent: DEFAULT_GTM_CONSENT
@@ -407,6 +409,13 @@ interface SiteContentContextType {
   updateService: (serviceId: string, updates: Partial<DmcService>) => void;
   updateAbout: (updates: Partial<AboutSettings>) => void;
   updateGtmConsent: (updates: Partial<GtmConsentSettings>) => void;
+
+  // Curated Sample Frameworks (Itineraries)
+  updateItinerary: (itinId: string, updates: Partial<SampleItinerary>) => void;
+  addItinerary: (itinerary: SampleItinerary) => void;
+  deleteItinerary: (itinId: string) => void;
+  duplicateItinerary: (itinId: string) => void;
+  reorderItineraries: (newOrder: SampleItinerary[]) => void;
   
   // Blog Management (SEO / AEO / AIO)
   addBlog: (blog: BlogPost) => void;
@@ -949,7 +958,63 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     setIsDirty(true);
   }, []);
 
-  // 10. Photo Library Custom Photos
+  // 10. Curated Sample Frameworks (Itineraries) Updates
+  const updateItinerary = useCallback((itinId: string, updates: Partial<SampleItinerary>) => {
+    setContent(prev => ({
+      ...prev,
+      itineraries: (prev.itineraries || DEFAULT_ITINERARIES).map(it =>
+        it.id === itinId ? { ...it, ...updates } : it
+      )
+    }));
+    setIsDirty(true);
+  }, []);
+
+  const addItinerary = useCallback((itinerary: SampleItinerary) => {
+    setContent(prev => ({
+      ...prev,
+      itineraries: [itinerary, ...(prev.itineraries || DEFAULT_ITINERARIES)]
+    }));
+    setIsDirty(true);
+  }, []);
+
+  const deleteItinerary = useCallback((itinId: string) => {
+    setContent(prev => ({
+      ...prev,
+      itineraries: (prev.itineraries || DEFAULT_ITINERARIES).filter(it => it.id !== itinId)
+    }));
+    setIsDirty(true);
+  }, []);
+
+  const duplicateItinerary = useCallback((itinId: string) => {
+    setContent(prev => {
+      const currentList = prev.itineraries || DEFAULT_ITINERARIES;
+      const target = currentList.find(it => it.id === itinId);
+      if (!target) return prev;
+      const copy: SampleItinerary = {
+        ...target,
+        id: `${target.id}-copy-${Date.now()}`,
+        title: `${target.title} (Copy)`,
+        days: target.days.map(d => ({ ...d, highlights: [...d.highlights] })),
+        destinations: [...target.destinations],
+        includedHighlights: [...target.includedHighlights]
+      };
+      return {
+        ...prev,
+        itineraries: [copy, ...currentList]
+      };
+    });
+    setIsDirty(true);
+  }, []);
+
+  const reorderItineraries = useCallback((newOrder: SampleItinerary[]) => {
+    setContent(prev => ({
+      ...prev,
+      itineraries: newOrder
+    }));
+    setIsDirty(true);
+  }, []);
+
+  // 11. Photo Library Custom Photos
   const addCustomPhoto = useCallback((photo: LibraryPhotoItem) => {
     setContent(prev => {
       const existing = prev.customPhotos || [];
@@ -1151,6 +1216,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     deleteVenue,
     updateService,
     updateAbout,
+    updateItinerary,
+    addItinerary,
+    deleteItinerary,
+    duplicateItinerary,
+    reorderItineraries,
     addBlog,
     updateBlog,
     deleteBlog,
@@ -1193,6 +1263,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     deleteVenue,
     updateService,
     updateAbout,
+    updateItinerary,
+    addItinerary,
+    deleteItinerary,
+    duplicateItinerary,
+    reorderItineraries,
     updateGtmConsent,
     addBlog,
     updateBlog,

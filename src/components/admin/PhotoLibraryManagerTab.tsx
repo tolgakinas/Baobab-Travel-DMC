@@ -35,7 +35,10 @@ import {
   RefreshCw,
   CheckCheck,
   CheckSquare,
-  Square
+  Square,
+  Link2,
+  ListPlus,
+  Wand2
 } from 'lucide-react';
 
 interface PhotoLibraryManagerTabProps {
@@ -43,6 +46,20 @@ interface PhotoLibraryManagerTabProps {
   currentUrl?: string;
   isModalMode?: boolean;
   initialCategory?: string;
+}
+
+export interface BulkUrlItem {
+  id: string;
+  url: string;
+  title: string;
+  location: string;
+  category: string;
+  altText: string;
+  caption: string;
+  description: string;
+  seoKeywords: string[];
+  status: 'pending' | 'analyzing' | 'ready' | 'error';
+  errorMessage?: string;
 }
 
 export interface UploadQueueItem {
@@ -96,11 +113,19 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
 }) => {
   const { content, addCustomPhoto, deleteCustomPhoto, updateCustomPhoto } = useSiteContent();
 
-  const [activeSubView, setActiveSubView] = useState<'browse' | 'upload' | 'manual_add'>('browse');
+  const [activeSubView, setActiveSubView] = useState<'browse' | 'upload' | 'manual_add' | 'bulk_url'>('browse');
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'error' } | null>(null);
+
+  // Bulk URL Upload State
+  const [bulkUrlsRaw, setBulkUrlsRaw] = useState<string>('');
+  const [bulkDefaultCategory, setBulkDefaultCategory] = useState<string>('Cappadocia & Balloons');
+  const [bulkDefaultLocation, setBulkDefaultLocation] = useState<string>('Turkiye');
+  const [bulkQueue, setBulkQueue] = useState<BulkUrlItem[]>([]);
+  const [isBulkAnalyzing, setIsBulkAnalyzing] = useState<boolean>(false);
+  const [bulkProgress, setBulkProgress] = useState<{ current: number; total: number } | null>(null);
 
   // Inspector / Editor Modal State
   const [editingPhoto, setEditingPhoto] = useState<LibraryPhotoItem | null>(null);
@@ -710,6 +735,239 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
     setActiveSubView('browse');
   };
 
+  // ==========================================
+  // BULK UPLOAD BY URL HELPERS & HANDLERS
+  // ==========================================
+
+  // Smart heuristic deduction from URL
+  const inferMetadataFromUrl = (url: string, defaultLoc: string, defaultCat: string) => {
+    const lowerUrl = url.toLowerCase();
+    let location = defaultLoc || 'Turkiye';
+    let category = defaultCat || 'Cappadocia & Balloons';
+    let title = 'Turkey Travel Experience';
+
+    // Extract slug / file name if possible
+    try {
+      const urlObj = new URL(url);
+      const pathname = decodeURIComponent(urlObj.pathname);
+      const filename = pathname.split('/').pop()?.replace(/\.[^/.]+$/, '').replace(/[-_+]/g, ' ') || '';
+      if (filename.length > 3 && !filename.startsWith('photo-')) {
+        title = filename.charAt(0).toUpperCase() + filename.slice(1);
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    // Location & Category detection
+    if (lowerUrl.includes('cappadocia') || lowerUrl.includes('goreme') || lowerUrl.includes('fairy') || lowerUrl.includes('balloon')) {
+      location = 'Göreme, Cappadocia';
+      category = 'Cappadocia & Balloons';
+      title = title === 'Turkey Travel Experience' ? 'Hot Air Balloons over Göreme Valley' : title;
+    } else if (lowerUrl.includes('bosphorus') || lowerUrl.includes('istanbul') || lowerUrl.includes('sultanahmet') || lowerUrl.includes('galata')) {
+      location = 'Istanbul & Bosphorus';
+      category = 'Istanbul & Bosphorus';
+      title = title === 'Turkey Travel Experience' ? 'Historic Peninsula & Bosphorus Waters, Istanbul' : title;
+    } else if (lowerUrl.includes('ephesus') || lowerUrl.includes('selcuk') || lowerUrl.includes('ruin') || lowerUrl.includes('celsus')) {
+      location = 'Ancient Ephesus, Selçuk';
+      category = 'Aegean & Classical Ruins';
+      title = title === 'Turkey Travel Experience' ? 'Library of Celsus in Ancient Ephesus' : title;
+    } else if (lowerUrl.includes('bodrum') || lowerUrl.includes('gulet') || lowerUrl.includes('fethiye') || lowerUrl.includes('oludeniz') || lowerUrl.includes('kas')) {
+      location = lowerUrl.includes('bodrum') ? 'Bodrum Peninsula' : 'Turquoise Coast & Fethiye';
+      category = 'Turquoise Coast & Gulets';
+      title = title === 'Turkey Travel Experience' ? 'Wooden Gulet Sailing in Turquoise Waters' : title;
+    } else if (lowerUrl.includes('pamukkale') || lowerUrl.includes('hierapolis')) {
+      location = 'Pamukkale Travertines';
+      category = 'Aegean & Classical Ruins';
+      title = title === 'Turkey Travel Experience' ? 'Thermal Mineral Terraces of Pamukkale' : title;
+    } else if (lowerUrl.includes('nemrut') || lowerUrl.includes('mardin') || lowerUrl.includes('gobeklitepe')) {
+      location = lowerUrl.includes('nemrut') ? 'Mount Nemrut Summit' : 'Eastern Anatolia & Mesopotamia';
+      category = 'Eastern Anatolia & Mesopotamia';
+      title = title === 'Turkey Travel Experience' ? 'Ancient Heritage of Anatolia' : title;
+    } else if (lowerUrl.includes('trabzon') || lowerUrl.includes('blacksea') || lowerUrl.includes('sumela') || lowerUrl.includes('rize')) {
+      location = 'Black Sea & Highlands';
+      category = 'Black Sea & Highlands';
+      title = title === 'Turkey Travel Experience' ? 'Highland Valleys and Misty Pine Forests' : title;
+    }
+
+    const altText = `${title} in ${location}, Turkey - Baobab DMC Travel`.slice(0, 120);
+    const caption = `Curated photography of ${location} for bespoke Turkey itineraries and small groups.`;
+    const description = `High-resolution photograph featuring ${location}. Professionally curated for inbound luxury tour operators and travel advisors partnering with Baobab DMC Turkey.`;
+    const seoKeywords = ['Turkey DMC', location, 'Turkey tours', 'Inbound Turkish ground operator', category];
+
+    return { title, location, category, altText, caption, description, seoKeywords };
+  };
+
+  // Parse raw text into Bulk URL queue
+  const handleParseBulkUrls = () => {
+    if (!bulkUrlsRaw.trim()) {
+      showToast('Please paste one or more image URLs.', 'error');
+      return;
+    }
+
+    // Split by newlines, whitespace, or commas
+    const rawTokens = bulkUrlsRaw
+      .split(/[\n,\s]+/)
+      .map(t => t.trim())
+      .filter(t => t.length > 8 && (t.startsWith('http://') || t.startsWith('https://') || t.startsWith('data:image/')));
+
+    if (rawTokens.length === 0) {
+      showToast('No valid URLs found. Make sure URLs start with http:// or https://', 'error');
+      return;
+    }
+
+    // Deduplicate against existing queue
+    const existingUrls = new Set(bulkQueue.map(item => item.url));
+    const newItems: BulkUrlItem[] = [];
+
+    rawTokens.forEach((url, idx) => {
+      if (!existingUrls.has(url)) {
+        existingUrls.add(url);
+        const inferred = inferMetadataFromUrl(url, bulkDefaultLocation, bulkDefaultCategory);
+        newItems.push({
+          id: `bulk-${Date.now()}-${idx}-${Math.random().toString(36).slice(2, 6)}`,
+          url,
+          title: inferred.title,
+          location: inferred.location,
+          category: inferred.category,
+          altText: inferred.altText,
+          caption: inferred.caption,
+          description: inferred.description,
+          seoKeywords: inferred.seoKeywords,
+          status: 'ready'
+        });
+      }
+    });
+
+    if (newItems.length === 0) {
+      showToast('All parsed URLs are already in the queue.', 'info');
+      return;
+    }
+
+    setBulkQueue(prev => [...prev, ...newItems]);
+    setBulkUrlsRaw('');
+    showToast(`Added ${newItems.length} photos to bulk queue. Ready to review and import!`);
+  };
+
+  // Load sample Turkey photo URLs
+  const handleLoadSampleBulkUrls = () => {
+    const sampleUrls = [
+      'https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=1600&q=85',
+      'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1600&q=85',
+      'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=1600&q=85',
+      'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1600&q=85',
+      'https://images.unsplash.com/photo-1599818818580-0a2c2069279d?auto=format&fit=crop&w=1600&q=85'
+    ];
+    setBulkUrlsRaw(sampleUrls.join('\n'));
+    showToast('Sample Turkey image URLs loaded into input box.');
+  };
+
+  // Run AI & Smart SEO auto-fill for all items in bulk queue
+  const handleRunBulkAiAnalysis = async () => {
+    if (bulkQueue.length === 0) return;
+    setIsBulkAnalyzing(true);
+    setBulkProgress({ current: 0, total: bulkQueue.length });
+
+    const updatedQueue = [...bulkQueue];
+
+    for (let i = 0; i < updatedQueue.length; i++) {
+      const item = updatedQueue[i];
+      setBulkProgress({ current: i + 1, total: updatedQueue.length });
+
+      try {
+        const res = await fetch('/api/analyze-photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageUrl: item.url,
+            mimeType: 'image/jpeg',
+            originalName: item.title || 'turkey-photo.jpg',
+            categoryHint: item.category,
+            locationHint: item.location
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.analysis) {
+            updatedQueue[i] = {
+              ...item,
+              title: data.analysis.title || item.title,
+              location: data.analysis.location || item.location,
+              category: data.analysis.category || item.category,
+              altText: data.analysis.altText || item.altText,
+              caption: data.analysis.caption || item.caption,
+              description: data.analysis.description || item.description,
+              seoKeywords: data.analysis.seoKeywords || item.seoKeywords,
+              status: 'ready'
+            };
+          }
+        } else {
+          // Fallback heuristic if API quota reached
+          const inferred = inferMetadataFromUrl(item.url, item.location, item.category);
+          updatedQueue[i] = { ...item, ...inferred, status: 'ready' };
+        }
+      } catch (err) {
+        // Fallback heuristic on network / API exhaustion
+        const inferred = inferMetadataFromUrl(item.url, item.location, item.category);
+        updatedQueue[i] = { ...item, ...inferred, status: 'ready' };
+      }
+
+      // Update state incrementally
+      setBulkQueue([...updatedQueue]);
+    }
+
+    setIsBulkAnalyzing(false);
+    setBulkProgress(null);
+    showToast('Completed SEO auto-fill for all photos in bulk queue!');
+  };
+
+  // Remove single item from bulk queue
+  const handleRemoveBulkItem = (id: string) => {
+    setBulkQueue(prev => prev.filter(item => item.id !== id));
+  };
+
+  // Update item in bulk queue
+  const handleUpdateBulkItem = (id: string, updates: Partial<BulkUrlItem>) => {
+    setBulkQueue(prev => prev.map(item => item.id === id ? { ...item, ...updates } : item));
+  };
+
+  // Clear bulk queue
+  const handleClearBulkQueue = () => {
+    setBulkQueue([]);
+    showToast('Bulk queue cleared.', 'info');
+  };
+
+  // Import all photos from bulk queue into Library
+  const handleImportBulkPhotos = () => {
+    if (bulkQueue.length === 0) return;
+
+    let importCount = 0;
+    bulkQueue.forEach((item, idx) => {
+      if (item.url) {
+        const newPhoto: LibraryPhotoItem = {
+          id: `bulk-${Date.now()}-${idx}`,
+          url: item.url.trim(),
+          title: item.title.trim() || 'Curated Turkey Photography',
+          location: item.location.trim() || 'Turkiye',
+          category: item.category,
+          altText: item.altText.trim() || `${item.title} in ${item.location}, Turkey`,
+          caption: item.caption.trim() || `Curated photography of ${item.location} for bespoke itineraries.`,
+          description: item.description.trim() || `High-resolution photograph featuring ${item.location} by Baobab DMC Turkey.`,
+          seoKeywords: item.seoKeywords && item.seoKeywords.length > 0 ? item.seoKeywords : ['Turkey DMC', item.location, 'Turkey tours'],
+          uploadedAt: new Date().toISOString(),
+          isCustom: true
+        };
+        addCustomPhoto(newPhoto);
+        importCount++;
+      }
+    });
+
+    showToast(`Successfully imported ${importCount} photos to the Photo Library!`, 'success');
+    setBulkQueue([]);
+    setBulkUrlsRaw('');
+    setActiveSubView('browse');
+  };
+
   return (
     <div className="space-y-6 relative">
       {/* Toast Notification */}
@@ -777,6 +1035,24 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
 
           <button
             type="button"
+            onClick={() => setActiveSubView('bulk_url')}
+            className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded flex items-center gap-1.5 transition-colors ${
+              activeSubView === 'bulk_url'
+                ? 'bg-gradient-to-r from-purple-700 via-indigo-700 to-[#F05A28] text-white shadow-xs'
+                : 'bg-purple-50 text-purple-800 border border-purple-200 hover:bg-purple-100'
+            }`}
+          >
+            <ListPlus className="w-3.5 h-3.5 text-purple-600" />
+            <span>Bulk Upload by URL</span>
+            {bulkQueue.length > 0 && (
+              <span className="ml-1 px-1.5 py-0.2 bg-white/30 rounded-full text-[10px] font-mono">
+                {bulkQueue.length}
+              </span>
+            )}
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveSubView('manual_add')}
             className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded flex items-center gap-1.5 transition-colors ${
               activeSubView === 'manual_add'
@@ -785,7 +1061,7 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
             }`}
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add by URL</span>
+            <span>Single URL Add</span>
           </button>
         </div>
       </div>
@@ -997,6 +1273,282 @@ export const PhotoLibraryManagerTab: React.FC<PhotoLibraryManagerTabProps> = ({
               <span>Save Photo to Library</span>
             </button>
           </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* VIEW: BULK UPLOAD BY URL WITH SMART SEO GENERATION & LIVE PREVIEW         */}
+      {/* ========================================================================= */}
+      {activeSubView === 'bulk_url' && (
+        <div className="space-y-6">
+          {/* Input & Parser Card */}
+          <div className="bg-white rounded-xl border border-neutral-200 p-6 space-y-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold shadow-2xs">
+                  <ListPlus className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-neutral-900 flex items-center gap-2">
+                    <span>Bulk Upload Photos by URL</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800">
+                      Multi-Link Importer
+                    </span>
+                  </h4>
+                  <p className="text-xs text-neutral-500 mt-0.5">
+                    Paste multiple image URLs (one per line or comma-separated). Automatically parse, preview, and generate SEO tags before saving.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleLoadSampleBulkUrls}
+                  className="px-3 py-1.5 border border-purple-200 bg-purple-50/50 hover:bg-purple-100 text-purple-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                  <span>Load Sample Turkey URLs</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              {/* Left Column: Textarea for pasting URLs */}
+              <div className="lg:col-span-8 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-neutral-700 uppercase tracking-wider flex items-center gap-1.5">
+                    <Link2 className="w-3.5 h-3.5 text-[#F05A28]" />
+                    <span>Paste Image URLs (One per line)</span>
+                  </label>
+                  <span className="text-[11px] text-neutral-400">
+                    Supports Unsplash, CDN, or direct JPG / PNG / WebP links
+                  </span>
+                </div>
+                <textarea
+                  rows={5}
+                  value={bulkUrlsRaw}
+                  onChange={(e) => setBulkUrlsRaw(e.target.value)}
+                  placeholder={`https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=1600&q=85\nhttps://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1600&q=85\nhttps://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=1600&q=85`}
+                  className="w-full px-3.5 py-2.5 text-xs font-mono border border-neutral-300 rounded-lg focus:outline-none focus:border-[#F05A28] bg-neutral-50/50"
+                />
+              </div>
+
+              {/* Right Column: Default Settings & Parse Button */}
+              <div className="lg:col-span-4 bg-neutral-50/70 p-4 rounded-xl border border-neutral-200 space-y-3 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <span className="text-xs font-bold text-neutral-900 uppercase tracking-wider block">
+                    Default Batch Meta
+                  </span>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-neutral-600 mb-1">
+                      Default Category
+                    </label>
+                    <select
+                      value={bulkDefaultCategory}
+                      onChange={(e) => setBulkDefaultCategory(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                    >
+                      {CATEGORY_OPTIONS.map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-neutral-600 mb-1">
+                      Default Region / Location
+                    </label>
+                    <input
+                      type="text"
+                      value={bulkDefaultLocation}
+                      onChange={(e) => setBulkDefaultLocation(e.target.value)}
+                      placeholder="e.g. Turkiye, Cappadocia, Istanbul"
+                      className="w-full px-2.5 py-1.5 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleParseBulkUrls}
+                  disabled={!bulkUrlsRaw.trim()}
+                  className="w-full py-2.5 bg-neutral-900 hover:bg-black disabled:opacity-40 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-xs flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <ListPlus className="w-4 h-4" />
+                  <span>Parse & Add to Queue</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Bulk Queue Table / Cards */}
+          {bulkQueue.length > 0 && (
+            <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden shadow-xs space-y-4">
+              {/* Queue Controls Toolbar */}
+              <div className="p-4 sm:p-5 border-b border-neutral-200 bg-neutral-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-sm font-bold text-neutral-900">
+                    Validated Photos in Queue ({bulkQueue.length})
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                    Ready to Import
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={handleRunBulkAiAnalysis}
+                    disabled={isBulkAnalyzing}
+                    className="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-xs flex items-center gap-1.5 transition-all disabled:opacity-50"
+                  >
+                    {isBulkAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-amber-200" />}
+                    <span>{isBulkAnalyzing ? `Analyzing (${bulkProgress?.current || 0}/${bulkProgress?.total || 0})...` : 'Auto-Fill SEO with AI'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleClearBulkQueue}
+                    disabled={isBulkAnalyzing}
+                    className="px-3 py-2 border border-neutral-300 hover:bg-neutral-100 text-neutral-700 text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    Clear Queue
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleImportBulkPhotos}
+                    disabled={isBulkAnalyzing}
+                    className="px-4 py-2 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-xs flex items-center gap-1.5 transition-colors"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>Import All ({bulkQueue.length}) to Library</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Items List */}
+              <div className="divide-y divide-neutral-100 p-4 sm:p-5 space-y-4">
+                {bulkQueue.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className="bg-neutral-50/50 p-4 rounded-xl border border-neutral-200/80 hover:border-neutral-300 transition-all flex flex-col md:flex-row gap-4"
+                  >
+                    {/* Thumbnail */}
+                    <div className="relative w-36 h-28 shrink-0 rounded-lg overflow-hidden bg-neutral-900 border border-neutral-200 shadow-2xs group">
+                      <img
+                        src={item.url}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                      <span className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/70 text-white text-[9.5px] font-mono font-bold">
+                        #{idx + 1}
+                      </span>
+                    </div>
+
+                    {/* Inline Editable Fields */}
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs">
+                      <div className="sm:col-span-7">
+                        <label className="block text-[10px] font-bold text-neutral-600 uppercase tracking-wider mb-1">
+                          Headline / Title
+                        </label>
+                        <input
+                          type="text"
+                          value={item.title}
+                          onChange={(e) => handleUpdateBulkItem(item.id, { title: e.target.value })}
+                          className="w-full px-2.5 py-1.5 text-xs font-semibold border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-5">
+                        <label className="block text-[10px] font-bold text-neutral-600 uppercase tracking-wider mb-1">
+                          Category
+                        </label>
+                        <select
+                          value={item.category}
+                          onChange={(e) => handleUpdateBulkItem(item.id, { category: e.target.value })}
+                          className="w-full px-2.5 py-1.5 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                        >
+                          {CATEGORY_OPTIONS.map(c => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="sm:col-span-5">
+                        <label className="block text-[10px] font-bold text-neutral-600 uppercase tracking-wider mb-1">
+                          Location / Region
+                        </label>
+                        <input
+                          type="text"
+                          value={item.location}
+                          onChange={(e) => handleUpdateBulkItem(item.id, { location: e.target.value })}
+                          className="w-full px-2.5 py-1.5 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-7">
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider">
+                            Alt Text (Accessibility)
+                          </label>
+                          <span className="text-[10px] text-neutral-400">
+                            {item.altText?.length || 0}/120
+                          </span>
+                        </div>
+                        <input
+                          type="text"
+                          value={item.altText}
+                          onChange={(e) => handleUpdateBulkItem(item.id, { altText: e.target.value })}
+                          className="w-full px-2.5 py-1.5 text-xs border border-neutral-300 rounded bg-white focus:outline-none focus:border-[#F05A28]"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-12 flex items-center justify-between pt-1">
+                        <div className="flex items-center gap-1.5 overflow-hidden text-neutral-500 text-[11px] truncate">
+                          <Tag className="w-3 h-3 text-[#F05A28] shrink-0" />
+                          <span className="font-semibold text-neutral-700">SEO Keywords:</span>
+                          <span className="truncate">{item.seoKeywords?.join(', ')}</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveBulkItem(item.id)}
+                          className="text-neutral-400 hover:text-red-600 text-xs font-semibold flex items-center gap-1 shrink-0 ml-3"
+                          title="Remove from queue"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom Sticky Import Bar */}
+              <div className="p-4 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between">
+                <span className="text-xs text-neutral-500 font-medium">
+                  {bulkQueue.length} photos ready for import with complete SEO metadata.
+                </span>
+
+                <button
+                  type="button"
+                  onClick={handleImportBulkPhotos}
+                  className="px-6 py-2.5 bg-[#F05A28] hover:bg-[#D94526] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-sm flex items-center gap-1.5 transition-colors"
+                >
+                  <Check className="w-4 h-4" />
+                  <span>Import All ({bulkQueue.length}) Photos to Library</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

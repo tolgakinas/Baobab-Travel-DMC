@@ -28,6 +28,7 @@ import { ATLAS_TURKEY_TRIPS } from '../data/tripsData';
 import { ISTANBUL_DAY_TOURS } from '../data/dayToursData';
 import { DESTINATIONS, EXCLUSIVE_VENUES, SAMPLE_ITINERARIES, COMPANY_CONTACT } from '../data/dmcData';
 import { BLOG_POSTS, BlogPost } from '../data/blogData';
+import { useSiteContent } from '../context/SiteContentContext';
 import { AtlasTrip } from '../types';
 
 interface SitemapModalProps {
@@ -103,8 +104,11 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
     dest.description.toLowerCase().includes(q)
   );
 
+  const { content } = useSiteContent();
+  const sampleItineraries = content.itineraries && content.itineraries.length > 0 ? content.itineraries : SAMPLE_ITINERARIES;
+
   // Filtered sample frameworks
-  const filteredFrameworks = SAMPLE_ITINERARIES.filter(it =>
+  const filteredFrameworks = sampleItineraries.filter(it =>
     !q || it.title.toLowerCase().includes(q) ||
     it.category.toLowerCase().includes(q) ||
     it.destinations.some(d => d.toLowerCase().includes(q))

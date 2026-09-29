@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SAMPLE_ITINERARIES } from '../data/dmcData';
+import { useSiteContent } from '../context/SiteContentContext';
 import { SampleItinerary } from '../types';
 import { 
   Calendar, 
@@ -25,10 +26,13 @@ export const ItinerariesSection: React.FC<ItinerariesSectionProps> = ({
   onSelectItinerary,
   onCustomizeItinerary,
 }) => {
-  const [activeItineraryId, setActiveItineraryId] = useState<string>(SAMPLE_ITINERARIES[0].id);
+  const { content } = useSiteContent();
+  const itineraries = content.itineraries && content.itineraries.length > 0 ? content.itineraries : SAMPLE_ITINERARIES;
+
+  const [activeItineraryId, setActiveItineraryId] = useState<string>(() => itineraries[0]?.id || 'grand-odyssey');
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
 
-  const currentItinerary = SAMPLE_ITINERARIES.find(i => i.id === activeItineraryId) || SAMPLE_ITINERARIES[0];
+  const currentItinerary = itineraries.find(i => i.id === activeItineraryId) || itineraries[0] || SAMPLE_ITINERARIES[0];
 
   return (
     <section id="itineraries" className="py-20 sm:py-28 bg-[#FAF9F6] text-[#1A1A1A]">
@@ -52,7 +56,7 @@ export const ItinerariesSection: React.FC<ItinerariesSectionProps> = ({
 
           {/* Program Selectors */}
           <div className="flex flex-wrap gap-2">
-            {SAMPLE_ITINERARIES.map((itin) => (
+            {itineraries.map((itin) => (
               <button
                 key={itin.id}
                 onClick={() => {

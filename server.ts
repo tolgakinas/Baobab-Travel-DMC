@@ -607,6 +607,218 @@ Return strictly valid JSON only.`;
 });
 
 // ==========================================
+// AI ITINERARY GENERATOR & DESIGNER
+// ==========================================
+app.post('/api/generate-itinerary', async (req, res) => {
+  try {
+    const { 
+      theme = 'Classical Turkey & Cappadocia Expedition',
+      duration = '10 Days / 9 Nights',
+      category = 'Small Group Tour',
+      destinations = ['Istanbul', 'Cappadocia', 'Ephesus', 'Bodrum'],
+      focus = 'Cultural heritage, boutique hotels, hot air ballooning, local gastronomy',
+      groupSize = 'Intimate Groups & Private Circles (4–14 Travelers)',
+      existingItinerary
+    } = req.body;
+
+    const gemini = getGeminiClient();
+
+    // Destination photo library map
+    const DEST_PHOTO_MAP: Record<string, string> = {
+      'cappadocia': 'https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=1600&q=85',
+      'istanbul': 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1600&q=85',
+      'ephesus': 'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=1600&q=85',
+      'bodrum': 'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1600&q=85',
+      'antalya': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1600&q=85',
+      'fethiye': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=85',
+      'kas': 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=85',
+      'pamukkale': 'https://images.unsplash.com/photo-1599818818580-0a2c2069279d?auto=format&fit=crop&w=1600&q=85',
+      'trabzon': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=85',
+      'black sea': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=85',
+      'mardin': 'https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=1600&q=85',
+      'nemrut': 'https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=1600&q=85',
+      'gobeklitepe': 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1600&q=85'
+    };
+
+    const destArray = Array.isArray(destinations) && destinations.length > 0 ? destinations : ['Istanbul', 'Cappadocia', 'Ephesus'];
+    const primaryDestKey = destArray[0].toLowerCase();
+    const coverPhoto = Object.entries(DEST_PHOTO_MAP).find(([k]) => primaryDestKey.includes(k))?.[1] ||
+      'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1600&q=85';
+
+    // Parse requested days count
+    const daysMatch = duration.match(/(\d+)\s*Day/i);
+    const parsedDaysCount = daysMatch ? parseInt(daysMatch[1], 10) : 10;
+    const daysCount = Math.min(Math.max(parsedDaysCount, 3), 21);
+
+    if (gemini) {
+      const prompt = `You are a master luxury itinerary architect and tour designer for Baobab DMC Turkey, an A-Grade TÜRSAB Licensed luxury Tour Operator & Destination Management Company.
+
+Design a comprehensive, realistic, and highly marketable sample framework itinerary tailored for international travel advisors, tour operators, and discerning travelers.
+
+Design Parameters:
+- Theme / Core Concept: "${theme}"
+- Duration: "${duration}" (Must contain exactly ${daysCount} detailed days in the schedule)
+- Category: "${category}" (Choose or keep from: Small Group Tour, Active Adventure, Cultural Expedition, Gulet & Coastal Trek)
+- Target Destinations: ${JSON.stringify(destArray)}
+- Special Focus & Pacing: "${focus}"
+- Ideal Scale: "${groupSize}"
+${existingItinerary ? `Existing Draft to Refine / Upgrade:\n${JSON.stringify(existingItinerary, null, 2)}` : ''}
+
+CRITICAL RULES:
+1. Provide a captivating, polished "title" (e.g. "The Lycian Way & Sunken Ruins Coastal Expedition") and "subtitle" (e.g. "Antalya • Kas • Kekova • Fethiye").
+2. "overview": 2-3 compelling sentences describing the logistical flow, exclusive local experiences, and boutique accommodation standard.
+3. "includedHighlights": An array of 5-6 distinct, compelling bullet inclusions (e.g. "Private sunrise hot air balloon flight over Goreme", "Scholar-guided private entry to Ephesus Terrace Houses").
+4. "days": An array of EXACTLY ${daysCount} day objects (day: 1 to ${daysCount}), with:
+   - "day": integer (1, 2, ..., ${daysCount})
+   - "title": engaging day headline (e.g. "Arrival in Istanbul & Sunset Bosphorus Boat")
+   - "location": Turkish city or district (e.g. "Istanbul", "Göreme", "Ancient Ephesus")
+   - "description": 2-3 rich sentences detailing the authentic pacing, morning/afternoon activities, and dining/transport flow.
+   - "highlights": 3-4 bullet keywords/tags for the day (e.g. ["Airport Meet & Greet", "Bosphorus Sunset Yacht", "Welcome Dinner"]).
+5. "images": Provide an array of 4-6 high quality photographic URLs (from unsplash).
+6. "imageCaptions": Matching array of descriptive captions for each image.
+
+Return valid JSON with this exact structure:
+{
+  "id": "${theme.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}-${Date.now()}",
+  "title": "Itinerary Title",
+  "subtitle": "City • City • City",
+  "duration": "${duration}",
+  "category": "${category}",
+  "destinations": ${JSON.stringify(destArray)},
+  "coverImage": "${coverPhoto}",
+  "images": [
+    "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80"
+  ],
+  "imageCaptions": [
+    "Historic landmarks and skyline of Istanbul",
+    "Dawn balloon ascension across Cappadocia valleys",
+    "Classical marble avenues of ancient Ephesus",
+    "Wooden gulet sailing across turquoise Aegean bays"
+  ],
+  "overview": "Overview text...",
+  "idealGroupSize": "${groupSize}",
+  "includedHighlights": [
+    "Highlight 1", "Highlight 2", "Highlight 3", "Highlight 4", "Highlight 5"
+  ],
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1 Title",
+      "location": "Istanbul",
+      "description": "Day 1 description...",
+      "highlights": ["Tag 1", "Tag 2", "Tag 3"]
+    }
+  ]
+}
+JSON only.`;
+
+      for (const model of ['gemini-3.8-flash', 'gemini-3.1-flash-lite']) {
+        try {
+          const aiResponse = await gemini.models.generateContent({
+            model,
+            contents: prompt,
+            config: {
+              responseMimeType: 'application/json'
+            }
+          });
+
+          const parsed = JSON.parse(aiResponse.text || '{}');
+          if (parsed.title && Array.isArray(parsed.days) && parsed.days.length > 0) {
+            return res.json({
+              success: true,
+              source: `gemini-ai (${model})`,
+              itinerary: {
+                ...parsed,
+                id: parsed.id || `itin-${Date.now()}`,
+                coverImage: parsed.coverImage || coverPhoto,
+                duration: parsed.duration || duration,
+                category: parsed.category || category,
+                destinations: parsed.destinations || destArray,
+                idealGroupSize: parsed.idealGroupSize || groupSize
+              }
+            });
+          }
+        } catch (modelErr: any) {
+          console.warn(`[AI Itinerary Gen ${model} Warning]:`, modelErr?.message || modelErr);
+        }
+      }
+    }
+
+    // Algorithmic Fallback Itinerary Generator when API offline
+    const generatedDays = Array.from({ length: daysCount }).map((_, idx) => {
+      const dayNum = idx + 1;
+      const targetDest = destArray[Math.min(Math.floor((idx / daysCount) * destArray.length), destArray.length - 1)] || 'Istanbul';
+      return {
+        day: dayNum,
+        title: dayNum === 1 
+          ? `Arrival in ${targetDest} & VIP Welcome` 
+          : dayNum === daysCount 
+          ? `Farewell ${targetDest} & Homeward Departure` 
+          : `Curated Discovery of ${targetDest}`,
+        location: targetDest,
+        description: dayNum === 1
+          ? `VIP airport meet-and-greet with dedicated Mercedes Sprinter transfer to your boutique hotel. Settle in before a curated sunset orientation and welcome dinner.`
+          : dayNum === daysCount
+          ? `Leisurely morning with late breakfast. Private Mercedes transfer to the airport with priority check-in assistance for onward flights.`
+          : `Full-day private scholar-led exploration of ${targetDest}, featuring exclusive access, authentic artisan encounters, and handpicked local gastronomy.`,
+        highlights: [
+          `${targetDest} Heritage`,
+          dayNum === 1 ? 'VIP Airport Meet' : dayNum === daysCount ? 'Airport Departure' : 'Private Scholar Guide',
+          'Boutique Hospitality'
+        ]
+      };
+    });
+
+    const fallbackItinerary = {
+      id: `itin-custom-${Date.now()}`,
+      title: theme || `${destArray.join(' & ')} Curated Journey`,
+      subtitle: destArray.join(' • '),
+      duration,
+      category,
+      destinations: destArray,
+      coverImage: coverPhoto,
+      images: [
+        coverPhoto,
+        'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=1200&q=80'
+      ],
+      imageCaptions: [
+        `Signature scenery across ${destArray[0]}`,
+        'Historic landmarks and architectural heritage',
+        'Immersive landscapes and boutique lodges',
+        'Private coastal or scenic experiences'
+      ],
+      overview: `A bespoke ${duration} luxury journey designed by Baobab DMC connecting ${destArray.join(', ')}. Seamless ground transport, licensed scholar guides, and handpicked boutique accommodations throughout.`,
+      idealGroupSize: groupSize,
+      includedHighlights: [
+        'Dedicated Mercedes VIP Sprinter ground transport throughout',
+        'Licensed scholar guides with private skip-the-line privileges',
+        'Boutique historical hotels, cave suites, or seaside lodges',
+        'Domestic flights and private airport fast-track transfers',
+        '24/7 dedicated Baobab DMC field operations desk'
+      ],
+      days: generatedDays
+    };
+
+    return res.json({
+      success: true,
+      source: 'heuristic-generator',
+      itinerary: fallbackItinerary
+    });
+  } catch (error: any) {
+    console.error('[Generate Itinerary Error]:', error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || 'Failed to generate itinerary'
+    });
+  }
+});
+
+// ==========================================
 // INQUIRIES & TRADE BOOKING DATA STORE (CRM)
 // ==========================================
 const INQUIRIES_FILE = path.join(process.cwd(), 'data', 'inquiries.json');

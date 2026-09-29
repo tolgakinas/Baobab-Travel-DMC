@@ -45,7 +45,8 @@ import { InquiriesCrmTab } from './InquiriesCrmTab';
 import { PhotoLibraryManagerTab } from './PhotoLibraryManagerTab';
 import { BlogManagerTab } from './BlogManagerTab';
 import { GtmConsentManagerTab } from './GtmConsentManagerTab';
-import { Image as ImageIcon, BookOpen, Tag } from 'lucide-react';
+import { ItinerariesManagerTab } from './ItinerariesManagerTab';
+import { Image as ImageIcon, BookOpen, Tag, Route } from 'lucide-react';
 
 interface SuperAdminModalProps {
   isOpen: boolean;
@@ -237,6 +238,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
     { id: 'metrics', label: 'Metrics & Numbers', icon: Hash, count: content.stats.length },
     { id: 'contact', label: 'Contact & Ops', icon: Phone },
     { id: 'trips', label: 'Trips & Expeditions', icon: Compass, count: content.trips.length },
+    { id: 'itineraries', label: 'Sample Frameworks', icon: Route, count: content.itineraries?.length || 4, badge: 'AI Generator' },
     { id: 'destinations', label: 'Destinations', icon: MapPin, count: content.destinations.length },
     { id: 'venues', label: 'Venues & Lodges', icon: Building, count: content.venues.length },
     { id: 'services', label: 'Services', icon: Layers, count: content.services.length },
@@ -660,6 +662,7 @@ export const SuperAdminModal: React.FC<SuperAdminModalProps> = ({
             {activeAdminTab === 'metrics' && <MetricsNumbersTab />}
             {activeAdminTab === 'contact' && <CompanyContactTab />}
             {activeAdminTab === 'trips' && <TripsManagerTab />}
+            {activeAdminTab === 'itineraries' && <ItinerariesManagerTab />}
             {activeAdminTab === 'destinations' && <DestinationsManagerTab />}
             {activeAdminTab === 'venues' && <VenuesManagerTab />}
             {activeAdminTab === 'services' && <ServicesManagerTab />}

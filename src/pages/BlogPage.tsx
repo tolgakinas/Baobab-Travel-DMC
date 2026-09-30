@@ -2,7 +2,8 @@ import React from 'react';
 import { PageHeader } from '../components/PageHeader';
 import { BlogSection } from '../components/BlogSection';
 import { BlogPost } from '../data/blogData';
-import { BookOpen, Sparkles } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface BlogPageProps {
   onSelectBlogPost: (post: BlogPost) => void;
@@ -15,19 +16,21 @@ export const BlogPage: React.FC<BlogPageProps> = ({
   onOpenInquiry,
   onNavigateHome
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-neutral-900">
       <PageHeader
-        title="Turkey Travel Insights & DMC Journal"
-        subtitle="Expert regional guides, logistical advice, culinary spotlights, and insider tips curated by our local destination specialists for travel advisors and tour operators."
-        categoryBadge="Destination Intelligence"
+        title={t('pages.blog.title')}
+        subtitle={t('pages.blog.subtitle')}
+        categoryBadge={t('pages.blog.badge')}
         breadcrumbs={[
           { label: 'Home', onClick: onNavigateHome },
-          { label: 'Travel Insights & Blog' }
+          { label: t('nav.blog') }
         ]}
         backgroundImage="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=2000&q=85"
         actionButton={{
-          label: 'Plan a Story-Driven Tour',
+          label: t('pages.blog.cta'),
           onClick: () => onOpenInquiry({ source: 'Blog Page' }),
           icon: <BookOpen className="w-4 h-4" />
         }}

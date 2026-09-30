@@ -2,8 +2,9 @@ import React from 'react';
 import { PageHeader } from '../components/PageHeader';
 import { PartnerWithUsSection } from '../components/PartnerWithUsSection';
 import { InquiryForm } from '../components/InquiryForm';
-import { Handshake, Calendar, MessageSquare, Phone, Mail, MapPin } from 'lucide-react';
+import { Handshake, Phone, Mail, MapPin } from 'lucide-react';
 import { COMPANY_CONTACT } from '../data/dmcData';
+import { useLanguage } from '../context/LanguageContext';
 
 interface PartnerPageProps {
   onOpenInquiry: (initialData?: Record<string, any>) => void;
@@ -16,24 +17,26 @@ export const PartnerPage: React.FC<PartnerPageProps> = ({
   onOpenCalendly,
   onNavigateHome
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-white">
       <PageHeader
-        title="Partner With Baobab DMC Turkey"
-        subtitle="Exclusive B2B inbound partnerships for international tour operators, travel advisors, and wholesale agencies. Guaranteed net rates, white-label proposals, and 24/7 on-the-ground support."
-        categoryBadge="B2B Travel Trade Partnership"
+        title={t('pages.partner.title')}
+        subtitle={t('pages.partner.subtitle')}
+        categoryBadge={t('pages.partner.badge')}
         breadcrumbs={[
           { label: 'Home', onClick: onNavigateHome },
-          { label: 'Partner With Us' }
+          { label: t('nav.partner') }
         ]}
         backgroundImage="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=2000&q=85"
         actionButton={{
-          label: 'Submit B2B RFP',
+          label: t('pages.partner.cta'),
           onClick: () => onOpenInquiry({ source: 'Partner Page' }),
           icon: <Handshake className="w-4 h-4" />
         }}
         secondaryButton={onOpenCalendly ? {
-          label: 'Schedule Discovery Call',
+          label: t('pages.partner.bookCall'),
           onClick: () => onOpenCalendly('b2b-discovery')
         } : undefined}
       />

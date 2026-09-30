@@ -2,7 +2,8 @@ import React from 'react';
 import { PageHeader } from '../components/PageHeader';
 import { AtlasTripsSection } from '../components/AtlasTripsSection';
 import { AtlasTrip } from '../types';
-import { Compass, Sparkles, MessageSquare } from 'lucide-react';
+import { Compass } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface TripsPageProps {
   onSelectTrip: (trip: AtlasTrip) => void;
@@ -15,19 +16,21 @@ export const TripsPage: React.FC<TripsPageProps> = ({
   onOpenInquiry,
   onNavigateHome
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-neutral-900">
       <PageHeader
-        title="Guided Trips & Expeditions"
-        subtitle="Curated small-group journeys, scholar-led cultural expeditions, active trail treks, scenic rail voyages, and private day tours across Turkey."
-        categoryBadge="Small Group & Private Expeditions"
+        title={t('pages.trips.title')}
+        subtitle={t('pages.trips.subtitle')}
+        categoryBadge={t('pages.trips.badge')}
         breadcrumbs={[
           { label: 'Home', onClick: onNavigateHome },
-          { label: 'Guided Trips & Expeditions' }
+          { label: t('nav.trips') }
         ]}
         backgroundImage="https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?auto=format&fit=crop&w=2000&q=85"
         actionButton={{
-          label: 'Request Custom Expedition',
+          label: t('pages.trips.cta'),
           onClick: () => onOpenInquiry({ tripType: 'Guided Trip / Expedition' }),
           icon: <Compass className="w-4 h-4" />
         }}

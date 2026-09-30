@@ -1,7 +1,6 @@
 import React from 'react';
 import { Logo } from './Logo';
 import { SocialMediaLinks } from './SocialMediaLinks';
-import { LanguageSelector } from './LanguageSelector';
 import { AccreditationLogos } from './AccreditationLogos';
 import { useLanguage } from '../context/LanguageContext';
 import { 
@@ -502,8 +501,6 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
-            <LanguageSelector variant="dark" />
-
             {onOpenB2BPanel && (
               <button 
                 onClick={onOpenB2BPanel} 

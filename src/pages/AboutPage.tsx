@@ -3,6 +3,7 @@ import { PageHeader } from '../components/PageHeader';
 import { AboutDmc } from '../components/AboutDmc';
 import { StatsBar } from '../components/StatsBar';
 import { ShieldCheck, MessageSquare, Award } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AboutPageProps {
   onOpenInquiry: (initialData?: Record<string, any>) => void;
@@ -19,19 +20,21 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onOpenResponsibleTravel,
   onNavigateHome
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-white">
       <PageHeader
-        title="About Baobab DMC Turkey"
-        subtitle="Licensed TURSAB Group A Inbound Operator (#12458). Dedicated to delivering authentic, sustainable, and scholar-grade travel experiences across Turkey for international partners."
-        categoryBadge="TURSAB Group A Certified"
+        title={t('pages.about.title')}
+        subtitle={t('pages.about.subtitle')}
+        categoryBadge={t('pages.about.badge')}
         breadcrumbs={[
           { label: 'Home', onClick: onNavigateHome },
-          { label: 'About Us' }
+          { label: t('nav.whyBaobab') }
         ]}
         backgroundImage="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=2000&q=85"
         actionButton={{
-          label: 'Contact Our Leadership',
+          label: t('pages.about.cta'),
           onClick: () => onOpenInquiry({ source: 'About Us Page' }),
           icon: <ShieldCheck className="w-4 h-4" />
         }}

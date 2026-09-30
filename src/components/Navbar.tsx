@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Logo } from './Logo';
-import { LanguageSelector } from './LanguageSelector';
 import { SocialMediaLinks } from './SocialMediaLinks';
 import { useLanguage } from '../context/LanguageContext';
 import { 
@@ -375,7 +374,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="space-y-6">
               <div className="pb-4 border-b border-neutral-200 flex items-center justify-between">
                 <Logo variant="light" size="sm" />
-                <LanguageSelector variant="light" />
               </div>
               <p className="text-xs text-neutral-500 font-sans leading-relaxed">
                 Specialized Destination Management Company in Turkey for small group tours, guided trekking, and bespoke cultural adventures.

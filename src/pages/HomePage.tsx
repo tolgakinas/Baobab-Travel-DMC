@@ -12,6 +12,7 @@ import { PartnerWithUsSection } from '../components/PartnerWithUsSection';
 import { InquiryForm } from '../components/InquiryForm';
 import { Destination, SampleItinerary, VenueShowcase, AtlasTrip } from '../types';
 import { BlogPost } from '../data/blogData';
+import { DESTINATIONS } from '../data/dmcData';
 
 interface HomePageProps {
   onSelectDestination: (dest: Destination) => void;
@@ -38,9 +39,17 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <Hero 
-        onOpenInquiry={() => onOpenInquiry()} 
-        onOpenCalendly={() => onOpenCalendly?.('b2b-discovery')}
-        onExploreClick={() => onNavigatePage('destinations')}
+        onOpenInquiry={onOpenInquiry} 
+        onOpenCalendly={onOpenCalendly}
+        onExploreDestinations={() => onNavigatePage('destinations')}
+        onSelectDestination={(destId) => {
+          const found = DESTINATIONS.find(d => d.id === destId);
+          if (found) {
+            onSelectDestination(found);
+          } else {
+            onNavigatePage('destinations');
+          }
+        }}
       />
 
       {/* Trust & Live Operational Stats */}

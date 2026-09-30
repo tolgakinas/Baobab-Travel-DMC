@@ -35,6 +35,7 @@ interface SitemapModalProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (sectionId: string) => void;
+  onNavigatePage?: (page: string) => void;
   onSelectDestination: (destId: string) => void;
   onSelectTrip: (trip: AtlasTrip) => void;
   onSelectBlogPost?: (post: BlogPost) => void;
@@ -50,6 +51,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
   isOpen,
   onClose,
   onNavigate,
+  onNavigatePage,
   onSelectDestination,
   onSelectTrip,
   onSelectBlogPost,
@@ -61,6 +63,15 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
   onOpenB2BPanel
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSitemapNav = (pageOrSection: string) => {
+    onClose();
+    if (onNavigatePage) {
+      onNavigatePage(pageOrSection);
+    } else {
+      onNavigate(pageOrSection);
+    }
+  };
 
   // Close on Escape key and prevent background scroll
   useEffect(() => {
@@ -130,14 +141,14 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
 
   // Navigation helper
   const handleJump = (sectionId: string) => {
-    onClose();
-    setTimeout(() => {
-      onNavigate(sectionId);
-    }, 100);
+    handleSitemapNav(sectionId);
   };
 
   const handleTripClick = (trip: AtlasTrip) => {
     onClose();
+    if (onNavigatePage) {
+      onNavigatePage('trips');
+    }
     setTimeout(() => {
       onSelectTrip(trip);
     }, 100);
@@ -145,21 +156,22 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
 
   const handleDestClick = (destId: string) => {
     onClose();
+    if (onNavigatePage) {
+      onNavigatePage('destinations');
+    }
     setTimeout(() => {
       onSelectDestination(destId);
-      onNavigate('destinations');
     }, 100);
   };
 
   const handleBlogClick = (post: BlogPost) => {
     onClose();
+    if (onNavigatePage) {
+      onNavigatePage('blog');
+    }
     if (onSelectBlogPost) {
       setTimeout(() => {
         onSelectBlogPost(post);
-      }, 100);
-    } else {
-      setTimeout(() => {
-        onNavigate('blog');
       }, 100);
     }
   };

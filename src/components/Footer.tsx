@@ -37,6 +37,7 @@ import { DESTINATIONS, COMPANY_CONTACT } from '../data/dmcData';
 
 interface FooterProps {
   onNavigate: (sectionId: string) => void;
+  onNavigatePage?: (page: string) => void;
   onSelectDestination: (destId: string) => void;
   onOpenInquiry: (initialData?: Record<string, any>) => void;
   onOpenCalendly?: (eventTypeId?: string) => void;
@@ -51,6 +52,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({
   onNavigate,
+  onNavigatePage,
   onSelectDestination,
   onOpenInquiry,
   onOpenCalendly,
@@ -65,6 +67,14 @@ export const Footer: React.FC<FooterProps> = ({
   const { t } = useLanguage();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFooterNav = (pageOrSection: string) => {
+    if (onNavigatePage) {
+      onNavigatePage(pageOrSection);
+    } else {
+      onNavigate(pageOrSection);
+    }
   };
 
   return (
@@ -173,7 +183,7 @@ export const Footer: React.FC<FooterProps> = ({
                   <button
                     onClick={() => {
                       onSelectDestination(d.id);
-                      onNavigate('destinations');
+                      handleFooterNav('destinations');
                     }}
                     className="group hover:text-white transition-colors flex items-center gap-2 text-left w-full"
                   >
@@ -207,7 +217,7 @@ export const Footer: React.FC<FooterProps> = ({
               )}
               <li>
                 <button 
-                  onClick={() => onNavigate('partner')} 
+                  onClick={() => handleFooterNav('partner')} 
                   className="group hover:text-white text-[#F05A28] font-semibold transition-colors flex items-center gap-2"
                 >
                   <Briefcase className="w-3.5 h-3.5 text-[#F05A28] shrink-0" />
@@ -227,7 +237,7 @@ export const Footer: React.FC<FooterProps> = ({
               )}
               <li>
                 <button 
-                  onClick={() => onNavigate('trips')} 
+                  onClick={() => handleFooterNav('trips')} 
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Compass className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
@@ -236,7 +246,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button 
-                  onClick={() => onNavigate('services')} 
+                  onClick={() => handleFooterNav('services')} 
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Users className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
@@ -245,7 +255,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button 
-                  onClick={() => onNavigate('services')} 
+                  onClick={() => handleFooterNav('services')} 
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Mountain className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
@@ -254,7 +264,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button 
-                  onClick={() => onNavigate('services')} 
+                  onClick={() => handleFooterNav('services')} 
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Anchor className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
@@ -263,7 +273,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button 
-                  onClick={() => onNavigate('venues')} 
+                  onClick={() => handleFooterNav('venues')} 
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Building2 className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
@@ -272,7 +282,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button 
-                  onClick={() => onNavigate('about')} 
+                  onClick={() => handleFooterNav('about')} 
                   className="group hover:text-white transition-colors flex items-center gap-2 text-neutral-400 hover:text-neutral-200"
                 >
                   <Award className="w-3.5 h-3.5 text-neutral-500 group-hover:text-[#F05A28] shrink-0 transition-colors" />
@@ -281,7 +291,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button 
-                  onClick={() => onNavigate('blog')} 
+                  onClick={() => handleFooterNav('blog')} 
                   className="group hover:text-white text-[#F05A28] font-semibold transition-colors flex items-center gap-2"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-[#F05A28] shrink-0" />

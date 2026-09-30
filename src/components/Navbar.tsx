@@ -20,6 +20,8 @@ import { COMPANY_CONTACT } from '../data/dmcData';
 
 interface NavbarProps {
   onNavigate: (sectionId: string) => void;
+  currentPage?: string;
+  onNavigatePage?: (page: string, params?: Record<string, any>) => void;
   onOpenInquiry: (initialData?: Record<string, any>) => void;
   onOpenCalendly?: (eventTypeId?: string) => void;
   onOpenB2BPanel?: () => void;
@@ -27,6 +29,8 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ 
   onNavigate, 
+  currentPage = 'home',
+  onNavigatePage,
   onOpenInquiry, 
   onOpenCalendly: _onOpenCalendly, 
   onOpenB2BPanel
@@ -44,10 +48,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (sectionId: string) => {
+  const handleNavClick = (pageOrSection: string, params?: Record<string, any>) => {
     setMobileMenuOpen(false);
     setDestinationsDropdownOpen(false);
-    onNavigate(sectionId);
+    if (onNavigatePage) {
+      onNavigatePage(pageOrSection, params);
+    } else {
+      onNavigate(pageOrSection);
+    }
   };
 
   return (
@@ -137,10 +145,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={() => handleNavClick('destinations')}
                 onMouseEnter={() => setDestinationsDropdownOpen(true)}
-                className="flex items-center gap-1 py-2 hover:text-[#F05A28] transition-colors"
+                className={`flex items-center gap-1 py-2 transition-colors relative ${
+                  currentPage === 'destinations' ? 'text-[#F05A28] font-bold' : 'hover:text-[#F05A28]'
+                }`}
               >
                 <span>{t('nav.destinations')}</span>
                 <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180 text-neutral-400" />
+                {currentPage === 'destinations' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+                )}
               </button>
 
               {/* Mega Dropdown */}
@@ -235,58 +248,86 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Turkey Trips Catalog Link */}
             <button
               onClick={() => handleNavClick('trips')}
-              className="py-2 hover:text-[#F05A28] transition-colors"
+              className={`py-2 transition-colors relative ${
+                currentPage === 'trips' ? 'text-[#F05A28] font-bold' : 'hover:text-[#F05A28]'
+              }`}
             >
-              {t('nav.trips')}
+              <span>{t('nav.trips')}</span>
+              {currentPage === 'trips' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+              )}
             </button>
 
             <button
               onClick={() => handleNavClick('services')}
-              className="py-2 hover:text-[#F05A28] transition-colors"
+              className={`py-2 transition-colors relative ${
+                currentPage === 'services' ? 'text-[#F05A28] font-bold' : 'hover:text-[#F05A28]'
+              }`}
             >
-              {t('nav.services')}
+              <span>{t('nav.services')}</span>
+              {currentPage === 'services' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+              )}
             </button>
 
             <button
               onClick={() => handleNavClick('itineraries')}
-              className="py-2 hover:text-[#F05A28] transition-colors"
+              className={`py-2 transition-colors relative ${
+                currentPage === 'itineraries' ? 'text-[#F05A28] font-bold' : 'hover:text-[#F05A28]'
+              }`}
             >
-              {t('nav.itineraries')}
+              <span>{t('nav.itineraries')}</span>
+              {currentPage === 'itineraries' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+              )}
             </button>
 
             <button
               onClick={() => handleNavClick('venues')}
-              className="py-2 hover:text-[#F05A28] transition-colors"
+              className={`py-2 transition-colors relative ${
+                currentPage === 'venues' ? 'text-[#F05A28] font-bold' : 'hover:text-[#F05A28]'
+              }`}
             >
-              {t('nav.lodges')}
-            </button>
-
-            <button
-              onClick={() => handleNavClick('partner')}
-              className="py-2 hover:text-[#F05A28] transition-colors text-[#F05A28] font-semibold"
-            >
-              {t('nav.partner')}
+              <span>{t('nav.lodges')}</span>
+              {currentPage === 'venues' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+              )}
             </button>
 
             <button
               onClick={() => handleNavClick('about')}
-              className="py-2 hover:text-[#F05A28] transition-colors"
+              className={`py-2 transition-colors relative ${
+                currentPage === 'about' ? 'text-[#F05A28] font-bold' : 'hover:text-[#F05A28]'
+              }`}
             >
-              {t('nav.whyBaobab')}
+              <span>{t('nav.whyBaobab')}</span>
+              {currentPage === 'about' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+              )}
             </button>
 
             <button
               onClick={() => handleNavClick('blog')}
-              className="py-2 hover:text-[#F05A28] transition-colors font-semibold"
+              className={`py-2 transition-colors relative font-semibold ${
+                currentPage === 'blog' ? 'text-[#F05A28] font-bold' : 'hover:text-[#F05A28]'
+              }`}
             >
-              {t('nav.blog')}
+              <span>{t('nav.blog')}</span>
+              {currentPage === 'blog' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+              )}
             </button>
 
             <button
-              onClick={() => handleNavClick('faq')}
-              className="py-2 hover:text-[#F05A28] transition-colors"
+              onClick={() => handleNavClick('partner')}
+              className={`py-2 transition-colors relative font-bold ${
+                currentPage === 'partner' ? 'text-[#F05A28]' : 'text-[#F05A28] hover:text-[#D94526]'
+              }`}
             >
-              Partner FAQ
+              <span>{t('nav.partner')}</span>
+              {currentPage === 'partner' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F05A28] rounded-full" />
+              )}
             </button>
           </div>
 

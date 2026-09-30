@@ -1680,6 +1680,26 @@ app.get('/robots.txt', (req, res) => {
   res.sendFile(robotsPath);
 });
 
+// Serve llms.txt standard for AI crawlers & Large Language Models
+app.get('/llms.txt', (req, res) => {
+  const rootLlms = path.join(process.cwd(), 'llms.txt');
+  const publicLlms = path.join(process.cwd(), 'public', 'llms.txt');
+  const llmsPath = fs.existsSync(rootLlms) ? rootLlms : publicLlms;
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=172800');
+  res.sendFile(llmsPath);
+});
+
+// Serve llms-full.txt comprehensive knowledge base
+app.get('/llms-full.txt', (req, res) => {
+  const rootLlmsFull = path.join(process.cwd(), 'llms-full.txt');
+  const publicLlmsFull = path.join(process.cwd(), 'public', 'llms-full.txt');
+  const llmsFullPath = fs.existsSync(rootLlmsFull) ? rootLlmsFull : publicLlmsFull;
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=172800');
+  res.sendFile(llmsFullPath);
+});
+
 // Vite middleware & Production Serving
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {

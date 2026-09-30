@@ -77,11 +77,14 @@ User-agent: anthropic-ai
 User-agent: Applebot
 User-agent: Applebot-Extended
 Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
 Allow: /trip/
 Allow: /blog/
 Allow: /destination/
 Allow: /venues
 Allow: /services
+Allow: /itineraries
 Disallow: /admin
 Disallow: /super-admin
 Disallow: /api/
